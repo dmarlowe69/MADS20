@@ -1,0 +1,3118 @@
+VICMONB.ASM......PAGE 0001
+
+LINE# LOC   CODE        LINE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+VICMON$B000......PAGE 0002
+
+LINE# LOC   CODE        LINE
+
+
+00003  0000              ;********************************
+00004  0000              ;
+00005  0000              ;        VICMON$B000
+00006  0000              ;   VICMON$B000.VIC V072882
+00007  0000              ;   MACHINE LANGUAGE MONITOR
+00008  0000              ; (C) 1982 BY COMMODORE MACHINES
+00009  0000              ;
+00010  0000              ;  DOCUMENTED BY DENTON MARLOWE
+00011  0000              ;  
+00012  0000              ;********************************
+00013  0000              *=$B000                ;SYS 45056 (11*4096)
+00014  B000              ;*********************************
+00015  B000              ; MAIN BODY OF CODE
+00016  B000              ;*********************************
+00017  B000              .FIL   VICMON.ASM
+00018  B000              ;*=$6000
+00019  B000              ;********************************
+00020  B000              ;
+00021  B000              ;        VICMON$6000
+00022  B000              ;   VICMON$8000.VIC V072882
+00023  B000              ;   MACHINE LANGUAGE MONITOR
+00024  B000              ; (C) 1982 BY COMMODORE MACHINES
+00025  B000              ;
+00026  B000              ;     BASED ON VICMON$6000
+00027  B000              ;
+00028  B000              ;  DOCUMENTED BY DENTON MARLOWE
+00029  B000              ;
+00030  B000              ;********************************
+00031  B000              ; EXTERNAL ADDRESS EQUATES
+00032  B000              ;********************************
+00033  B000              SETMSG=$FF90
+00034  B000              CLRCHN=$FFCC
+00035  B000              CHRIN=$FFCF
+00036  B000              CHROUT=$FFD2
+00037  B000              LOAD=$FFD5
+00038  B000              GETIN=$FFE4
+00039  B000              ;********************************
+00040  B000              ; ENTRY POINT
+00041  B000              ; 
+00042  B000              ; ?
+00043  B000              ;********************************
+00044  B000  4C 0C B0    XX6000 JMP XX600C
+00045  B003              ;********************************
+00046  B003  4C 3F B0    ZZ6003 JMP XX603F
+00047  B006              ;********************************
+00048  B006  4C CF FF    XX6006 JMP CHRIN
+00049  B009              ;********************************
+00050  B009  4C D2 FF    XX6009 JMP CHROUT
+00051  B00C              ;********************************
+00052  B00C  78          XX600C SEI 
+00053  B00D  AD 18 03           LDA $0318
+00054  B010  85 0D              STA $0D
+00055  B012  AD 19 03           LDA $0319
+00056  B015  85 0E              STA $0E
+00057  B017  AD B2 BE           LDA XX6EB2
+
+
+
+
+
+
+VICMON$B000......PAGE 0003
+
+LINE# LOC   CODE        LINE
+
+
+00058  B01A                                     ;LDX XX6EB3
+00059  B01A  AE B3 BE           LDX XX6EB2+1
+00060  B01D  8D 16 03           STA $0316
+00061  B020  8E 17 03           STX $0317
+00062  B023  20 D9 BC           JSR XX6CD9
+00063  B026  A9 00              LDA #$00
+00064  B028  85 FD              STA $FD
+00065  B02A  85 FE              STA $FE
+00066  B02C  A9 80              LDA #$80
+00067  B02E  20 90 FF           JSR SETMSG
+00068  B031  A9 FF              LDA #$FF
+00069  B033  85 16              STA $16
+00070  B035  A9 00              LDA #$00
+00071  B037  85 0F              STA $0F
+00072  B039  85 0C              STA $0C
+00073  B03B  85 2F              STA $2F
+00074  B03D  58                 CLI 
+00075  B03E  00                 BRK 
+00076  B03F              ;********************************
+00077  B03F              ; NMI SERIVE ROUTINE
+00078  B03F              ;********************************
+00079  B03F  20 B9 BC    XX603F JSR XX6CB9
+00080  B042  68                 PLA 
+00081  B043  85 05              STA $05
+00082  B045  68                 PLA 
+00083  B046  85 04              STA $04
+00084  B048  68                 PLA 
+00085  B049  85 03              STA $03
+00086  B04B  68                 PLA 
+00087  B04C  85 02              STA $02
+00088  B04E  68                 PLA 
+00089  B04F  85 01              STA $01
+00090  B051  68                 PLA 
+00091  B052  85 00              STA $00
+00092  B054  BA                 TSX 
+00093  B055  86 06              STX $06
+00094  B057  38                 SEC 
+00095  B058  A5 01              LDA $01
+00096  B05A  E9 02              SBC #$02
+00097  B05C  85 01              STA $01
+00098  B05E  A5 00              LDA $00
+00099  B060  E9 00              SBC #$00
+00100  B062  85 00              STA $00
+00101  B064  20 D9 BC           JSR XX6CD9
+00102  B067  A5 16              LDA $16
+00103  B069  C9 FF              CMP #$FF
+00104  B06B  F0 1D              BEQ XX608A
+00105  B06D  A6 10              LDX $10
+00106  B06F  86 C1              STX $C1
+00107  B071  A6 11              LDX $11
+00108  B073  86 C2              STX $C2
+00109  B075  A0 00              LDY #$00
+00110  B077  20 6B BD           JSR XX6D6B
+00111  B07A  A5 2B              LDA $2B
+00112  B07C  D0 06              BNE XX6084
+
+
+
+
+
+
+VICMON$B000......PAGE 0004
+
+LINE# LOC   CODE        LINE
+
+
+00113  B07E  A5 2C              LDA $2C
+00114  B080  D0 05              BNE XX6087
+00115  B082  F0 06              BEQ XX608A
+00116  B084  4C 56 B6    XX6084 JMP XX6656
+00117  B087              ;********************************
+00118  B087  4C 54 B6    XX6087 JMP XX6654
+00119  B08A              ;********************************
+00120  B08A  20 3E B9    XX608A JSR XX693E
+00121  B08D  A2 42              LDX #$42        ;'B'
+00122  B08F  A9 2A       XX608F LDA #$2A        ;'*'
+00123  B091  20 26 B8           JSR XX6826
+00124  B094  4C 6A B9           JMP XX696A
+00125  B097              ;********************************
+00126  B097  A9 3F       XX6097 LDA #$3F        ;'?'
+00127  B099  20 09 B0           JSR XX6009
+00128  B09C  20 3E B9    XX609C JSR XX693E
+00129  B09F  A9 2E              LDA #$2E        ;'.'
+00130  B0A1  20 09 B0           JSR XX6009
+00131  B0A4  A9 00              LDA #$00
+00132  B0A6  85 0B              STA $0B
+00133  B0A8  85 27              STA $27
+00134  B0AA  85 2F              STA $2F
+00135  B0AC  20 9D B8    XX60AC JSR XX689D
+00136  B0AF  C9 2E              CMP #$2E        ;'.'
+00137  B0B1  F0 F9              BEQ XX60AC
+00138  B0B3  C9 20              CMP #$20        ;' '
+00139  B0B5  F0 F5              BEQ XX60AC
+00140  B0B7  A2 14              LDX #$14
+00141  B0B9  DD 6D BE    XX60B9 CMP XX6E6D,X
+00142  B0BC  D0 12              BNE XX60D0
+00143  B0BE  85 1C              STA $1C
+00144  B0C0  8A                 TXA 
+00145  B0C1  0A                 ASL A
+00146  B0C2  AA                 TAX 
+00147  B0C3  BD 82 BE           LDA XX6E82,X
+00148  B0C6  85 C1              STA $C1
+00149  B0C8  BD 83 BE           LDA XX6E82+1,X
+00150  B0CB  85 C2              STA $C2
+00151  B0CD  6C C1 00           JMP ($00C1)
+00152  B0D0              ;********************************
+00153  B0D0  CA          XX60D0 DEX 
+00154  B0D1  10 E6              BPL XX60B9
+00155  B0D3  30 C2              BMI XX6097
+00156  B0D5  A2 02       XX60D5 LDX #$02
+00157  B0D7  D0 02              BNE XX60DB
+00158  B0D9  A2 00       XX60D9 LDX #$00
+00159  B0DB  B4 C1       XX60DB LDY $C1,X
+00160  B0DD  D0 08              BNE XX60E7
+00161  B0DF  B4 C2              LDY $C2,X
+00162  B0E1  D0 02              BNE XX60E5
+00163  B0E3  E6 27              INC $27
+00164  B0E5  D6 C2       XX60E5 DEC $C2,X
+00165  B0E7  D6 C1       XX60E7 DEC $C1,X
+00166  B0E9  60                 RTS 
+00167  B0EA              ;********************************
+
+
+
+
+
+
+VICMON$B000......PAGE 0005
+
+LINE# LOC   CODE        LINE
+
+
+00168  B0EA  A9 00       XX60EA LDA #$00
+00169  B0EC  85 21              STA $21
+00170  B0EE  20 5B B2           JSR XX625B
+00171  B0F1  A2 02              LDX #$02
+00172  B0F3  20 3B B9    XX60F3 JSR XX693B
+00173  B0F6  CA                 DEX 
+00174  B0F7  D0 FA              BNE XX60F3
+00175  B0F9  60                 RTS 
+00176  B0FA              ;********************************
+00177  B0FA  A2 02       XX60FA LDX #$02
+00178  B0FC  B5 C0       XX60FC LDA $C0,X
+00179  B0FE  48                 PHA 
+00180  B0FF  B5 24              LDA $24,X
+00181  B101  95 C0              STA $C0,X
+00182  B103  68                 PLA 
+00183  B104  95 24              STA $24,X
+00184  B106  CA                 DEX 
+00185  B107  D0 F3              BNE XX60FC
+00186  B109  60                 RTS 
+00187  B10A              ;********************************
+00188  B10A  A5 25       XX610A LDA $25
+00189  B10C  A4 26              LDY $26
+00190  B10E  4C 15 B1           JMP XX6115
+00191  B111              ;********************************
+00192  B111  A5 C3       XX6111 LDA $C3
+00193  B113  A4 C4              LDY $C4
+00194  B115  38          XX6115 SEC 
+00195  B116  E5 C1              SBC $C1
+00196  B118  85 24              STA $24
+00197  B11A  98                 TYA 
+00198  B11B  E5 C2              SBC $C2
+00199  B11D  A8                 TAY 
+00200  B11E  05 24              ORA $24
+00201  B120  60                 RTS 
+00202  B121              ;********************************
+00203  B121              ; C
+00204  B121              ;********************************
+00205  B121  A9 00       XX6121 LDA #$00
+00206  B123  F0 02              BEQ XX6127
+00207  B125              ;********************************
+00208  B125              ; T
+00209  B125              ;********************************
+00210  B125  A9 01       XX6125 LDA #$01
+00211  B127  85 28       XX6127 STA $28
+00212  B129  20 DF B7           JSR XX67DF
+00213  B12C  20 3E B9           JSR XX693E
+00214  B12F  20 11 B1           JSR XX6111
+00215  B132  20 39 B8           JSR XX6839
+00216  B135  90 1A              BCC XX6151
+00217  B137  20 0A B1    XX6137 JSR XX610A
+00218  B13A  B0 03              BCS XX613F
+00219  B13C  4C C1 B1           JMP XX61C1
+00220  B13F              ;********************************
+00221  B13F  20 77 B1    XX613F JSR XX6177
+00222  B142  E6 C3              INC $C3
+
+
+
+
+
+
+VICMON$B000......PAGE 0006
+
+LINE# LOC   CODE        LINE
+
+
+00223  B144  D0 02              BNE XX6148
+00224  B146  E6 C4              INC $C4
+00225  B148  20 25 B9    XX6148 JSR XX6925
+00226  B14B  A4 27              LDY $27
+00227  B14D  D0 49              BNE XX6198
+00228  B14F  F0 E6              BEQ XX6137
+00229  B151  20 0A B1    XX6151 JSR XX610A
+00230  B154  18                 CLC 
+00231  B155  A5 24              LDA $24
+00232  B157  65 C3              ADC $C3
+00233  B159  85 C3              STA $C3
+00234  B15B  98                 TYA 
+00235  B15C  65 C4              ADC $C4
+00236  B15E  85 C4              STA $C4
+00237  B160  20 FA B0           JSR XX60FA
+00238  B163  20 77 B1    XX6163 JSR XX6177
+00239  B166  20 0A B1           JSR XX610A
+00240  B169  B0 56              BCS XX61C1
+00241  B16B  20 D5 B0           JSR XX60D5
+00242  B16E  20 D9 B0           JSR XX60D9
+00243  B171  A4 27              LDY $27
+00244  B173  D0 23              BNE XX6198
+00245  B175  F0 EC              BEQ XX6163
+00246  B177  A2 00       XX6177 LDX #$00
+00247  B179  20 09 BD           JSR XX6D09
+00248  B17C  48                 PHA 
+00249  B17D  20 05 BD           JSR XX6D05
+00250  B180  68                 PLA 
+00251  B181  A4 28              LDY $28
+00252  B183  F0 03              BEQ XX6188
+00253  B185  20 13 BD           JSR XX6D13
+00254  B188  C1 09       XX6188 CMP ($09,X)
+00255  B18A  F0 0B              BEQ XX6197
+00256  B18C  20 10 B8    XX618C JSR XX6810
+00257  B18F  20 3B B9           JSR XX693B
+00258  B192  20 A7 B8           JSR XX68A7
+00259  B195  F0 01              BEQ XX6198
+00260  B197  60          XX6197 RTS 
+00261  B198              ;********************************
+00262  B198  4C 9C B0    XX6198 JMP XX609C
+00263  B19B              ;********************************
+00264  B19B              ; F
+00265  B19B              ;********************************
+00266  B19B  20 F8 B7    XX619B JSR XX67F8
+00267  B19E  20 02 B8           JSR XX6802
+00268  B1A1  20 9D B8           JSR XX689D
+00269  B1A4  20 6B B8           JSR XX686B
+00270  B1A7  90 15              BCC XX61BE
+00271  B1A9  85 1E              STA $1E
+00272  B1AB  A6 27       XX61AB LDX $27
+00273  B1AD  D0 12              BNE XX61C1
+00274  B1AF  20 11 B1           JSR XX6111
+00275  B1B2  90 0D              BCC XX61C1
+00276  B1B4  A5 1E              LDA $1E
+00277  B1B6  20 17 BD           JSR XX6D17
+
+
+
+
+
+
+VICMON$B000......PAGE 0007
+
+LINE# LOC   CODE        LINE
+
+
+00278  B1B9  20 25 B9           JSR XX6925
+00279  B1BC  D0 ED              BNE XX61AB
+00280  B1BE  4C 97 B0    XX61BE JMP XX6097
+00281  B1C1              ;********************************
+00282  B1C1  4C 9C B0    XX61C1 JMP XX609C
+00283  B1C4              ;********************************
+00284  B1C4              ; H
+00285  B1C4              ;********************************
+00286  B1C4  20 F8 B7    XX61C4 JSR XX67F8
+00287  B1C7  20 02 B8           JSR XX6802
+00288  B1CA  20 9D B8           JSR XX689D
+00289  B1CD  A2 00              LDX #$00
+00290  B1CF  20 9D B8           JSR XX689D
+00291  B1D2  C9 27              CMP #$27        ;'''
+00292  B1D4  D0 13              BNE XX61E9
+00293  B1D6  20 9D B8           JSR XX689D
+00294  B1D9  95 31       XX61D9 STA $31,X
+00295  B1DB  E8                 INX 
+00296  B1DC  20 06 B0           JSR XX6006
+00297  B1DF  C9 0D              CMP #$0D
+00298  B1E1  F0 20              BEQ XX6203
+00299  B1E3  E0 20              CPX #$20        ;' '
+00300  B1E5  D0 F2              BNE XX61D9
+00301  B1E7  F0 1A              BEQ XX6203
+00302  B1E9  86 2A       XX61E9 STX $2A
+00303  B1EB  20 72 B8           JSR XX6872
+00304  B1EE  90 CE              BCC XX61BE
+00305  B1F0  95 31       XX61F0 STA $31,X
+00306  B1F2  E8                 INX 
+00307  B1F3  20 06 B0           JSR XX6006
+00308  B1F6  C9 0D              CMP #$0D
+00309  B1F8  F0 09              BEQ XX6203
+00310  B1FA  20 6B B8           JSR XX686B
+00311  B1FD  90 BF              BCC XX61BE
+00312  B1FF  E0 20              CPX #$20        ;' '
+00313  B201  D0 ED              BNE XX61F0
+00314  B203  86 1D       XX6203 STX $1D
+00315  B205  20 3E B9           JSR XX693E
+00316  B208  A2 00       XX6208 LDX #$00
+00317  B20A  A0 00              LDY #$00
+00318  B20C  A5 C1              LDA $C1
+00319  B20E  48                 PHA 
+00320  B20F  A5 C2              LDA $C2
+00321  B211  48                 PHA 
+00322  B212  20 3C BD    XX6212 JSR XX6D3C
+00323  B215  D5 31              CMP $31,X
+00324  B217  D0 13              BNE XX622C
+00325  B219  20 25 B9           JSR XX6925
+00326  B21C  E8                 INX 
+00327  B21D  E4 1D              CPX $1D
+00328  B21F  D0 F1              BNE XX6212
+00329  B221  68                 PLA 
+00330  B222  85 C2              STA $C2
+00331  B224  68                 PLA 
+00332  B225  85 C1              STA $C1
+
+
+
+
+
+
+VICMON$B000......PAGE 0008
+
+LINE# LOC   CODE        LINE
+
+
+00333  B227  20 8C B1           JSR XX618C
+00334  B22A  D0 06              BNE XX6232
+00335  B22C  68          XX622C PLA 
+00336  B22D  85 C2              STA $C2
+00337  B22F  68                 PLA 
+00338  B230  85 C1              STA $C1
+00339  B232  20 25 B9    XX6232 JSR XX6925
+00340  B235  A4 27              LDY $27
+00341  B237  D0 05              BNE XX623E
+00342  B239  20 11 B1           JSR XX6111
+00343  B23C  B0 CA              BCS XX6208
+00344  B23E  4C 9C B0    XX623E JMP XX609C
+00345  B241              ;********************************
+00346  B241              ; D
+00347  B241              ;********************************
+00348  B241  20 FA B3    XX6241 JSR XX63FA
+00349  B244  20 11 B1    XX6244 JSR XX6111
+00350  B247  90 0D              BCC XX6256
+00351  B249  A0 2C              LDY #$2C        ;','
+00352  B24B  20 EA B0           JSR XX60EA
+00353  B24E  20 B0 B2           JSR XX62B0
+00354  B251  20 A7 B8           JSR XX68A7
+00355  B254  D0 EE              BNE XX6244
+00356  B256  20 59 B5    XX6256 JSR XX6559
+00357  B259  D0 E3              BNE XX623E
+00358  B25B  20 30 B9    XX625B JSR XX6930
+00359  B25E  20 10 B8    XX625E JSR XX6810
+00360  B261  20 3B B9           JSR XX693B
+00361  B264  20 D3 BB           JSR XX6BD3
+00362  B267  A2 03              LDX #$03
+00363  B269  20 24 B3           JSR XX6324
+00364  B26C  A2 06              LDX #$06
+00365  B26E  E0 03       XX626E CPX #$03
+00366  B270  D0 13              BNE XX6285
+00367  B272  A4 20              LDY $20
+00368  B274  F0 0F              BEQ XX6285
+00369  B276  A5 29       XX6276 LDA $29
+00370  B278  C9 E8              CMP #$E8
+00371  B27A  20 3C BD           JSR XX6D3C
+00372  B27D  B0 1C              BCS XX629B
+00373  B27F  20 A8 B2           JSR XX62A8
+00374  B282  88                 DEY 
+00375  B283  D0 F1              BNE XX6276
+00376  B285  06 29       XX6285 ASL $29
+00377  B287  90 0E              BCC XX6297
+00378  B289  BD CA BD           LDA XX6DCA,X
+00379  B28C  20 54 B5           JSR XX6554
+00380  B28F  BD D0 BD           LDA XX6DD0,X
+00381  B292  F0 03              BEQ XX6297
+00382  B294  20 54 B5           JSR XX6554
+00383  B297  CA          XX6297 DEX 
+00384  B298  D0 D4              BNE XX626E
+00385  B29A  60                 RTS 
+00386  B29B              ;********************************
+00387  B29B  20 BB B2    XX629B JSR XX62BB
+
+
+
+
+
+
+VICMON$B000......PAGE 0009
+
+LINE# LOC   CODE        LINE
+
+
+00388  B29E  AA                 TAX 
+00389  B29F  E8                 INX 
+00390  B2A0  D0 01              BNE XX62A3
+00391  B2A2  C8                 INY 
+00392  B2A3  98          XX62A3 TYA 
+00393  B2A4  20 A8 B2           JSR XX62A8
+00394  B2A7  8A                 TXA 
+00395  B2A8  86 1D       XX62A8 STX $1D
+00396  B2AA  20 17 B8           JSR XX6817
+00397  B2AD  A6 1D              LDX $1D
+00398  B2AF  60                 RTS 
+00399  B2B0              ;********************************
+00400  B2B0  A5 20       XX62B0 LDA $20
+00401  B2B2  20 BA B2    XX62B2 JSR XX62BA
+00402  B2B5  85 C1              STA $C1
+00403  B2B7  84 C2              STY $C2
+00404  B2B9  60                 RTS 
+00405  B2BA              ;********************************
+00406  B2BA  38          XX62BA SEC 
+00407  B2BB  A4 C2       XX62BB LDY $C2
+00408  B2BD  AA                 TAX 
+00409  B2BE  10 01              BPL XX62C1
+00410  B2C0  88                 DEY 
+00411  B2C1  65 C1       XX62C1 ADC $C1
+00412  B2C3  90 01              BCC XX62C6
+00413  B2C5  C8                 INY 
+00414  B2C6  60          XX62C6 RTS 
+00415  B2C7              ;********************************
+00416  B2C7  A8          XX62C7 TAY 
+00417  B2C8  4A                 LSR A
+00418  B2C9  90 0B              BCC XX62D6
+00419  B2CB  4A                 LSR A
+00420  B2CC  B0 17              BCS XX62E5
+00421  B2CE  C9 22              CMP #$22        ;'"'
+00422  B2D0  F0 13              BEQ XX62E5
+00423  B2D2  29 07              AND #$07
+00424  B2D4  09 80              ORA #$80
+00425  B2D6  4A          XX62D6 LSR A
+00426  B2D7  AA                 TAX 
+00427  B2D8  BD 79 BD           LDA XX6D79,X
+00428  B2DB  B0 04              BCS XX62E1
+00429  B2DD  4A                 LSR A
+00430  B2DE  4A                 LSR A
+00431  B2DF  4A                 LSR A
+00432  B2E0  4A                 LSR A
+00433  B2E1  29 0F       XX62E1 AND #$0F
+00434  B2E3  D0 04              BNE XX62E9
+00435  B2E5  A0 80       XX62E5 LDY #$80
+00436  B2E7  A9 00              LDA #$00
+00437  B2E9  AA          XX62E9 TAX 
+00438  B2EA  BD BD BD           LDA XX6DBD,X
+00439  B2ED  85 29              STA $29
+00440  B2EF  29 03              AND #$03
+00441  B2F1  85 20              STA $20
+00442  B2F3  98                 TYA 
+
+
+
+
+
+
+VICMON$B000......PAGE 0010
+
+LINE# LOC   CODE        LINE
+
+
+00443  B2F4  29 8F              AND #$8F
+00444  B2F6  AA                 TAX 
+00445  B2F7  98                 TYA 
+00446  B2F8  A0 03              LDY #$03
+00447  B2FA  E0 8A              CPX #$8A
+00448  B2FC  F0 0B              BEQ XX6309
+00449  B2FE  4A          XX62FE LSR A
+00450  B2FF  90 08              BCC XX6309
+00451  B301  4A                 LSR A
+00452  B302  4A          XX6302 LSR A
+00453  B303  09 20              ORA #$20        ;' '
+00454  B305  88                 DEY 
+00455  B306  D0 FA              BNE XX6302
+00456  B308  C8                 INY 
+00457  B309  88          XX6309 DEY 
+00458  B30A  D0 F2              BNE XX62FE
+00459  B30C  60                 RTS 
+00460  B30D              ;********************************
+00461  B30D  20 3C BD    XX630D JSR XX6D3C
+00462  B310  20 A8 B2           JSR XX62A8
+00463  B313  A2 01              LDX #$01
+00464  B315  20 F3 B0    XX6315 JSR XX60F3
+00465  B318  C4 20              CPY $20
+00466  B31A  C8                 INY 
+00467  B31B  90 F0              BCC XX630D
+00468  B31D  A2 03              LDX #$03
+00469  B31F  C0 03              CPY #$03
+00470  B321  90 F2              BCC XX6315
+00471  B323  60                 RTS 
+00472  B324              ;********************************
+00473  B324  A8          XX6324 TAY 
+00474  B325  B9 D7 BD           LDA XX6DD7,Y
+00475  B328  85 25              STA $25
+00476  B32A  B9 17 BE           LDA XX6E17,Y
+00477  B32D  85 26              STA $26
+00478  B32F  A9 00       XX632F LDA #$00
+00479  B331  A0 05              LDY #$05
+00480  B333  06 26       XX6333 ASL $26
+00481  B335  26 25              ROL $25
+00482  B337  2A                 ROL A
+00483  B338  88                 DEY 
+00484  B339  D0 F8              BNE XX6333
+00485  B33B  69 3F              ADC #$3F        ;'?'
+00486  B33D  20 09 B0           JSR XX6009
+00487  B340  CA                 DEX 
+00488  B341  D0 EC              BNE XX632F
+00489  B343  4C 3B B9           JMP XX693B
+00490  B346              ;********************************
+00491  B346              ;
+00492  B346              ;********************************
+00493  B346  AD B5 BE    XX6346 LDA XX6EB4+1
+00494  B349  48                 PHA 
+00495  B34A  AD B4 BE           LDA XX6EB4
+00496  B34D  48                 PHA 
+00497  B34E  A9 00              LDA #$00
+
+
+
+
+
+
+VICMON$B000......PAGE 0011
+
+LINE# LOC   CODE        LINE
+
+
+00498  B350  48                 PHA 
+00499  B351  48                 PHA 
+00500  B352  48                 PHA 
+00501  B353  48                 PHA 
+00502  B354  6C 14 00           JMP ($0014)
+00503  B357              ;********************************
+00504  B357  85 1E       XX6357 STA $1E
+00505  B359  48                 PHA 
+00506  B35A  20 9D B8    XX635A JSR XX689D
+00507  B35D  20 01 B9           JSR XX6901
+00508  B360  D0 F8              BNE XX635A
+00509  B362  68                 PLA 
+00510  B363  49 FF       XX6363 EOR #$FF
+00511  B365  4C B2 B2           JMP XX62B2
+00512  B368              ;********************************
+00513  B368  A9 40       XX6368 LDA #$40        ;'@'
+00514  B36A              ;********************************
+00515  B36A  2C                 .BYTE $2C
+00516  B36B              ;********************************
+00517  B36B  A9 00       XX636B LDA #$00
+00518  B36D  85 1E              STA $1E
+00519  B36F  20 FA B3           JSR XX63FA
+00520  B372  A6 27       XX6372 LDX $27
+00521  B374  D0 17              BNE XX638D
+00522  B376  20 11 B1           JSR XX6111
+00523  B379  90 12              BCC XX638D
+00524  B37B  24 1E              BIT $1E
+00525  B37D  50 06              BVC XX6385
+00526  B37F  20 90 B3           JSR XX6390
+00527  B382  4C 88 B3           JMP XX6388
+00528  B385              ;********************************
+00529  B385  20 D0 B3    XX6385 JSR XX63D0
+00530  B388  20 A7 B8    XX6388 JSR XX68A7
+00531  B38B  D0 E5              BNE XX6372
+00532  B38D  4C 56 B2    XX638D JMP XX6256
+00533  B390              ;********************************
+00534  B390  20 3E B9    XX6390 JSR XX693E
+00535  B393  A2 2E       XX6393 LDX #$2E        ;'.'
+00536  B395  A9 27              LDA #$27        ;'''
+00537  B397  20 26 B8           JSR XX6826
+00538  B39A  20 3B B9           JSR XX693B
+00539  B39D  20 10 B8           JSR XX6810
+00540  B3A0  A9 12              LDA #$12
+00541  B3A2  20 09 B0           JSR XX6009
+00542  B3A5  A0 0C              LDY #$0C
+00543  B3A7  A2 00              LDX #$00
+00544  B3A9  20 09 BD    XX63A9 JSR XX6D09
+00545  B3AC  29 7F              AND #$7F
+00546  B3AE  C9 20              CMP #$20        ;' '
+00547  B3B0  B0 02              BCS XX63B4
+00548  B3B2  A9 2E              LDA #$2E        ;'.'
+00549  B3B4  20 09 B0    XX63B4 JSR XX6009
+00550  B3B7  C9 22              CMP #$22        ;'"'
+00551  B3B9  D0 0A              BNE XX63C5
+00552  B3BB  A9 14              LDA #$14
+
+
+
+
+
+
+VICMON$B000......PAGE 0012
+
+LINE# LOC   CODE        LINE
+
+
+00553  B3BD  20 09 B0           JSR XX6009
+00554  B3C0  A9 22              LDA #$22        ;'"'
+00555  B3C2  20 09 B0           JSR XX6009
+00556  B3C5  20 25 B9    XX63C5 JSR XX6925
+00557  B3C8  88                 DEY 
+00558  B3C9  D0 DE              BNE XX63A9
+00559  B3CB  A9 92              LDA #$92
+00560  B3CD  4C 09 B0           JMP XX6009
+00561  B3D0              ;********************************
+00562  B3D0  20 3E B9    XX63D0 JSR XX693E
+00563  B3D3  A2 2E       XX63D3 LDX #$2E        ;'.'
+00564  B3D5  A9 3A              LDA #$3A        ;':'
+00565  B3D7  20 26 B8           JSR XX6826
+00566  B3DA  20 10 B8           JSR XX6810
+00567  B3DD  A9 05              LDA #$05
+00568  B3DF  4C EC B8           JMP XX68EC
+00569  B3E2              ;********************************
+00570  B3E2              ; :
+00571  B3E2              ;********************************
+00572  B3E2  20 F8 B7    XX63E2 JSR XX67F8
+00573  B3E5  A9 05              LDA #$05
+00574  B3E7  20 57 B3           JSR XX6357
+00575  B3EA  20 59 B5           JSR XX6559
+00576  B3ED  20 D0 B3           JSR XX63D0
+00577  B3F0  A9 3A              LDA #$3A        ;':'
+00578  B3F2  8D 77 02           STA $0277
+00579  B3F5  A9 00              LDA #$00
+00580  B3F7  4C 09 B5           JMP XX6509
+00581  B3FA              ;********************************
+00582  B3FA  20 F8 B7    XX63FA JSR XX67F8
+00583  B3FD  85 C3              STA $C3
+00584  B3FF  86 C4              STX $C4
+00585  B401  20 06 B0           JSR XX6006
+00586  B404  C9 0D              CMP #$0D
+00587  B406  F0 03              BEQ XX640B
+00588  B408  20 FD B7           JSR XX67FD
+00589  B40B  4C 3E B9    XX640B JMP XX693E
+00590  B40E              ;********************************
+00591  B40E              ; A AND ,
+00592  B40E              ;********************************
+00593  B40E  20 49 B8    XX640E JSR XX6849
+00594  B411  85 C3              STA $C3
+00595  B413  86 C4              STX $C4
+00596  B415  A2 00       XX6415 LDX #$00
+00597  B417  86 32              STX $32
+00598  B419  20 9D B8    XX6419 JSR XX689D
+00599  B41C  C9 20              CMP #$20        ;' '
+00600  B41E  F0 F5              BEQ XX6415
+00601  B420  95 22              STA $22,X
+00602  B422  E8                 INX 
+00603  B423  E0 03              CPX #$03
+00604  B425  D0 F2              BNE XX6419
+00605  B427  CA          XX6427 DEX 
+00606  B428  30 11              BMI XX643B
+00607  B42A  B5 22              LDA $22,X
+
+
+
+
+
+
+VICMON$B000......PAGE 0013
+
+LINE# LOC   CODE        LINE
+
+
+00608  B42C  38                 SEC 
+00609  B42D  E9 3F              SBC #$3F        ;'?'
+00610  B42F  A0 05              LDY #$05
+00611  B431  4A          XX6431 LSR A
+00612  B432  66 32              ROR $32
+00613  B434  66 31              ROR $31
+00614  B436  88                 DEY 
+00615  B437  D0 F8              BNE XX6431
+00616  B439  F0 EC              BEQ XX6427
+00617  B43B  A2 02       XX643B LDX #$02
+00618  B43D  20 06 B0    XX643D JSR XX6006
+00619  B440  C9 0D              CMP #$0D
+00620  B442  F0 20              BEQ XX6464
+00621  B444  C9 3A              CMP #$3A        ;':'
+00622  B446  F0 1C              BEQ XX6464
+00623  B448  C9 20              CMP #$20        ;' '
+00624  B44A  F0 F1              BEQ XX643D
+00625  B44C  20 4B B5           JSR XX654B
+00626  B44F  B0 0E              BCS XX645F
+00627  B451  20 7F B8           JSR XX687F
+00628  B454  A4 C1              LDY $C1
+00629  B456  84 C2              STY $C2
+00630  B458  85 C1              STA $C1
+00631  B45A  A9 30              LDA #$30        ;'0'
+00632  B45C  95 31              STA $31,X
+00633  B45E  E8                 INX 
+00634  B45F  95 31       XX645F STA $31,X
+00635  B461  E8                 INX 
+00636  B462  D0 D9              BNE XX643D
+00637  B464  86 25       XX6464 STX $25
+00638  B466  A2 00              LDX #$00
+00639  B468  86 27              STX $27
+00640  B46A  A2 00       XX646A LDX #$00
+00641  B46C  86 1E              STX $1E
+00642  B46E  A5 27              LDA $27
+00643  B470  20 C7 B2           JSR XX62C7
+00644  B473  A6 29              LDX $29
+00645  B475  86 26              STX $26
+00646  B477  AA                 TAX 
+00647  B478  BD 17 BE           LDA XX6E17,X
+00648  B47B  20 31 B5           JSR XX6531
+00649  B47E  BD D7 BD           LDA XX6DD7,X
+00650  B481  20 31 B5           JSR XX6531
+00651  B484  A2 06              LDX #$06
+00652  B486  E0 03       XX6486 CPX #$03
+00653  B488  D0 12              BNE XX649C
+00654  B48A  A4 20              LDY $20
+00655  B48C  F0 0E              BEQ XX649C
+00656  B48E  A5 29       XX648E LDA $29
+00657  B490  C9 E8              CMP #$E8
+00658  B492  A9 30              LDA #$30        ;'0'
+00659  B494  B0 1D              BCS XX64B3
+00660  B496  20 2E B5           JSR XX652E
+00661  B499  88                 DEY 
+00662  B49A  D0 F2              BNE XX648E
+
+
+
+
+
+
+VICMON$B000......PAGE 0014
+
+LINE# LOC   CODE        LINE
+
+
+00663  B49C  06 29       XX649C ASL $29
+00664  B49E  90 0E              BCC XX64AE
+00665  B4A0  BD CA BD           LDA XX6DCA,X
+00666  B4A3  20 31 B5           JSR XX6531
+00667  B4A6  BD D0 BD           LDA XX6DD0,X
+00668  B4A9  F0 03              BEQ XX64AE
+00669  B4AB  20 31 B5           JSR XX6531
+00670  B4AE  CA          XX64AE DEX 
+00671  B4AF  D0 D5              BNE XX6486
+00672  B4B1  F0 06              BEQ XX64B9
+00673  B4B3  20 2E B5    XX64B3 JSR XX652E
+00674  B4B6  20 2E B5           JSR XX652E
+00675  B4B9  A5 25       XX64B9 LDA $25
+00676  B4BB  C5 1E              CMP $1E
+00677  B4BD  F0 03              BEQ XX64C2
+00678  B4BF  4C 3B B5           JMP XX653B
+00679  B4C2              ;********************************
+00680  B4C2  20 39 B8    XX64C2 JSR XX6839
+00681  B4C5  A4 20              LDY $20
+00682  B4C7  F0 2B              BEQ XX64F4
+00683  B4C9  A5 26              LDA $26
+00684  B4CB  C9 9D              CMP #$9D
+00685  B4CD  D0 1C              BNE XX64EB
+00686  B4CF  20 11 B1           JSR XX6111
+00687  B4D2  90 09              BCC XX64DD
+00688  B4D4  98                 TYA 
+00689  B4D5  D0 6B              BNE XX6542
+00690  B4D7  A6 24              LDX $24
+00691  B4D9  30 67              BMI XX6542
+00692  B4DB  10 07              BPL XX64E4
+00693  B4DD  C8          XX64DD INY 
+00694  B4DE  D0 62              BNE XX6542
+00695  B4E0  A6 24              LDX $24
+00696  B4E2  10 5E              BPL XX6542
+00697  B4E4  CA          XX64E4 DEX 
+00698  B4E5  CA                 DEX 
+00699  B4E6  8A                 TXA 
+00700  B4E7  A4 20              LDY $20
+00701  B4E9  D0 03              BNE XX64EE
+00702  B4EB  B9 C2 00    XX64EB LDA $00C2,Y
+00703  B4EE  20 6B BD    XX64EE JSR XX6D6B
+00704  B4F1  88                 DEY 
+00705  B4F2  D0 F7              BNE XX64EB
+00706  B4F4  A5 27       XX64F4 LDA $27
+00707  B4F6  20 6B BD           JSR XX6D6B
+00708  B4F9  A0 41              LDY #$41        ;'A'
+00709  B4FB  8C 77 02           STY $0277
+00710  B4FE  20 59 B5           JSR XX6559
+00711  B501  20 EA B0           JSR XX60EA
+00712  B504  20 B0 B2           JSR XX62B0
+00713  B507  A9 20              LDA #$20        ;' '
+00714  B509  8D 78 02    XX6509 STA $0278
+00715  B50C  A5 C2              LDA $C2
+00716  B50E  20 5E B5           JSR XX655E
+00717  B511  8E 79 02           STX $0279
+
+
+
+
+
+
+VICMON$B000......PAGE 0015
+
+LINE# LOC   CODE        LINE
+
+
+00718  B514  8D 7A 02           STA $027A
+00719  B517  A5 C1              LDA $C1
+00720  B519  20 5E B5           JSR XX655E
+00721  B51C  8E 7B 02           STX $027B
+00722  B51F  8D 7C 02           STA $027C
+00723  B522  A9 20              LDA #$20        ;' '
+00724  B524  8D 7D 02           STA $027D
+00725  B527  A9 07              LDA #$07
+00726  B529  85 C6              STA $C6
+00727  B52B  4C 9C B0           JMP XX609C
+00728  B52E              ;********************************
+00729  B52E  20 31 B5    XX652E JSR XX6531
+00730  B531  86 1D       XX6531 STX $1D
+00731  B533  A6 1E              LDX $1E
+00732  B535  D5 31              CMP $31,X
+00733  B537  F0 0C              BEQ XX6545
+00734  B539  68                 PLA 
+00735  B53A  68                 PLA 
+00736  B53B  E6 27       XX653B INC $27
+00737  B53D  F0 03              BEQ XX6542
+00738  B53F  4C 6A B4           JMP XX646A
+00739  B542              ;********************************
+00740  B542  4C 97 B0    XX6542 JMP XX6097
+00741  B545              ;********************************
+00742  B545  E8          XX6545 INX 
+00743  B546  86 1E              STX $1E
+00744  B548  A6 1D              LDX $1D
+00745  B54A  60                 RTS 
+00746  B54B              ;********************************
+00747  B54B  C9 30       XX654B CMP #$30        ;'0'
+00748  B54D  90 03              BCC XX6552
+00749  B54F  C9 47              CMP #$47        ;'G'
+00750  B551  60                 RTS 
+00751  B552              ;********************************
+00752  B552  38          XX6552 SEC 
+00753  B553  60                 RTS 
+00754  B554              ;********************************
+00755  B554  C5 21       XX6554 CMP $21
+00756  B556  D0 03              BNE XX655B
+00757  B558  60                 RTS 
+00758  B559              ;********************************
+00759  B559  A9 91       XX6559 LDA #$91
+00760  B55B  4C 09 B0    XX655B JMP XX6009
+00761  B55E              ;********************************
+00762  B55E              ;
+00763  B55E              ;********************************
+00764  B55E  48          XX655E PHA 
+00765  B55F  4A                 LSR A
+00766  B560  4A                 LSR A
+00767  B561  4A                 LSR A
+00768  B562  4A                 LSR A
+00769  B563  20 2F B8           JSR XX682F
+00770  B566  AA                 TAX 
+00771  B567  68                 PLA 
+00772  B568  29 0F              AND #$0F
+
+
+
+
+
+
+VICMON$B000......PAGE 0016
+
+LINE# LOC   CODE        LINE
+
+
+00773  B56A  4C 2F B8           JMP XX682F
+00774  B56D              ;********************************
+00775  B56D              ;
+00776  B56D              ;********************************
+00777  B56D  85 03       ZZ656D STA $03
+00778  B56F  08                 PHP 
+00779  B570  68                 PLA 
+00780  B571  29 EF              AND #$EF
+00781  B573  85 02              STA $02
+00782  B575  86 04              STX $04
+00783  B577  84 05              STY $05
+00784  B579  68                 PLA 
+00785  B57A  18                 CLC 
+00786  B57B  69 01              ADC #$01
+00787  B57D  85 01              STA $01
+00788  B57F  68                 PLA 
+00789  B580  69 00              ADC #$00
+00790  B582  85 00              STA $00
+00791  B584  A9 80              LDA #$80
+00792  B586  85 0C              STA $0C
+00793  B588  D0 3F              BNE XX65C9
+00794  B58A  48          XX658A PHA 
+00795  B58B  8A                 TXA 
+00796  B58C  48                 PHA 
+00797  B58D  98                 TYA 
+00798  B58E  48                 PHA 
+00799  B58F  BA                 TSX 
+00800  B590  BD 04 01           LDA $0104,X
+00801  B593  29 04              AND #$04
+00802  B595  D0 01              BNE XX6598
+00803  B597  58                 CLI 
+00804  B598  A0 30       XX6598 LDY #$30        ;'0'
+00805  B59A  B1 FD              LDA ($FD),Y
+00806  B59C  8D 2E 91           STA $912E
+00807  B59F  EA                 NOP 
+00808  B5A0  78                 SEI 
+00809  B5A1  20 B9 BC           JSR XX6CB9
+00810  B5A4  68                 PLA 
+00811  B5A5  85 05              STA $05
+00812  B5A7  68                 PLA 
+00813  B5A8  85 04              STA $04
+00814  B5AA  68                 PLA 
+00815  B5AB  85 03              STA $03
+00816  B5AD  D8                 CLD 
+00817  B5AE  68                 PLA 
+00818  B5AF  85 02              STA $02
+00819  B5B1  68                 PLA 
+00820  B5B2  85 01              STA $01
+00821  B5B4  68                 PLA 
+00822  B5B5  85 00              STA $00
+00823  B5B7  A5 0D              LDA $0D
+00824  B5B9  8D 18 03           STA $0318
+00825  B5BC  A5 0E              LDA $0E
+00826  B5BE  8D 19 03           STA $0319
+00827  B5C1  20 D9 BC           JSR XX6CD9
+
+
+
+
+
+
+VICMON$B000......PAGE 0017
+
+LINE# LOC   CODE        LINE
+
+
+00828  B5C4  A9 20              LDA #$20        ;' '
+00829  B5C6  8D 1E 91           STA $911E
+00830  B5C9  BA          XX65C9 TSX 
+00831  B5CA  86 06              STX $06
+00832  B5CC  AD 1D 91           LDA $911D
+00833  B5CF  8D 1D 91           STA $911D
+00834  B5D2  58                 CLI 
+00835  B5D3  24 0F              BIT $0F
+00836  B5D5  10 1F              BPL XX65F6
+00837  B5D7  A5 10              LDA $10
+00838  B5D9  85 C1              STA $C1
+00839  B5DB  A5 11              LDA $11
+00840  B5DD  85 C2              STA $C2
+00841  B5DF  A0 00              LDY #$00
+00842  B5E1  20 3C BD           JSR XX6D3C
+00843  B5E4  85 16              STA $16
+00844  B5E6  A9 00              LDA #$00
+00845  B5E8  20 6B BD           JSR XX6D6B
+00846  B5EB  24 0F              BIT $0F
+00847  B5ED  50 05              BVC XX65F4
+00848  B5EF  85 0F              STA $0F
+00849  B5F1  4C 9B B6           JMP XX669B
+00850  B5F4              ;********************************
+00851  B5F4  85 0F       XX65F4 STA $0F
+00852  B5F6  24 0C       XX65F6 BIT $0C
+00853  B5F8  50 18              BVC XX6612
+00854  B5FA  A5 00              LDA $00
+00855  B5FC  C5 11              CMP $11
+00856  B5FE  D0 58              BNE XX6658
+00857  B600              ;********************************
+00858  B600              ;.END
+00859  B600              ;*=$6600
+00860  B600              ;********************************
+00861  B600  A5 01              LDA $01
+00862  B602  C5 10              CMP $10
+00863  B604  D0 52              BNE XX6658
+00864  B606  A5 2B              LDA $2B
+00865  B608  D0 4C              BNE XX6656
+00866  B60A  A5 2C              LDA $2C
+00867  B60C  D0 46              BNE XX6654
+00868  B60E  A9 80              LDA #$80
+00869  B610  85 0C              STA $0C
+00870  B612  30 15       XX6612 BMI XX6629
+00871  B614  46 0C              LSR $0C
+00872  B616  B0 03              BCS XX661B
+00873  B618  4C 8A B0           JMP XX608A
+00874  B61B              ;********************************
+00875  B61B  A6 06       XX661B LDX $06
+00876  B61D  9A                 TXS 
+00877  B61E  AD B7 BE           LDA XX6EB6+1
+00878  B621  48                 PHA 
+00879  B622  AD B6 BE           LDA XX6EB6
+00880  B625  48                 PHA 
+00881  B626  4C F5 B6           JMP XX66F5
+00882  B629              ;********************************
+
+
+
+
+
+
+VICMON$B000......PAGE 0018
+
+LINE# LOC   CODE        LINE
+
+
+00883  B629  20 3E B9    XX6629 JSR XX693E
+00884  B62C  A5 01              LDA $01
+00885  B62E  A6 00              LDX $00
+00886  B630  85 C1              STA $C1
+00887  B632  86 C2              STX $C2
+00888  B634  20 3B B9           JSR XX693B
+00889  B637  A9 24              LDA #$24        ;'$'
+00890  B639  85 21              STA $21
+00891  B63B  20 5E B2           JSR XX625E
+00892  B63E  20 E4 FF    XX663E JSR GETIN
+00893  B641  F0 FB              BEQ XX663E
+00894  B643  C9 03              CMP #$03
+00895  B645  D0 03              BNE XX664A
+00896  B647  4C 9C B0           JMP XX609C
+00897  B64A              ;********************************
+00898  B64A  C9 4A       XX664A CMP #$4A        ;'J'
+00899  B64C  D0 4D              BNE XX669B
+00900  B64E  A9 01              LDA #$01
+00901  B650  85 0C              STA $0C
+00902  B652  D0 47              BNE XX669B
+00903  B654  C6 2C       XX6654 DEC $2C
+00904  B656  C6 2B       XX6656 DEC $2B
+00905  B658  AD 21 91    XX6658 LDA $9121
+00906  B65B  C9 FA              CMP #$FA
+00907  B65D  D0 3C              BNE XX669B
+00908  B65F  A2 53              LDX #$53        ;'S'
+00909  B661  4C 8F B0           JMP XX608F
+00910  B664              ;********************************
+00911  B664              ; G
+00912  B664              ;********************************
+00913  B664  A9 00       XX6664 LDA #$00
+00914  B666  F0 06              BEQ XX666E
+00915  B668              ;********************************
+00916  B668              ; Q
+00917  B668              ;********************************
+00918  B668  A9 40       XX6668 LDA #$40        ;'@'
+00919  B66A  D0 02              BNE XX666E
+00920  B66C              ;********************************
+00921  B66C              ; W
+00922  B66C              ;********************************
+00923  B66C  A9 80       XX666C LDA #$80
+00924  B66E  85 0C       XX666E STA $0C
+00925  B670  85 2F              STA $2F
+00926  B672  A4 12              LDY $12
+00927  B674  84 2B              STY $2B
+00928  B676  A4 13              LDY $13
+00929  B678  84 2C              STY $2C
+00930  B67A  20 06 B0           JSR XX6006
+00931  B67D  C9 0D              CMP #$0D
+00932  B67F  F0 17              BEQ XX6698
+00933  B681  C9 20              CMP #$20        ;' '
+00934  B683  F0 03              BEQ XX6688
+00935  B685  4C 29 B7           JMP XX6729
+00936  B688              ;********************************
+00937  B688  20 5C B8    XX6688 JSR XX685C
+
+
+
+
+
+
+VICMON$B000......PAGE 0019
+
+LINE# LOC   CODE        LINE
+
+
+00938  B68B  20 E7 B8           JSR XX68E7
+00939  B68E  20 06 B0           JSR XX6006
+00940  B691  C9 0D              CMP #$0D
+00941  B693  F0 03              BEQ XX6698
+00942  B695  4C 29 B7           JMP XX6729
+00943  B698              ;********************************
+00944  B698  20 3E B9    XX6698 JSR XX693E
+00945  B69B  A5 16       XX669B LDA $16
+00946  B69D  C9 FF              CMP #$FF
+00947  B69F  F0 35              BEQ XX66D6
+00948  B6A1  A6 10              LDX $10
+00949  B6A3  E4 01              CPX $01
+00950  B6A5  D0 1D              BNE XX66C4
+00951  B6A7  A4 11              LDY $11
+00952  B6A9  C4 00              CPY $00
+00953  B6AB  D0 17              BNE XX66C4
+00954  B6AD  84 C2              STY $C2
+00955  B6AF  86 C1              STX $C1
+00956  B6B1  A6 0C              LDX $0C
+00957  B6B3  D0 25              BNE XX66DA
+00958  B6B5  A0 00              LDY #$00
+00959  B6B7  20 6B BD           JSR XX6D6B
+00960  B6BA  A9 80              LDA #$80
+00961  B6BC  85 0F              STA $0F
+00962  B6BE  A9 C0              LDA #$C0
+00963  B6C0  85 0F              STA $0F
+00964  B6C2  D0 16              BNE XX66DA
+00965  B6C4  A5 0C       XX66C4 LDA $0C
+00966  B6C6  D0 12              BNE XX66DA
+00967  B6C8  86 C1              STX $C1
+00968  B6CA  A4 11              LDY $11
+00969  B6CC  84 C2              STY $C2
+00970  B6CE  A0 00              LDY #$00
+00971  B6D0  A9 00              LDA #$00
+00972  B6D2  A8                 TAY 
+00973  B6D3  20 6B BD           JSR XX6D6B
+00974  B6D6  A5 0C       XX66D6 LDA $0C
+00975  B6D8  F0 17              BEQ XX66F1
+00976  B6DA  78          XX66DA SEI 
+00977  B6DB  A9 A0              LDA #$A0
+00978  B6DD  8D 1E 91           STA $911E
+00979  B6E0  A9 00              LDA #$00
+00980  B6E2  8D 1B 91           STA $911B
+00981  B6E5  AD B1 BE           LDA XX6EB0+1
+00982  B6E8  8D 19 03           STA $0319
+00983  B6EB  AD B0 BE           LDA XX6EB0
+00984  B6EE  8D 18 03           STA $0318
+00985  B6F1  78          XX66F1 SEI 
+00986  B6F2  A6 06              LDX $06
+00987  B6F4  9A                 TXS 
+00988  B6F5  A5 00       XX66F5 LDA $00
+00989  B6F7  48                 PHA 
+00990  B6F8  A5 01              LDA $01
+00991  B6FA  48                 PHA 
+00992  B6FB  A5 02              LDA $02
+
+
+
+
+
+
+VICMON$B000......PAGE 0020
+
+LINE# LOC   CODE        LINE
+
+
+00993  B6FD  48                 PHA 
+00994  B6FE  A5 03              LDA $03
+00995  B700  48                 PHA 
+00996  B701  A6 04              LDX $04
+00997  B703  A4 05              LDY $05
+00998  B705  A5 0C              LDA $0C
+00999  B707  05 0F              ORA $0F
+01000  B709  08                 PHP 
+01001  B70A  AD 2E 91           LDA $912E
+01002  B70D  85 30              STA $30
+01003  B70F  20 FA BC           JSR XX6CFA
+01004  B712  20 B9 BC           JSR XX6CB9
+01005  B715  28                 PLP 
+01006  B716  F0 0F              BEQ XX6727
+01007  B718  A9 7F              LDA #$7F
+01008  B71A  8D 2E 91           STA $912E
+01009  B71D  A9 09              LDA #$09
+01010  B71F  8D 18 91           STA $9118
+01011  B722  A9 00              LDA #$00
+01012  B724  8D 19 91           STA $9119
+01013  B727  68          XX6727 PLA 
+01014  B728  40                 RTI 
+01015  B729              ;********************************
+01016  B729  4C 97 B0    XX6729 JMP XX6097
+01017  B72C              ;********************************
+01018  B72C              ; B
+01019  B72C              ;********************************
+01020  B72C  20 49 B8    XX672C JSR XX6849
+01021  B72F  85 C1              STA $C1
+01022  B731  86 C2              STX $C2
+01023  B733  85 10              STA $10
+01024  B735  86 11              STX $11
+01025  B737  A0 00              LDY #$00
+01026  B739  20 3C BD           JSR XX6D3C
+01027  B73C  85 16              STA $16
+01028  B73E  98                 TYA 
+01029  B73F  A9 00              LDA #$00
+01030  B741  85 12              STA $12
+01031  B743  85 13              STA $13
+01032  B745  20 59 B8           JSR XX6859
+01033  B748  85 12              STA $12
+01034  B74A  86 13              STX $13
+01035  B74C  4C 9C B0           JMP XX609C
+01036  B74F              ;********************************
+01037  B74F              ; M
+01038  B74F              ;********************************
+01039  B74F  20 DF B7    XX674F JSR XX67DF
+01040  B752  85 2D              STA $2D
+01041  B754  86 2E              STX $2E
+01042  B756  20 59 B8           JSR XX6859
+01043  B759  85 22              STA $22
+01044  B75B  86 23              STX $23
+01045  B75D  20 59 B8           JSR XX6859
+01046  B760  85 AE              STA $AE
+01047  B762  86 AF              STX $AF
+
+
+
+
+
+
+VICMON$B000......PAGE 0021
+
+LINE# LOC   CODE        LINE
+
+
+01048  B764  20 06 B0           JSR XX6006
+01049  B767  C9 0D              CMP #$0D
+01050  B769  F0 09              BEQ XX6774
+01051  B76B  20 06 B0           JSR XX6006
+01052  B76E  C9 57              CMP #$57        ;'W'
+01053  B770  D0 02              BNE XX6774
+01054  B772  E6 21              INC $21
+01055  B774  20 39 B8    XX6774 JSR XX6839
+01056  B777  A6 27       XX6777 LDX $27
+01057  B779  D0 18              BNE XX6793
+01058  B77B  20 0A B1           JSR XX610A
+01059  B77E  90 13              BCC XX6793
+01060  B780  A4 21              LDY $21
+01061  B782  D0 1A              BNE XX679E
+01062  B784  20 3C BD           JSR XX6D3C
+01063  B787  20 C7 B2           JSR XX62C7
+01064  B78A  AA                 TAX 
+01065  B78B  BD D7 BD           LDA XX6DD7,X
+01066  B78E  D0 06              BNE XX6796
+01067  B790  20 EA B0           JSR XX60EA
+01068  B793  4C 9C B0    XX6793 JMP XX609C
+01069  B796              ;********************************
+01070  B796  A4 20       XX6796 LDY $20
+01071  B798  C0 02              CPY #$02
+01072  B79A  D0 3B              BNE XX67D7
+01073  B79C  F0 02              BEQ XX67A0
+01074  B79E  84 20       XX679E STY $20
+01075  B7A0  88          XX67A0 DEY 
+01076  B7A1  38                 SEC 
+01077  B7A2  20 3C BD           JSR XX6D3C
+01078  B7A5  AA                 TAX 
+01079  B7A6  E5 22              SBC $22
+01080  B7A8  C8                 INY 
+01081  B7A9  20 3C BD           JSR XX6D3C
+01082  B7AC  E5 23              SBC $23
+01083  B7AE  90 27              BCC XX67D7
+01084  B7B0  88                 DEY 
+01085  B7B1  20 3C BD           JSR XX6D3C
+01086  B7B4  85 08              STA $08
+01087  B7B6  A5 AE              LDA $AE
+01088  B7B8  E5 08              SBC $08
+01089  B7BA  C8                 INY 
+01090  B7BB  20 3C BD           JSR XX6D3C
+01091  B7BE  85 08              STA $08
+01092  B7C0  A5 AF              LDA $AF
+01093  B7C2  E5 08              SBC $08
+01094  B7C4  90 11              BCC XX67D7
+01095  B7C6  88                 DEY 
+01096  B7C7  18                 CLC 
+01097  B7C8  8A                 TXA 
+01098  B7C9  65 2D              ADC $2D
+01099  B7CB  20 6B BD           JSR XX6D6B
+01100  B7CE  C8                 INY 
+01101  B7CF  20 3C BD           JSR XX6D3C
+01102  B7D2  65 2E              ADC $2E
+
+
+
+
+
+
+VICMON$B000......PAGE 0022
+
+LINE# LOC   CODE        LINE
+
+
+01103  B7D4  20 6B BD           JSR XX6D6B
+01104  B7D7  20 25 B9    XX67D7 JSR XX6925
+01105  B7DA  88                 DEY 
+01106  B7DB  10 FA              BPL XX67D7
+01107  B7DD  30 98              BMI XX6777
+01108  B7DF  20 49 B8    XX67DF JSR XX6849
+01109  B7E2  85 C3              STA $C3
+01110  B7E4  86 C4              STX $C4
+01111  B7E6  20 59 B8           JSR XX6859
+01112  B7E9  85 25              STA $25
+01113  B7EB  86 26              STX $26
+01114  B7ED  20 9D B8           JSR XX689D
+01115  B7F0  20 5C B8    XX67F0 JSR XX685C
+01116  B7F3  85 C1       XX67F3 STA $C1
+01117  B7F5  86 C2              STX $C2
+01118  B7F7  60                 RTS 
+01119  B7F8              ;********************************
+01120  B7F8  20 49 B8    XX67F8 JSR XX6849
+01121  B7FB  B0 F6              BCS XX67F3
+01122  B7FD  20 5C B8    XX67FD JSR XX685C
+01123  B800  B0 03              BCS XX6805
+01124  B802  20 59 B8    XX6802 JSR XX6859
+01125  B805  85 C3       XX6805 STA $C3
+01126  B807  86 C4              STX $C4
+01127  B809  60                 RTS 
+01128  B80A              ;********************************
+01129  B80A  20 FA B0           JSR XX60FA
+01130  B80D  4C 59 B8           JMP XX6859
+01131  B810              ;********************************
+01132  B810  A5 C2       XX6810 LDA $C2
+01133  B812  20 17 B8           JSR XX6817
+01134  B815  A5 C1              LDA $C1
+01135  B817  48          XX6817 PHA 
+01136  B818  4A                 LSR A
+01137  B819  4A                 LSR A
+01138  B81A  4A                 LSR A
+01139  B81B  4A                 LSR A
+01140  B81C  20 2F B8           JSR XX682F
+01141  B81F  AA                 TAX 
+01142  B820  68                 PLA 
+01143  B821  29 0F              AND #$0F
+01144  B823  20 2F B8           JSR XX682F
+01145  B826  48          XX6826 PHA 
+01146  B827  8A                 TXA 
+01147  B828  20 09 B0           JSR XX6009
+01148  B82B  68                 PLA 
+01149  B82C  4C 09 B0           JMP XX6009
+01150  B82F              ;********************************
+01151  B82F  18          XX682F CLC 
+01152  B830  69 F6              ADC #$F6
+01153  B832  90 02              BCC XX6836
+01154  B834  69 06              ADC #$06
+01155  B836  69 3A       XX6836 ADC #$3A        ;':'
+01156  B838  60                 RTS 
+01157  B839              ;********************************
+
+
+
+
+
+
+VICMON$B000......PAGE 0023
+
+LINE# LOC   CODE        LINE
+
+
+01158  B839  A2 02       XX6839 LDX #$02
+01159  B83B  B5 C0       XX683B LDA $C0,X
+01160  B83D  48                 PHA 
+01161  B83E  B5 C2              LDA $C2,X
+01162  B840  95 C0              STA $C0,X
+01163  B842  68                 PLA 
+01164  B843  95 C2              STA $C2,X
+01165  B845  CA                 DEX 
+01166  B846  D0 F3              BNE XX683B
+01167  B848  60                 RTS 
+01168  B849              ;********************************
+01169  B849  A9 00       XX6849 LDA #$00
+01170  B84B  85 2A              STA $2A
+01171  B84D  20 9D B8    XX684D JSR XX689D
+01172  B850  C9 20              CMP #$20        ;' '
+01173  B852  F0 F9              BEQ XX684D
+01174  B854  20 7F B8           JSR XX687F
+01175  B857  B0 08              BCS XX6861
+01176  B859  20 9D B8    XX6859 JSR XX689D
+01177  B85C  20 6B B8    XX685C JSR XX686B
+01178  B85F  90 07              BCC XX6868
+01179  B861  AA          XX6861 TAX 
+01180  B862  20 6B B8           JSR XX686B
+01181  B865  90 01              BCC XX6868
+01182  B867  60                 RTS 
+01183  B868              ;********************************
+01184  B868  4C 97 B0    XX6868 JMP XX6097
+01185  B86B              ;********************************
+01186  B86B  A9 00       XX686B LDA #$00
+01187  B86D  85 2A              STA $2A
+01188  B86F  20 9D B8           JSR XX689D
+01189  B872  C9 20       XX6872 CMP #$20        ;' '
+01190  B874  D0 09              BNE XX687F
+01191  B876  20 9D B8           JSR XX689D
+01192  B879  C9 20              CMP #$20        ;' '
+01193  B87B  D0 0E              BNE XX688B
+01194  B87D  18                 CLC 
+01195  B87E  60                 RTS 
+01196  B87F              ;********************************
+01197  B87F  20 92 B8    XX687F JSR XX6892
+01198  B882  0A                 ASL A
+01199  B883  0A                 ASL A
+01200  B884  0A                 ASL A
+01201  B885  0A                 ASL A
+01202  B886  85 2A              STA $2A
+01203  B888  20 9D B8           JSR XX689D
+01204  B88B  20 92 B8    XX688B JSR XX6892
+01205  B88E  05 2A              ORA $2A
+01206  B890  38                 SEC 
+01207  B891  60                 RTS 
+01208  B892              ;********************************
+01209  B892  C9 3A       XX6892 CMP #$3A        ;':'
+01210  B894  08                 PHP 
+01211  B895  29 0F              AND #$0F
+01212  B897  28                 PLP 
+
+
+
+
+
+
+VICMON$B000......PAGE 0024
+
+LINE# LOC   CODE        LINE
+
+
+01213  B898  90 02              BCC XX689C
+01214  B89A  69 08              ADC #$08
+01215  B89C  60          XX689C RTS 
+01216  B89D              ;********************************
+01217  B89D  20 06 B0    XX689D JSR XX6006
+01218  B8A0  C9 0D              CMP #$0D
+01219  B8A2  D0 F8              BNE XX689C
+01220  B8A4  4C 9C B0           JMP XX609C
+01221  B8A7              ;********************************
+01222  B8A7  A5 91       XX68A7 LDA $91
+01223  B8A9  C9 FE              CMP #$FE
+01224  B8AB  D0 07              BNE XX68B4
+01225  B8AD  08                 PHP 
+01226  B8AE  20 CC FF           JSR CLRCHN
+01227  B8B1  85 C6              STA $C6
+01228  B8B3  28                 PLP 
+01229  B8B4  60          XX68B4 RTS 
+01230  B8B5              ;********************************
+01231  B8B5  20 BE B8    XX68B5 JSR XX68BE
+01232  B8B8  2C 2D 91           BIT $912D
+01233  B8BB  30 F8              BMI XX68B5
+01234  B8BD  60                 RTS 
+01235  B8BE              ;********************************
+01236  B8BE  20 A7 B8    XX68BE JSR XX68A7
+01237  B8C1  D0 0B              BNE XX68CE
+01238  B8C3  20 CF B8           JSR XX68CF
+01239  B8C6  A9 03              LDA #$03
+01240  B8C8  85 9A              STA $9A
+01241  B8CA  A9 00              LDA #$00
+01242  B8CC  85 99              STA $99
+01243  B8CE  60          XX68CE RTS 
+01244  B8CF              ;********************************
+01245  B8CF  08          XX68CF PHP 
+01246  B8D0  78                 SEI 
+01247  B8D1  AD 1C 91           LDA $911C
+01248  B8D4  09 02              ORA #$02
+01249  B8D6  8D 1C 91           STA $911C
+01250  B8D9  AD AE BE           LDA XX6EAE
+01251  B8DC  8D 14 03           STA $0314
+01252  B8DF  AD AF BE           LDA XX6EAE+1
+01253  B8E2  8D 15 03           STA $0315
+01254  B8E5  28                 PLP 
+01255  B8E6  60                 RTS 
+01256  B8E7              ;********************************
+01257  B8E7  85 01       XX68E7 STA $01
+01258  B8E9  86 00              STX $00
+01259  B8EB  60                 RTS 
+01260  B8EC              ;********************************
+01261  B8EC  85 1E       XX68EC STA $1E
+01262  B8EE  A0 00              LDY #$00
+01263  B8F0  20 3B B9    XX68F0 JSR XX693B
+01264  B8F3  20 3C BD           JSR XX6D3C
+01265  B8F6  20 17 B8           JSR XX6817
+01266  B8F9  20 25 B9           JSR XX6925
+01267  B8FC  C6 1E              DEC $1E
+
+
+
+
+
+
+VICMON$B000......PAGE 0025
+
+LINE# LOC   CODE        LINE
+
+
+01268  B8FE  D0 F0              BNE XX68F0
+01269  B900  60                 RTS 
+01270  B901              ;********************************
+01271  B901  20 6B B8    XX6901 JSR XX686B
+01272  B904  90 0C              BCC XX6912
+01273  B906  A2 00              LDX #$00
+01274  B908  20 17 BD           JSR XX6D17
+01275  B90B  C1 09              CMP ($09,X)
+01276  B90D  F0 03              BEQ XX6912
+01277  B90F  4C 97 B0           JMP XX6097
+01278  B912              ;********************************
+01279  B912  20 25 B9    XX6912 JSR XX6925
+01280  B915  C6 1E              DEC $1E
+01281  B917  60                 RTS 
+01282  B918              ;********************************
+01283  B918  A9 02       XX6918 LDA #$02
+01284  B91A  85 C1              STA $C1
+01285  B91C  A9 00              LDA #$00
+01286  B91E  85 C2              STA $C2
+01287  B920  A9 05              LDA #$05
+01288  B922  E6 0B              INC $0B
+01289  B924  60                 RTS 
+01290  B925              ;********************************
+01291  B925  E6 C1       XX6925 INC $C1
+01292  B927  D0 06              BNE XX692F
+01293  B929  E6 C2              INC $C2
+01294  B92B  D0 02              BNE XX692F
+01295  B92D  E6 27              INC $27
+01296  B92F  60          XX692F RTS 
+01297  B930              ;********************************
+01298  B930  98          XX6930 TYA 
+01299  B931  48                 PHA 
+01300  B932  20 3E B9           JSR XX693E
+01301  B935  68                 PLA 
+01302  B936  A2 2E       XX6936 LDX #$2E        ;'.'
+01303  B938  20 26 B8           JSR XX6826
+01304  B93B  A9 20       XX693B LDA #$20        ;' '
+01305  B93D              ;********************************
+01306  B93D  2C                 .BYTE $2C
+01307  B93E              ;********************************
+01308  B93E  A9 0D       XX693E LDA #$0D
+01309  B940  4C 09 B0           JMP XX6009
+01310  B943              ;********************************
+01311  B943              ; R
+01312  B943              ;********************************
+01313  B943  A5 C8       XX6943 LDA $C8
+01314  B945  C9 02              CMP #$02
+01315  B947  90 21              BCC XX696A
+01316  B949  20 06 B0           JSR XX6006
+01317  B94C  C9 42              CMP #$42        ;'B'
+01318  B94E  D0 1A              BNE XX696A
+01319  B950  A5 16              LDA $16
+01320  B952  C9 FF              CMP #$FF
+01321  B954  F0 14              BEQ XX696A
+01322  B956  A6 10              LDX $10
+
+
+
+
+
+
+VICMON$B000......PAGE 0026
+
+LINE# LOC   CODE        LINE
+
+
+01323  B958  A4 11              LDY $11
+01324  B95A  86 C1              STX $C1
+01325  B95C  84 C2              STY $C2
+01326  B95E  A0 00              LDY #$00
+01327  B960  20 6B BD           JSR XX6D6B
+01328  B963  A9 FF              LDA #$FF
+01329  B965  85 16              STA $16
+01330  B967  4C 9C B0           JMP XX609C
+01331  B96A              ;********************************
+01332  B96A  A2 00       XX696A LDX #$00
+01333  B96C  BD 57 BE    XX696C LDA XX6E57,X
+01334  B96F  20 09 B0           JSR XX6009
+01335  B972  E8                 INX 
+01336  B973  E0 16              CPX #$16
+01337  B975  D0 F5              BNE XX696C
+01338  B977  20 3E B9           JSR XX693E
+01339  B97A  A2 2E              LDX #$2E        ;'.'
+01340  B97C  A9 3B              LDA #$3B        ;';'
+01341  B97E  20 26 B8           JSR XX6826
+01342  B981  A5 00              LDA $00
+01343  B983  20 17 B8           JSR XX6817
+01344  B986  A5 01              LDA $01
+01345  B988  20 17 B8           JSR XX6817
+01346  B98B  20 18 B9           JSR XX6918
+01347  B98E  20 EC B8           JSR XX68EC
+01348  B991  C6 0B              DEC $0B
+01349  B993  4C 9C B0    XX6993 JMP XX609C
+01350  B996              ;********************************
+01351  B996  4C 97 B0           JMP XX6097
+01352  B999              ;********************************
+01353  B999              ; ;
+01354  B999              ;********************************
+01355  B999  20 49 B8    XX6999 JSR XX6849
+01356  B99C  20 E7 B8           JSR XX68E7
+01357  B99F  20 18 B9           JSR XX6918
+01358  B9A2  85 1E              STA $1E
+01359  B9A4  20 9D B8    XX69A4 JSR XX689D
+01360  B9A7  20 01 B9           JSR XX6901
+01361  B9AA  D0 F8              BNE XX69A4
+01362  B9AC  C6 0B              DEC $0B
+01363  B9AE  F0 E3              BEQ XX6993
+01364  B9B0              ;********************************
+01365  B9B0              ; X
+01366  B9B0              ;********************************
+01367  B9B0  78          XX69B0 SEI 
+01368  B9B1  20 FA BC           JSR XX6CFA
+01369  B9B4  A6 06              LDX $06
+01370  B9B6  9A                 TXS 
+01371  B9B7  20 B9 BC           JSR XX6CB9
+01372  B9BA  6C 02 C0           JMP ($C002)
+01373  B9BD              ;********************************
+01374  B9BD  4C 97 B0    XX69BD JMP XX6097
+01375  B9C0              ;********************************
+01376  B9C0              ; L AND S
+01377  B9C0              ;********************************
+
+
+
+
+
+
+VICMON$B000......PAGE 0027
+
+LINE# LOC   CODE        LINE
+
+
+01378  B9C0  A0 01       XX69C0 LDY #$01
+01379  B9C2  84 BA              STY $BA
+01380  B9C4  84 B9              STY $B9
+01381  B9C6  88                 DEY 
+01382  B9C7  84 B7              STY $B7
+01383  B9C9  84 90              STY $90
+01384  B9CB  84 93              STY $93
+01385  B9CD  A9 00              LDA #$00
+01386  B9CF  85 BC              STA $BC
+01387  B9D1  A9 31              LDA #$31        ;'1'
+01388  B9D3  85 BB              STA $BB
+01389  B9D5  20 06 B0    XX69D5 JSR XX6006
+01390  B9D8  C9 20              CMP #$20        ;' '
+01391  B9DA  F0 F9              BEQ XX69D5
+01392  B9DC  C9 0D              CMP #$0D
+01393  B9DE  F0 1A              BEQ XX69FA
+01394  B9E0  C9 22              CMP #$22        ;'"'
+01395  B9E2  D0 D9       XX69E2 BNE XX69BD
+01396  B9E4  20 06 B0    XX69E4 JSR XX6006
+01397  B9E7  C9 22              CMP #$22        ;'"'
+01398  B9E9  F0 26              BEQ XX6A11
+01399  B9EB  C9 0D              CMP #$0D
+01400  B9ED  F0 0B              BEQ XX69FA
+01401  B9EF  91 BB              STA ($BB),Y
+01402  B9F1  E6 B7              INC $B7
+01403  B9F3  C8                 INY 
+01404  B9F4  C0 10              CPY #$10
+01405  B9F6  F0 C5       XX69F6 BEQ XX69BD
+01406  B9F8  D0 EA              BNE XX69E4
+01407  B9FA  A5 1C       XX69FA LDA $1C
+01408  B9FC  C9 4C              CMP #$4C        ;'L'
+01409  B9FE  D0 E2       XX69FE BNE XX69E2
+01410  BA00  A9 00              LDA #$00
+01411  BA02  20 D5 FF           JSR LOAD
+01412  BA05  20 B5 B8           JSR XX68B5
+01413  BA08  A5 90              LDA $90
+01414  BA0A  29 10              AND #$10
+01415  BA0C  D0 F0       XX6A0C BNE XX69FE
+01416  BA0E  4C 9C B0           JMP XX609C
+01417  BA11              ;********************************
+01418  BA11  20 06 B0    XX6A11 JSR XX6006
+01419  BA14  C9 0D              CMP #$0D
+01420  BA16  F0 E2              BEQ XX69FA
+01421  BA18  C9 2C              CMP #$2C        ;','
+01422  BA1A  D0 F0       XX6A1A BNE XX6A0C
+01423  BA1C  20 6B B8           JSR XX686B
+01424  BA1F  29 0F              AND #$0F
+01425  BA21  F0 D3       XX6A21 BEQ XX69F6
+01426  BA23  C9 03              CMP #$03
+01427  BA25  F0 FA              BEQ XX6A21
+01428  BA27  85 BA              STA $BA
+01429  BA29  20 06 B0           JSR XX6006
+01430  BA2C  C9 0D              CMP #$0D
+01431  BA2E  F0 CA              BEQ XX69FA
+01432  BA30  C9 2C              CMP #$2C        ;','
+
+
+
+
+
+
+VICMON$B000......PAGE 0028
+
+LINE# LOC   CODE        LINE
+
+
+01433  BA32  D0 E6       XX6A32 BNE XX6A1A
+01434  BA34  20 F0 B7           JSR XX67F0
+01435  BA37  20 06 B0           JSR XX6006
+01436  BA3A  C9 2C              CMP #$2C        ;','
+01437  BA3C  D0 F4       XX6A3C BNE XX6A32
+01438  BA3E  20 5C B8           JSR XX685C
+01439  BA41  85 AE              STA $AE
+01440  BA43  86 AF              STX $AF
+01441  BA45  20 06 B0    XX6A45 JSR XX6006
+01442  BA48  C9 20              CMP #$20        ;' '
+01443  BA4A  F0 F9              BEQ XX6A45
+01444  BA4C  C9 0D              CMP #$0D
+01445  BA4E  D0 EC       XX6A4E BNE XX6A3C
+01446  BA50  A5 1C              LDA $1C
+01447  BA52  C9 53              CMP #$53        ;'S'
+01448  BA54  D0 F8              BNE XX6A4E
+01449  BA56  20 3E B9           JSR XX693E
+01450  BA59  20 82 F6           JSR $F682
+01451  BA5C  4C 9C B0           JMP XX609C
+01452  BA5F              ;********************************
+01453  BA5F              ;
+01454  BA5F              ;********************************
+01455  BA5F  A5 2F       XX6A5F LDA $2F
+01456  BA61  D0 04              BNE XX6A67
+01457  BA63  A5 C6              LDA $C6
+01458  BA65  D0 06              BNE XX6A6D
+01459  BA67  68          XX6A67 PLA 
+01460  BA68  A8                 TAY 
+01461  BA69  68                 PLA 
+01462  BA6A  AA                 TAX 
+01463  BA6B  68                 PLA 
+01464  BA6C  40                 RTI 
+01465  BA6D              ;********************************
+01466  BA6D  AD 77 02    XX6A6D LDA $0277
+01467  BA70  C9 11              CMP #$11
+01468  BA72  F0 03              BEQ XX6A77
+01469  BA74  4C 0D BB           JMP XX6B0D
+01470  BA77              ;********************************
+01471  BA77  A5 D6       XX6A77 LDA $D6
+01472  BA79  C9 16              CMP #$16
+01473  BA7B  D0 EA              BNE XX6A67
+01474  BA7D  A5 D1              LDA $D1
+01475  BA7F  85 C3              STA $C3
+01476  BA81  A5 D2              LDA $D2
+01477  BA83  85 C4              STA $C4
+01478  BA85  A9 17              LDA #$17
+01479  BA87  85 2B              STA $2B
+01480  BA89  A0 01       XX6A89 LDY #$01
+01481  BA8B  20 73 BC           JSR XX6C73
+01482  BA8E  C9 3A              CMP #$3A        ;':'
+01483  BA90  F0 19              BEQ XX6AAB
+01484  BA92  C9 2C              CMP #$2C        ;','
+01485  BA94  F0 15              BEQ XX6AAB
+01486  BA96  C9 27              CMP #$27        ;'''
+01487  BA98  F0 11              BEQ XX6AAB
+
+
+
+
+
+
+VICMON$B000......PAGE 0029
+
+LINE# LOC   CODE        LINE
+
+
+01488  BA9A  C6 2B              DEC $2B
+01489  BA9C  F0 C9              BEQ XX6A67
+01490  BA9E  38                 SEC 
+01491  BA9F  A5 C3              LDA $C3
+01492  BAA1  E9 16              SBC #$16
+01493  BAA3  85 C3              STA $C3
+01494  BAA5  B0 E2              BCS XX6A89
+01495  BAA7  C6 C4              DEC $C4
+01496  BAA9  D0 DE              BNE XX6A89
+01497  BAAB  85 1C       XX6AAB STA $1C
+01498  BAAD  20 2F BC           JSR XX6C2F
+01499  BAB0  B0 B5              BCS XX6A67
+01500  BAB2  A5 1C              LDA $1C
+01501  BAB4  C9 3A              CMP #$3A        ;':'
+01502  BAB6  F0 15              BEQ XX6ACD
+01503  BAB8  C9 27              CMP #$27        ;'''
+01504  BABA  D0 31              BNE XX6AED
+01505  BABC  18                 CLC 
+01506  BABD  A9 0C              LDA #$0C
+01507  BABF  65 C1              ADC $C1
+01508  BAC1  85 C1              STA $C1
+01509  BAC3  90 02              BCC XX6AC7
+01510  BAC5  E6 C2              INC $C2
+01511  BAC7  20 90 B3    XX6AC7 JSR XX6390
+01512  BACA  4C FC BA           JMP XX6AFC
+01513  BACD              ;********************************
+01514  BACD  18          XX6ACD CLC 
+01515  BACE  A5 C1              LDA $C1
+01516  BAD0  69 05              ADC #$05
+01517  BAD2  85 C1              STA $C1
+01518  BAD4  90 02              BCC XX6AD8
+01519  BAD6  E6 C2              INC $C2
+01520  BAD8  20 3E B9    XX6AD8 JSR XX693E
+01521  BADB  A2 2E              LDX #$2E        ;'.'
+01522  BADD  A9 3A              LDA #$3A        ;':'
+01523  BADF  20 26 B8           JSR XX6826
+01524  BAE2  20 10 B8           JSR XX6810
+01525  BAE5  A9 05              LDA #$05
+01526  BAE7  20 EC B8           JSR XX68EC
+01527  BAEA  4C FC BA           JMP XX6AFC
+01528  BAED              ;********************************
+01529  BAED  20 D3 BB    XX6AED JSR XX6BD3
+01530  BAF0  20 B0 B2           JSR XX62B0
+01531  BAF3  A9 00              LDA #$00
+01532  BAF5  85 21              STA $21
+01533  BAF7  A0 2C              LDY #$2C        ;','
+01534  BAF9  20 5B B2           JSR XX625B
+01535  BAFC  A9 00       XX6AFC LDA #$00
+01536  BAFE  85 C6              STA $C6
+01537  BB00  85 2F              STA $2F
+01538  BB02  85 27              STA $27
+01539  BB04  20 59 B5           JSR XX6559
+01540  BB07  20 3E B9           JSR XX693E
+01541  BB0A  4C 67 BA           JMP XX6A67
+01542  BB0D              ;********************************
+
+
+
+
+
+
+VICMON$B000......PAGE 0030
+
+LINE# LOC   CODE        LINE
+
+
+01543  BB0D  C9 91       XX6B0D CMP #$91
+01544  BB0F  F0 03              BEQ XX6B14
+01545  BB11  4C 67 BA           JMP XX6A67
+01546  BB14              ;********************************
+01547  BB14  A5 D6       XX6B14 LDA $D6
+01548  BB16  F0 03              BEQ XX6B1B
+01549  BB18  4C 67 BA           JMP XX6A67
+01550  BB1B              ;********************************
+01551  BB1B  A5 D1       XX6B1B LDA $D1
+01552  BB1D  85 C3              STA $C3
+01553  BB1F  A5 D2              LDA $D2
+01554  BB21  85 C4              STA $C4
+01555  BB23  A9 17              LDA #$17
+01556  BB25  85 2B              STA $2B
+01557  BB27  A0 01       XX6B27 LDY #$01
+01558  BB29  20 73 BC           JSR XX6C73
+01559  BB2C  C9 3A              CMP #$3A        ;':'
+01560  BB2E  F0 19              BEQ XX6B49
+01561  BB30  C9 2C              CMP #$2C        ;','
+01562  BB32  F0 15              BEQ XX6B49
+01563  BB34  C9 27              CMP #$27        ;'''
+01564  BB36  F0 11              BEQ XX6B49
+01565  BB38  C6 2B              DEC $2B
+01566  BB3A  F0 14              BEQ XX6B50
+01567  BB3C  18                 CLC 
+01568  BB3D  A5 C3              LDA $C3
+01569  BB3F  69 16              ADC #$16
+01570  BB41  85 C3              STA $C3
+01571  BB43  90 E2              BCC XX6B27
+01572  BB45  E6 C4              INC $C4
+01573  BB47  D0 DE              BNE XX6B27
+01574  BB49  85 1C       XX6B49 STA $1C
+01575  BB4B  20 2F BC           JSR XX6C2F
+01576  BB4E  90 03              BCC XX6B53
+01577  BB50  4C 67 BA    XX6B50 JMP XX6A67
+01578  BB53              ;********************************
+01579  BB53  A5 1C       XX6B53 LDA $1C
+01580  BB55  C9 3A              CMP #$3A        ;':'
+01581  BB57  F0 18              BEQ XX6B71
+01582  BB59  C9 27              CMP #$27        ;'''
+01583  BB5B  D0 33              BNE XX6B90
+01584  BB5D  20 DB BB           JSR XX6BDB
+01585  BB60  38                 SEC 
+01586  BB61  A5 C1              LDA $C1
+01587  BB63  E9 0C              SBC #$0C
+01588  BB65  85 C1              STA $C1
+01589  BB67  B0 02              BCS XX6B6B
+01590  BB69  C6 C2              DEC $C2
+01591  BB6B  20 93 B3    XX6B6B JSR XX6393
+01592  BB6E  4C 82 BB           JMP XX6B82
+01593  BB71              ;********************************
+01594  BB71  20 DB BB    XX6B71 JSR XX6BDB
+01595  BB74  38                 SEC 
+01596  BB75  A5 C1              LDA $C1
+01597  BB77  E9 05              SBC #$05
+
+
+
+
+
+
+VICMON$B000......PAGE 0031
+
+LINE# LOC   CODE        LINE
+
+
+01598  BB79  85 C1              STA $C1
+01599  BB7B  B0 02              BCS XX6B7F
+01600  BB7D  C6 C2              DEC $C2
+01601  BB7F  20 D3 B3    XX6B7F JSR XX63D3
+01602  BB82  A9 00       XX6B82 LDA #$00
+01603  BB84  85 C6              STA $C6
+01604  BB86  85 2F              STA $2F
+01605  BB88  85 27              STA $27
+01606  BB8A  20 2A BC           JSR XX6C2A
+01607  BB8D  4C 67 BA           JMP XX6A67
+01608  BB90              ;********************************
+01609  BB90  20 DB BB    XX6B90 JSR XX6BDB
+01610  BB93  A5 C1              LDA $C1
+01611  BB95  A6 C2              LDX $C2
+01612  BB97  85 C3              STA $C3
+01613  BB99  86 C4              STX $C4
+01614  BB9B  A9 10              LDA #$10
+01615  BB9D  85 2B              STA $2B
+01616  BB9F  38          XX6B9F SEC 
+01617  BBA0  A5 C3              LDA $C3
+01618  BBA2  E5 2B              SBC $2B
+01619  BBA4  85 C1              STA $C1
+01620  BBA6  A5 C4              LDA $C4
+01621  BBA8  E9 00              SBC #$00
+01622  BBAA  85 C2              STA $C2
+01623  BBAC  20 D3 BB    XX6BAC JSR XX6BD3
+01624  BBAF  20 B0 B2           JSR XX62B0
+01625  BBB2  20 11 B1           JSR XX6111
+01626  BBB5  F0 06              BEQ XX6BBD
+01627  BBB7  B0 F3              BCS XX6BAC
+01628  BBB9  C6 2B              DEC $2B
+01629  BBBB  D0 E2              BNE XX6B9F
+01630  BBBD  E6 20       XX6BBD INC $20
+01631  BBBF  A5 20              LDA $20
+01632  BBC1  20 63 B3           JSR XX6363
+01633  BBC4  A2 00              LDX #$00
+01634  BBC6  86 21              STX $21
+01635  BBC8  A9 2C              LDA #$2C        ;','
+01636  BBCA  20 36 B9           JSR XX6936
+01637  BBCD  20 5E B2           JSR XX625E
+01638  BBD0  4C 82 BB           JMP XX6B82
+01639  BBD3              ;********************************
+01640  BBD3  A2 00       XX6BD3 LDX #$00
+01641  BBD5  20 09 BD           JSR XX6D09
+01642  BBD8  4C C7 B2           JMP XX62C7
+01643  BBDB              ;********************************
+01644  BBDB  A9 00       XX6BDB LDA #$00
+01645  BBDD  85 AE              STA $AE
+01646  BBDF  AD 88 02           LDA $0288
+01647  BBE2  29 02              AND #$02
+01648  BBE4  09 95              ORA #$95
+01649  BBE6  85 AF              STA $AF
+01650  BBE8  85 B1              STA $B1
+01651  BBEA  AC 88 02           LDY $0288
+01652  BBED  C8                 INY 
+
+
+
+
+
+
+VICMON$B000......PAGE 0032
+
+LINE# LOC   CODE        LINE
+
+
+01653  BBEE  84 AD              STY $AD
+01654  BBF0  84 C4              STY $C4
+01655  BBF2  A9 00              LDA #$00
+01656  BBF4  85 AC              STA $AC
+01657  BBF6  A9 16              LDA #$16
+01658  BBF8  85 C3              STA $C3
+01659  BBFA  85 B0              STA $B0
+01660  BBFC  A0 E3              LDY #$E3
+01661  BBFE  A2 02              LDX #$02
+01662  BC00  B1 AC       XX6C00 LDA ($AC),Y
+01663  BC02  91 C3              STA ($C3),Y
+01664  BC04  B1 AE              LDA ($AE),Y
+01665  BC06  91 B0              STA ($B0),Y
+01666  BC08  88                 DEY 
+01667  BC09  D0 F5              BNE XX6C00
+01668  BC0B  CA                 DEX 
+01669  BC0C  F0 12              BEQ XX6C20
+01670  BC0E  B1 AC              LDA ($AC),Y
+01671  BC10  91 C3              STA ($C3),Y
+01672  BC12  B1 AE              LDA ($AE),Y
+01673  BC14  91 B0              STA ($B0),Y
+01674  BC16  C6 AD              DEC $AD
+01675  BC18  C6 C4              DEC $C4
+01676  BC1A  C6 AF              DEC $AF
+01677  BC1C  C6 B1              DEC $B1
+01678  BC1E  D0 E0              BNE XX6C00
+01679  BC20  A2 15       XX6C20 LDX #$15
+01680  BC22  A9 20              LDA #$20        ;' '
+01681  BC24  9D 00 1E    XX6C24 STA $1E00,X
+01682  BC27              ;********************************
+01683  BC27              ;.END
+01684  BC27              ;*=$6C27
+01685  BC27              ;********************************
+01686  BC27  CA                 DEX 
+01687  BC28  10 FA              BPL XX6C24
+01688  BC2A  A9 13       XX6C2A LDA #$13
+01689  BC2C  4C 09 B0           JMP XX6009
+01690  BC2F              ;********************************
+01691  BC2F  C0 16       XX6C2F CPY #$16
+01692  BC31  D0 02              BNE XX6C35
+01693  BC33  38                 SEC 
+01694  BC34  60                 RTS 
+01695  BC35              ;********************************
+01696  BC35  20 73 BC    XX6C35 JSR XX6C73
+01697  BC38  C9 20              CMP #$20        ;' '
+01698  BC3A  F0 F3              BEQ XX6C2F
+01699  BC3C  88                 DEY 
+01700  BC3D  20 5E BC           JSR XX6C5E
+01701  BC40  AA                 TAX 
+01702  BC41  20 5E BC           JSR XX6C5E
+01703  BC44  85 C1              STA $C1
+01704  BC46  86 C2              STX $C2
+01705  BC48  A9 FF              LDA #$FF
+01706  BC4A  85 2F              STA $2F
+01707  BC4C  85 CC              STA $CC
+
+
+
+
+
+
+VICMON$B000......PAGE 0033
+
+LINE# LOC   CODE        LINE
+
+
+01708  BC4E  A5 CF              LDA $CF
+01709  BC50  F0 0A              BEQ XX6C5C
+01710  BC52  A5 CE              LDA $CE
+01711  BC54  A4 D3              LDY $D3
+01712  BC56  91 D1              STA ($D1),Y
+01713  BC58  A9 00              LDA #$00
+01714  BC5A  85 CF              STA $CF
+01715  BC5C  18          XX6C5C CLC 
+01716  BC5D  60                 RTS 
+01717  BC5E              ;********************************
+01718  BC5E  20 73 BC    XX6C5E JSR XX6C73
+01719  BC61  20 92 B8           JSR XX6892
+01720  BC64  0A                 ASL A
+01721  BC65  0A                 ASL A
+01722  BC66  0A                 ASL A
+01723  BC67  0A                 ASL A
+01724  BC68  85 2A              STA $2A
+01725  BC6A  20 73 BC           JSR XX6C73
+01726  BC6D  20 92 B8           JSR XX6892
+01727  BC70  05 2A              ORA $2A
+01728  BC72  60                 RTS 
+01729  BC73              ;********************************
+01730  BC73  B1 C3       XX6C73 LDA ($C3),Y
+01731  BC75  C8                 INY 
+01732  BC76  29 7F              AND #$7F
+01733  BC78  C9 20              CMP #$20        ;' '
+01734  BC7A  B0 02              BCS XX6C7E
+01735  BC7C  09 40              ORA #$40        ;'@'
+01736  BC7E  60          XX6C7E RTS 
+01737  BC7F              ;********************************
+01738  BC7F              ; E
+01739  BC7F              ;********************************
+01740  BC7F  20 49 B8    XX6C7F JSR XX6849
+01741  BC82  E0 04              CPX #$04
+01742  BC84  90 23              BCC XX6CA9
+01743  BC86  85 FD              STA $FD
+01744  BC88  86 FE              STX $FE
+01745  BC8A  8D 83 02           STA $0283
+01746  BC8D  8E 84 02           STX $0284
+01747  BC90  85 C3              STA $C3
+01748  BC92  86 C4              STX $C4
+01749  BC94  A0 00              LDY #$00
+01750  BC96  A9 55       XX6C96 LDA #$55        ;'U'
+01751  BC98  91 C3              STA ($C3),Y
+01752  BC9A  D1 C3              CMP ($C3),Y
+01753  BC9C  D0 0B              BNE XX6CA9
+01754  BC9E  B9 00 00           LDA $0000,Y
+01755  BCA1  91 C3              STA ($C3),Y
+01756  BCA3  C8                 INY 
+01757  BCA4  D0 F0              BNE XX6C96
+01758  BCA6  4C 9C B0           JMP XX609C
+01759  BCA9              ;********************************
+01760  BCA9  86 C3       XX6CA9 STX $C3
+01761  BCAB  05 C3              ORA $C3
+01762  BCAD  D0 07              BNE XX6CB6
+
+
+
+
+
+
+VICMON$B000......PAGE 0034
+
+LINE# LOC   CODE        LINE
+
+
+01763  BCAF  85 FD              STA $FD
+01764  BCB1  86 FE              STX $FE
+01765  BCB3  4C 9C B0           JMP XX609C
+01766  BCB6              ;********************************
+01767  BCB6  4C 97 B0    XX6CB6 JMP XX6097
+01768  BCB9              ;********************************
+01769  BCB9  48          XX6CB9 PHA 
+01770  BCBA  8A                 TXA 
+01771  BCBB  48                 PHA 
+01772  BCBC  98                 TYA 
+01773  BCBD  48                 PHA 
+01774  BCBE  A5 FE              LDA $FE
+01775  BCC0  F0 11              BEQ XX6CD3
+01776  BCC2  A0 00              LDY #$00
+01777  BCC4  B9 00 00    XX6CC4 LDA $0000,Y
+01778  BCC7  AA                 TAX 
+01779  BCC8  B1 FD              LDA ($FD),Y
+01780  BCCA  99 00 00           STA $0000,Y
+01781  BCCD  8A                 TXA 
+01782  BCCE  91 FD              STA ($FD),Y
+01783  BCD0  C8                 INY 
+01784  BCD1  D0 F1              BNE XX6CC4
+01785  BCD3  68          XX6CD3 PLA 
+01786  BCD4  A8                 TAY 
+01787  BCD5  68                 PLA 
+01788  BCD6  AA                 TAX 
+01789  BCD7  68                 PLA 
+01790  BCD8  60                 RTS 
+01791  BCD9              ;********************************
+01792  BCD9  AD 14 03    XX6CD9 LDA $0314
+01793  BCDC  AE 15 03           LDX $0315
+01794  BCDF  CD AE BE           CMP XX6EAE
+01795  BCE2  D0 05              BNE XX6CE9
+01796  BCE4  EC AF BE           CPX XX6EAE+1
+01797  BCE7  F0 10              BEQ XX6CF9
+01798  BCE9  85 14       XX6CE9 STA $14
+01799  BCEB  86 15              STX $15
+01800  BCED  AD AE BE           LDA XX6EAE
+01801  BCF0  AE AF BE           LDX XX6EAE+1
+01802  BCF3  8D 14 03           STA $0314
+01803  BCF6  8E 15 03           STX $0315
+01804  BCF9  60          XX6CF9 RTS 
+01805  BCFA              ;********************************
+01806  BCFA  A5 14       XX6CFA LDA $14
+01807  BCFC  8D 14 03           STA $0314
+01808  BCFF  A5 15              LDA $15
+01809  BD01  8D 15 03           STA $0315
+01810  BD04  60                 RTS 
+01811  BD05              ;********************************
+01812  BD05  A2 02       XX6D05 LDX #$02
+01813  BD07  D0 02              BNE XX6D0B
+01814  BD09  A2 00       XX6D09 LDX #$00
+01815  BD0B  20 23 BD    XX6D0B JSR XX6D23
+01816  BD0E  A2 00              LDX #$00
+01817  BD10  A1 09              LDA ($09,X)
+
+
+
+
+
+
+VICMON$B000......PAGE 0035
+
+LINE# LOC   CODE        LINE
+
+
+01818  BD12  60                 RTS 
+01819  BD13              ;********************************
+01820  BD13  A2 02       XX6D13 LDX #$02
+01821  BD15  D0 02              BNE XX6D19
+01822  BD17  A2 00       XX6D17 LDX #$00
+01823  BD19  48          XX6D19 PHA 
+01824  BD1A  20 23 BD           JSR XX6D23
+01825  BD1D  68                 PLA 
+01826  BD1E  A2 00              LDX #$00
+01827  BD20  81 09              STA ($09,X)
+01828  BD22  60                 RTS 
+01829  BD23              ;********************************
+01830  BD23  B5 C2       XX6D23 LDA $C2,X
+01831  BD25  D0 0E              BNE XX6D35
+01832  BD27  18                 CLC 
+01833  BD28  A5 FD              LDA $FD
+01834  BD2A  75 C1              ADC $C1,X
+01835  BD2C  85 09              STA $09
+01836  BD2E  A5 FE              LDA $FE
+01837  BD30  75 C2              ADC $C2,X
+01838  BD32  85 0A              STA $0A
+01839  BD34  60                 RTS 
+01840  BD35              ;********************************
+01841  BD35  85 0A       XX6D35 STA $0A
+01842  BD37  B5 C1              LDA $C1,X
+01843  BD39  85 09              STA $09
+01844  BD3B  60                 RTS 
+01845  BD3C              ;********************************
+01846  BD3C  08          XX6D3C PHP 
+01847  BD3D  68                 PLA 
+01848  BD3E  29 EF              AND #$EF
+01849  BD40  48                 PHA 
+01850  BD41  84 08              STY $08
+01851  BD43  98                 TYA 
+01852  BD44  18                 CLC 
+01853  BD45  65 C1              ADC $C1
+01854  BD47  85 09              STA $09
+01855  BD49  A9 00              LDA #$00
+01856  BD4B  65 C2              ADC $C2
+01857  BD4D  85 0A              STA $0A
+01858  BD4F  C9 01              CMP #$01
+01859  BD51  B0 10              BCS XX6D63
+01860  BD53  A5 0B              LDA $0B
+01861  BD55  D0 0C              BNE XX6D63
+01862  BD57  A5 09              LDA $09
+01863  BD59  65 FD              ADC $FD
+01864  BD5B  85 09              STA $09
+01865  BD5D  A5 0A              LDA $0A
+01866  BD5F  65 FE              ADC $FE
+01867  BD61  85 0A              STA $0A
+01868  BD63  A0 00       XX6D63 LDY #$00
+01869  BD65  B1 09              LDA ($09),Y
+01870  BD67  A4 08              LDY $08
+01871  BD69  28                 PLP 
+01872  BD6A  60                 RTS 
+
+
+
+
+
+
+VICMON$B000......PAGE 0036
+
+LINE# LOC   CODE        LINE
+
+
+01873  BD6B              ;********************************
+01874  BD6B  48          XX6D6B PHA 
+01875  BD6C  20 3C BD           JSR XX6D3C
+01876  BD6F  84 08              STY $08
+01877  BD71  A0 00              LDY #$00
+01878  BD73  68                 PLA 
+01879  BD74  91 09              STA ($09),Y
+01880  BD76  A4 08              LDY $08
+01881  BD78  60                 RTS 
+01882  BD79              ;********************************
+01883  BD79              ;********************************
+01884  BD79              ; MODE TABLE... NYBBLE ORGANIZED
+01885  BD79              ;
+01886  BD79              ; 0= ERR  4= IMPLIED  8= ZER,X   C= ZER,Y
+01887  BD79              ; 1= IMM  5= ACC      9= ABS,X   D= REL
+01888  BD79              ; 2= ZER  6= (IND,X)  A= ABS,Y
+01889  BD79              ; 3= ABS  7= (IND),Y  B= (IND)
+01890  BD79              ;
+01891  BD79              ;********************************
+01892  BD79              ; SUPERMON
+01893  BD79              ;********************************
+01894  BD79              ; MODE TABLE... NYBBLE ORGANIZED
+01895  BD79              ; 0= ERR  4= IMPLIED  8= ZER,X   C= ZER,Y
+01896  BD79              ; 1= IMM  5= ACC      9= ABS,X   D= REL
+01897  BD79              ; 2= ZER  6= (IND,X)  A= ABS,Y
+01898  BD79              ; 3= ABS  7= (IND),Y  B= (IND)
+01899  BD79              ;MODE
+01900  BD79              ;.BYTE $40,$02,$45,$03
+01901  BD79              ;.BYTE $D0,$08,$40,$09
+01902  BD79              ;.BYTE $30,$22,$45,$33
+01903  BD79              ;.BYTE $D0,$08,$40,$09
+01904  BD79              ;.BYTE $40,$02,$45,$33
+01905  BD79              ;.BYTE $D0,$08,$40,$09
+01906  BD79              ;.BYTE $40,$02,$45,$B3
+01907  BD79              ;.BYTE $D0,$08,$40,$09
+01908  BD79              ;.BYTE $00,$22,$44,$33
+01909  BD79              ;.BYTE $D0,$8C,$44,$00
+01910  BD79              ;.BYTE $11,$22,$44,$33
+01911  BD79              ;.BYTE $D0,$8C,$44,$9A
+01912  BD79              ;.BYTE $10,$22,$44,$33
+01913  BD79              ;.BYTE $D0,$08,$40,$09
+01914  BD79              ;.BYTE $10,$22,$44,$33
+01915  BD79              ;.BYTE $D0,$08,$40,$09
+01916  BD79              ;.BYTE $62,$13,$78,$A9
+01917  BD79              ;********************************
+01918  BD79  40          XX6D79 .BYTE $40
+01919  BD7A  02                 .BYTE $02
+01920  BD7B  45                 .BYTE $45
+01921  BD7C  03                 .BYTE $03
+01922  BD7D  D0                 .BYTE $D0
+01923  BD7E  08                 .BYTE $08
+01924  BD7F  40                 .BYTE $40
+01925  BD80  09                 .BYTE $09
+01926  BD81  30                 .BYTE $30
+01927  BD82  22                 .BYTE $22
+
+
+
+
+
+
+VICMON$B000......PAGE 0037
+
+LINE# LOC   CODE        LINE
+
+
+01928  BD83  45                 .BYTE $45
+01929  BD84  33                 .BYTE $33
+01930  BD85  D0                 .BYTE $D0
+01931  BD86  08                 .BYTE $08
+01932  BD87  40                 .BYTE $40
+01933  BD88  09                 .BYTE $09
+01934  BD89  40                 .BYTE $40
+01935  BD8A  02                 .BYTE $02
+01936  BD8B  45                 .BYTE $45
+01937  BD8C  33                 .BYTE $33
+01938  BD8D  D0                 .BYTE $D0
+01939  BD8E  08                 .BYTE $08
+01940  BD8F  40                 .BYTE $40
+01941  BD90  09                 .BYTE $09
+01942  BD91  40                 .BYTE $40
+01943  BD92  02                 .BYTE $02
+01944  BD93  45                 .BYTE $45
+01945  BD94  B3                 .BYTE $B3
+01946  BD95  D0                 .BYTE $D0
+01947  BD96  08                 .BYTE $08
+01948  BD97  40                 .BYTE $40
+01949  BD98  09                 .BYTE $09
+01950  BD99  00                 .BYTE $00
+01951  BD9A  22                 .BYTE $22
+01952  BD9B  44                 .BYTE $44
+01953  BD9C  33                 .BYTE $33
+01954  BD9D  D0                 .BYTE $D0
+01955  BD9E  8C                 .BYTE $8C
+01956  BD9F  44                 .BYTE $44
+01957  BDA0  00                 .BYTE $00
+01958  BDA1  11                 .BYTE $11
+01959  BDA2  22                 .BYTE $22
+01960  BDA3  44                 .BYTE $44
+01961  BDA4  33                 .BYTE $33
+01962  BDA5  D0                 .BYTE $D0
+01963  BDA6  8C                 .BYTE $8C
+01964  BDA7  44                 .BYTE $44
+01965  BDA8  9A                 .BYTE $9A
+01966  BDA9  10                 .BYTE $10
+01967  BDAA  22                 .BYTE $22
+01968  BDAB  44                 .BYTE $44
+01969  BDAC  33                 .BYTE $33
+01970  BDAD  D0                 .BYTE $D0
+01971  BDAE  08                 .BYTE $08
+01972  BDAF  40                 .BYTE $40
+01973  BDB0  09                 .BYTE $09
+01974  BDB1  10                 .BYTE $10
+01975  BDB2  22                 .BYTE $22
+01976  BDB3  44                 .BYTE $44
+01977  BDB4  33                 .BYTE $33
+01978  BDB5  D0                 .BYTE $D0
+01979  BDB6  08                 .BYTE $08
+01980  BDB7  40                 .BYTE $40
+01981  BDB8  09                 .BYTE $09
+01982  BDB9  62                 .BYTE $62
+
+
+
+
+
+
+VICMON$B000......PAGE 0038
+
+LINE# LOC   CODE        LINE
+
+
+01983  BDBA  13                 .BYTE $13
+01984  BDBB  78                 .BYTE $78
+01985  BDBC  A9                 .BYTE $A9
+01986  BDBD              ;********************************
+01987  BDBD              ; MASTER MODES
+01988  BDBD              ; SIX HI-ORDER BITS MODE OPTIONS
+01989  BDBD              ; TWO LO-ORDER BIT OPERAND LENGHT
+01990  BDBD              ;
+01991  BDBD              ;********************************
+01992  BDBD              ; SUPERMON
+01993  BDBD              ;********************************
+01994  BDBD              ;MASTER MODES
+01995  BDBD              ;SIX HI-ORDER BITS  MODE OPTIONS
+01996  BDBD              ;TWO LO-ORDER BITS  OPERAND LENGTHREADY.
+01997  BDBD              ;MODE2
+01998  BDBD              ;.BYTE $00,$21,$81,$82
+01999  BDBD              ;.BYTE $00,$00,$59,$4D
+02000  BDBD              ;.BYTE $91,$92,$86,$4A,$85,$9D
+02001  BDBD              ;CHAR1
+02002  BDBD              ;.BYTE $2C,$29,$2C,$23,$28,$24
+02003  BDBD              ;CHAR2
+02004  BDBD              ;.BYTE $59,$00,$58,$24,$24,$00
+02005  BDBD              ;********************************
+02006  BDBD  00          XX6DBD .BYTE $00
+02007  BDBE  21                 .BYTE $21
+02008  BDBF  81                 .BYTE $81
+02009  BDC0  82                 .BYTE $82
+02010  BDC1  00                 .BYTE $00
+02011  BDC2  00                 .BYTE $00
+02012  BDC3  59                 .BYTE $59
+02013  BDC4  4D                 .BYTE $4D
+02014  BDC5  91                 .BYTE $91
+02015  BDC6  92                 .BYTE $92
+02016  BDC7  86                 .BYTE $86
+02017  BDC8  4A                 .BYTE $4A
+02018  BDC9  85                 .BYTE $85
+02019  BDCA  9D          XX6DCA .BYTE $9D
+02020  BDCB  2C                 .BYTE $2C
+02021  BDCC  29                 .BYTE $29
+02022  BDCD  2C                 .BYTE $2C
+02023  BDCE  23                 .BYTE $23
+02024  BDCF  28                 .BYTE $28
+02025  BDD0  24          XX6DD0 .BYTE $24
+02026  BDD1  59                 .BYTE $59
+02027  BDD2  00                 .BYTE $00
+02028  BDD3  58                 .BYTE $58
+02029  BDD4  24                 .BYTE $24
+02030  BDD5  24                 .BYTE $24
+02031  BDD6  00                 .BYTE $00
+02032  BDD7              ;********************************
+02033  BDD7              ; PACKED MNEMONICS
+02034  BDD7              ;********************************
+02035  BDD7              ; SUPERMON
+02036  BDD7              ;********************************
+02037  BDD7              ;MNEML
+
+
+
+
+
+
+VICMON$B000......PAGE 0039
+
+LINE# LOC   CODE        LINE
+
+
+02038  BDD7              ;.BYTE $1C,$8A,$1C,$23
+02039  BDD7              ;.BYTE $5D,$8B,$1B,$A1
+02040  BDD7              ;.BYTE $9D,$8A,$1D,$23
+02041  BDD7              ;.BYTE $9D,$8B,$1D,$A1
+02042  BDD7              ;.BYTE $00,$29,$19,$AE
+02043  BDD7              ;.BYTE $69,$A8,$19,$23
+02044  BDD7              ;.BYTE $24,$53,$1B,$23
+02045  BDD7              ;.BYTE $24,$53,$19,$A1
+02046  BDD7              ;.BYTE $00,$1A,$5B,$5B
+02047  BDD7              ;.BYTE $A5,$69,$24,$24
+02048  BDD7              ;.BYTE $AE,$AE,$A8,$AD
+02049  BDD7              ;.BYTE $29,$00,$7C,$00
+02050  BDD7              ;.BYTE $15,$9C,$6D,$9C
+02051  BDD7              ;.BYTE $A5,$69,$29,$53
+02052  BDD7              ;.BYTE $84,$13,$34,$11
+02053  BDD7              ;.BYTE $A5,$69,$23,$A0
+02054  BDD7              ;********************************
+02055  BDD7  1C          XX6DD7 .BYTE $1C
+02056  BDD8  8A                 .BYTE $8A
+02057  BDD9  1C                 .BYTE $1C
+02058  BDDA  23                 .BYTE $23
+02059  BDDB  5D                 .BYTE $5D
+02060  BDDC  8B                 .BYTE $8B
+02061  BDDD  1B                 .BYTE $1B
+02062  BDDE  A1                 .BYTE $A1
+02063  BDDF  9D                 .BYTE $9D
+02064  BDE0  8A                 .BYTE $8A
+02065  BDE1  1D                 .BYTE $1D
+02066  BDE2  23                 .BYTE $23
+02067  BDE3  9D                 .BYTE $9D
+02068  BDE4  8B                 .BYTE $8B
+02069  BDE5  1D                 .BYTE $1D
+02070  BDE6  A1                 .BYTE $A1
+02071  BDE7  00                 .BYTE $00
+02072  BDE8  29                 .BYTE $29
+02073  BDE9  19                 .BYTE $19
+02074  BDEA  AE                 .BYTE $AE
+02075  BDEB  69                 .BYTE $69
+02076  BDEC  A8                 .BYTE $A8
+02077  BDED  19                 .BYTE $19
+02078  BDEE  23                 .BYTE $23
+02079  BDEF  24                 .BYTE $24
+02080  BDF0  53                 .BYTE $53
+02081  BDF1  1B                 .BYTE $1B
+02082  BDF2  23                 .BYTE $23
+02083  BDF3  24                 .BYTE $24
+02084  BDF4  53                 .BYTE $53
+02085  BDF5  19                 .BYTE $19
+02086  BDF6  A1                 .BYTE $A1
+02087  BDF7  00                 .BYTE $00
+02088  BDF8  1A                 .BYTE $1A
+02089  BDF9  5B                 .BYTE $5B
+02090  BDFA  5B                 .BYTE $5B
+02091  BDFB  A5                 .BYTE $A5
+02092  BDFC  69                 .BYTE $69
+
+
+
+
+
+
+VICMON$B000......PAGE 0040
+
+LINE# LOC   CODE        LINE
+
+
+02093  BDFD  24                 .BYTE $24
+02094  BDFE  24                 .BYTE $24
+02095  BDFF  AE                 .BYTE $AE
+02096  BE00  AE                 .BYTE $AE
+02097  BE01  A8                 .BYTE $A8
+02098  BE02  AD                 .BYTE $AD
+02099  BE03  29                 .BYTE $29
+02100  BE04  00                 .BYTE $00
+02101  BE05  7C                 .BYTE $7C
+02102  BE06  00                 .BYTE $00
+02103  BE07  15                 .BYTE $15
+02104  BE08  9C                 .BYTE $9C
+02105  BE09  6D                 .BYTE $6D
+02106  BE0A  9C                 .BYTE $9C
+02107  BE0B  A5                 .BYTE $A5
+02108  BE0C  69                 .BYTE $69
+02109  BE0D  29                 .BYTE $29
+02110  BE0E  53                 .BYTE $53
+02111  BE0F  84                 .BYTE $84
+02112  BE10  13                 .BYTE $13
+02113  BE11  34                 .BYTE $34
+02114  BE12  11                 .BYTE $11
+02115  BE13  A5                 .BYTE $A5
+02116  BE14  69                 .BYTE $69
+02117  BE15  23                 .BYTE $23
+02118  BE16  A0                 .BYTE $A0
+02119  BE17              ;********************************
+02120  BE17              ; PACKED MNEMONICS
+02121  BE17              ;********************************
+02122  BE17              ; SUPERMON
+02123  BE17              ;********************************
+02124  BE17              ;MNEMR
+02125  BE17              ;.BYTE $D8,$62,$5A,$48
+02126  BE17              ;.BYTE $26,$62,$94,$88
+02127  BE17              ;.BYTE $54,$44,$C8,$54
+02128  BE17              ;.BYTE $68,$44,$E8,$94
+02129  BE17              ;.BYTE $00,$B4,$08,$84
+02130  BE17              ;.BYTE $74,$B4,$28,$6E
+02131  BE17              ;.BYTE $74,$F4,$CC,$4A
+02132  BE17              ;.BYTE $72,$F2,$A4,$8A
+02133  BE17              ;.BYTE $00,$AA,$A2,$A2
+02134  BE17              ;.BYTE $74,$74,$74,$72
+02135  BE17              ;.BYTE $44,$68,$B2,$32
+02136  BE17              ;.BYTE $B2,$00,$22,$00
+02137  BE17              ;.BYTE $1A,$1A,$26,$26
+02138  BE17              ;.BYTE $72,$72,$88,$C8
+02139  BE17              ;.BYTE $C4,$CA,$26,$48
+02140  BE17              ;.BYTE $44,$44,$A2,$C8
+02141  BE17              ;********************************
+02142  BE17  D8          XX6E17 .BYTE $D8
+02143  BE18  62                 .BYTE $62
+02144  BE19  5A                 .BYTE $5A
+02145  BE1A  48                 .BYTE $48
+02146  BE1B  26                 .BYTE $26
+02147  BE1C  62                 .BYTE $62
+
+
+
+
+
+
+VICMON$B000......PAGE 0041
+
+LINE# LOC   CODE        LINE
+
+
+02148  BE1D  94                 .BYTE $94
+02149  BE1E  88                 .BYTE $88
+02150  BE1F  54                 .BYTE $54
+02151  BE20  44                 .BYTE $44
+02152  BE21  C8                 .BYTE $C8
+02153  BE22  54                 .BYTE $54
+02154  BE23  68                 .BYTE $68
+02155  BE24  44                 .BYTE $44
+02156  BE25  E8                 .BYTE $E8
+02157  BE26  94                 .BYTE $94
+02158  BE27  00                 .BYTE $00
+02159  BE28  B4                 .BYTE $B4
+02160  BE29  08                 .BYTE $08
+02161  BE2A  84                 .BYTE $84
+02162  BE2B  74                 .BYTE $74
+02163  BE2C  B4                 .BYTE $B4
+02164  BE2D  28                 .BYTE $28
+02165  BE2E  6E                 .BYTE $6E
+02166  BE2F  74                 .BYTE $74
+02167  BE30  F4                 .BYTE $F4
+02168  BE31  CC                 .BYTE $CC
+02169  BE32  4A                 .BYTE $4A
+02170  BE33  72                 .BYTE $72
+02171  BE34  F2                 .BYTE $F2
+02172  BE35  A4                 .BYTE $A4
+02173  BE36  8A                 .BYTE $8A
+02174  BE37  00                 .BYTE $00
+02175  BE38  AA                 .BYTE $AA
+02176  BE39  A2                 .BYTE $A2
+02177  BE3A  A2                 .BYTE $A2
+02178  BE3B  74                 .BYTE $74
+02179  BE3C  74                 .BYTE $74
+02180  BE3D  74                 .BYTE $74
+02181  BE3E  72                 .BYTE $72
+02182  BE3F  44                 .BYTE $44
+02183  BE40  68                 .BYTE $68
+02184  BE41  B2                 .BYTE $B2
+02185  BE42  32                 .BYTE $32
+02186  BE43  B2                 .BYTE $B2
+02187  BE44  00                 .BYTE $00
+02188  BE45  22                 .BYTE $22
+02189  BE46  00                 .BYTE $00
+02190  BE47  1A                 .BYTE $1A
+02191  BE48  1A                 .BYTE $1A
+02192  BE49  26                 .BYTE $26
+02193  BE4A  26                 .BYTE $26
+02194  BE4B  72                 .BYTE $72
+02195  BE4C  72                 .BYTE $72
+02196  BE4D  88                 .BYTE $88
+02197  BE4E  C8                 .BYTE $C8
+02198  BE4F  C4                 .BYTE $C4
+02199  BE50  CA                 .BYTE $CA
+02200  BE51  26                 .BYTE $26
+02201  BE52  48                 .BYTE $48
+02202  BE53  44                 .BYTE $44
+
+
+
+
+
+
+VICMON$B000......PAGE 0042
+
+LINE# LOC   CODE        LINE
+
+
+02203  BE54  44                 .BYTE $44
+02204  BE55  A2                 .BYTE $A2
+02205  BE56  C8                 .BYTE $C8
+02206  BE57              ;*****************************
+02207  BE57              ; REGISTER HEADING
+02208  BE57              ;*****************************
+02209  BE57  0D          XX6E57 .BYTE $0D
+02210  BE58  20 20              .BYTE '   PC  SR AC XR YR SP'
+02211  BE6D  41 42       XX6E6D .BYTE 'ABCDFGHILMNQRSTWX,:'
+02212  BE80  3B 45              .BYTE ';E'
+02213  BE82              ;********************************
+02214  BE82              ;********************************
+02215  BE82              ;A
+02216  BE82  0E B4       XX6E82 .WORD XX640E
+02217  BE84              ;B
+02218  BE84  2C B7              .WORD XX672C
+02219  BE86              ;C
+02220  BE86  21 B1              .WORD XX6121
+02221  BE88              ;D
+02222  BE88  41 B2              .WORD XX6241
+02223  BE8A              ;F
+02224  BE8A  9B B1              .WORD XX619B
+02225  BE8C              ;G
+02226  BE8C  64 B6              .WORD XX6664
+02227  BE8E              ;H
+02228  BE8E  C4 B1              .WORD XX61C4
+02229  BE90              ;I
+02230  BE90  68 B3              .WORD XX6368
+02231  BE92              ;L
+02232  BE92  C0 69              .WORD $69C0
+02233  BE94              ;M
+02234  BE94  6B B3              .WORD XX636B
+02235  BE96              ;N
+02236  BE96  4F B7              .WORD XX674F
+02237  BE98              ;Q
+02238  BE98  68 B6              .WORD XX6668
+02239  BE9A              ;R
+02240  BE9A  43 B9              .WORD XX6943
+02241  BE9C              ;S
+02242  BE9C  C0 B9              .WORD XX69C0
+02243  BE9E              ;T
+02244  BE9E  25 B1              .WORD XX6125
+02245  BEA0              ;W
+02246  BEA0  6C B6              .WORD XX666C
+02247  BEA2              ;X
+02248  BEA2  B0 B9              .WORD XX69B0
+02249  BEA4              ;,
+02250  BEA4  0E B4              .WORD XX640E
+02251  BEA6              ;:
+02252  BEA6  E2 B3              .WORD XX63E2
+02253  BEA8              ;;
+02254  BEA8  99 B9              .WORD XX6999
+02255  BEAA              ;E
+02256  BEAA  7F BC              .WORD XX6C7F
+02257  BEAC              ;?
+
+
+
+
+
+
+VICMON$B000......PAGE 0043
+
+LINE# LOC   CODE        LINE
+
+
+02258  BEAC  00 B0              .WORD XX6000
+02259  BEAE              ;*****************************
+02260  BEAE              ;
+02261  BEAE              ;*****************************
+02262  BEAE  46 B3       XX6EAE .WORD XX6346
+02263  BEB0              ;*****************************
+02264  BEB0              ;
+02265  BEB0              ;*****************************
+02266  BEB0  8A B5       XX6EB0 .WORD XX658A
+02267  BEB2              ;*****************************
+02268  BEB2              ;
+02269  BEB2              ;*****************************
+02270  BEB2              ; NMI SERVICE ROUTINE
+02271  BEB2              ;*****************************
+02272  BEB2  3F B0       XX6EB2 .WORD XX603F
+02273  BEB4              ;*****************************
+02274  BEB4              ;
+02275  BEB4              ;*****************************
+02276  BEB4  5F BA       XX6EB4 .WORD XX6A5F
+02277  BEB6              ;*****************************
+02278  BEB6              ;
+02279  BEB6              ;*****************************
+02280  BEB6  6C B5       XX6EB6 .WORD ZZ656D-1
+02281  BEB8              ;*****************************
+02282  BEB8              ;
+02283  BEB8              ;*****************************
+02284  BEB8  AA AA              .WORD $AAAA
+02285  BEBA  AA AA              .WORD $AAAA
+02286  BEBC  AA AA              .WORD $AAAA
+02287  BEBE  AA AA              .WORD $AAAA
+02288  BEC0  AA AA              .WORD $AAAA
+02289  BEC2  AA AA              .WORD $AAAA
+02290  BEC4  AA AA              .WORD $AAAA
+02291  BEC6  AA AA              .WORD $AAAA
+02292  BEC8  AA AA              .WORD $AAAA
+02293  BECA  AA AA              .WORD $AAAA
+02294  BECC  AA AA              .WORD $AAAA
+02295  BECE  AA AA              .WORD $AAAA
+02296  BED0  AA AA              .WORD $AAAA
+02297  BED2  AA AA              .WORD $AAAA
+02298  BED4  AA AA              .WORD $AAAA
+02299  BED6  AA AA              .WORD $AAAA
+02300  BED8  AA AA              .WORD $AAAA
+02301  BEDA  AA AA              .WORD $AAAA
+02302  BEDC  AA AA              .WORD $AAAA
+02303  BEDE  AA AA              .WORD $AAAA
+02304  BEE0  AA AA              .WORD $AAAA
+02305  BEE2  AA AA              .WORD $AAAA
+02306  BEE4  AA AA              .WORD $AAAA
+02307  BEE6  AA AA              .WORD $AAAA
+02308  BEE8  AA AA              .WORD $AAAA
+02309  BEEA  AA AA              .WORD $AAAA
+02310  BEEC  AA AA              .WORD $AAAA
+02311  BEEE  AA AA              .WORD $AAAA
+02312  BEF0  AA AA              .WORD $AAAA
+
+
+
+
+
+
+VICMON$B000......PAGE 0044
+
+LINE# LOC   CODE        LINE
+
+
+02313  BEF2  AA AA              .WORD $AAAA
+02314  BEF4  AA AA              .WORD $AAAA
+02315  BEF6  AA AA              .WORD $AAAA
+02316  BEF8  AA AA              .WORD $AAAA
+02317  BEFA  AA AA              .WORD $AAAA
+02318  BEFC  AA AA              .WORD $AAAA
+02319  BEFE  AA AA              .WORD $AAAA
+02320  BF00  AA AA              .WORD $AAAA
+02321  BF02  AA AA              .WORD $AAAA
+02322  BF04  AA AA              .WORD $AAAA
+02323  BF06  AA AA              .WORD $AAAA
+02324  BF08  AA AA              .WORD $AAAA
+02325  BF0A  AA AA              .WORD $AAAA
+02326  BF0C  AA AA              .WORD $AAAA
+02327  BF0E  AA AA              .WORD $AAAA
+02328  BF10  AA AA              .WORD $AAAA
+02329  BF12  AA AA              .WORD $AAAA
+02330  BF14  AA AA              .WORD $AAAA
+02331  BF16  AA AA              .WORD $AAAA
+02332  BF18  AA AA              .WORD $AAAA
+02333  BF1A  AA AA              .WORD $AAAA
+02334  BF1C  AA AA              .WORD $AAAA
+02335  BF1E  AA AA              .WORD $AAAA
+02336  BF20  AA AA              .WORD $AAAA
+02337  BF22  AA AA              .WORD $AAAA
+02338  BF24  AA AA              .WORD $AAAA
+02339  BF26  AA AA              .WORD $AAAA
+02340  BF28  AA AA              .WORD $AAAA
+02341  BF2A  AA AA              .WORD $AAAA
+02342  BF2C  AA AA              .WORD $AAAA
+02343  BF2E  AA AA              .WORD $AAAA
+02344  BF30  AA AA              .WORD $AAAA
+02345  BF32  AA AA              .WORD $AAAA
+02346  BF34  AA AA              .WORD $AAAA
+02347  BF36  AA AA              .WORD $AAAA
+02348  BF38  AA AA              .WORD $AAAA
+02349  BF3A  AA AA              .WORD $AAAA
+02350  BF3C  AA AA              .WORD $AAAA
+02351  BF3E  AA AA              .WORD $AAAA
+02352  BF40  AA AA              .WORD $AAAA
+02353  BF42  AA AA              .WORD $AAAA
+02354  BF44  AA AA              .WORD $AAAA
+02355  BF46  AA AA              .WORD $AAAA
+02356  BF48  AA AA              .WORD $AAAA
+02357  BF4A  AA AA              .WORD $AAAA
+02358  BF4C  AA AA              .WORD $AAAA
+02359  BF4E  AA AA              .WORD $AAAA
+02360  BF50  AA AA              .WORD $AAAA
+02361  BF52  AA AA              .WORD $AAAA
+02362  BF54  AA AA              .WORD $AAAA
+02363  BF56  AA AA              .WORD $AAAA
+02364  BF58  AA AA              .WORD $AAAA
+02365  BF5A  AA AA              .WORD $AAAA
+02366  BF5C  AA AA              .WORD $AAAA
+02367  BF5E  AA AA              .WORD $AAAA
+
+
+
+
+
+
+VICMON$B000......PAGE 0045
+
+LINE# LOC   CODE        LINE
+
+
+02368  BF60  AA AA              .WORD $AAAA
+02369  BF62  AA AA              .WORD $AAAA
+02370  BF64  AA AA              .WORD $AAAA
+02371  BF66  AA AA              .WORD $AAAA
+02372  BF68  AA AA              .WORD $AAAA
+02373  BF6A  AA AA              .WORD $AAAA
+02374  BF6C  AA AA              .WORD $AAAA
+02375  BF6E  AA AA              .WORD $AAAA
+02376  BF70  AA AA              .WORD $AAAA
+02377  BF72  AA AA              .WORD $AAAA
+02378  BF74  AA AA              .WORD $AAAA
+02379  BF76  AA AA              .WORD $AAAA
+02380  BF78  AA AA              .WORD $AAAA
+02381  BF7A  AA AA              .WORD $AAAA
+02382  BF7C  AA AA              .WORD $AAAA
+02383  BF7E  AA AA              .WORD $AAAA
+02384  BF80  AA AA              .WORD $AAAA
+02385  BF82  AA AA              .WORD $AAAA
+02386  BF84  AA AA              .WORD $AAAA
+02387  BF86  AA AA              .WORD $AAAA
+02388  BF88  AA AA              .WORD $AAAA
+02389  BF8A  AA AA              .WORD $AAAA
+02390  BF8C  AA AA              .WORD $AAAA
+02391  BF8E  AA AA              .WORD $AAAA
+02392  BF90  AA AA              .WORD $AAAA
+02393  BF92  AA AA              .WORD $AAAA
+02394  BF94  AA AA              .WORD $AAAA
+02395  BF96  AA AA              .WORD $AAAA
+02396  BF98  AA AA              .WORD $AAAA
+02397  BF9A  AA AA              .WORD $AAAA
+02398  BF9C  AA AA              .WORD $AAAA
+02399  BF9E  AA AA              .WORD $AAAA
+02400  BFA0  AA AA              .WORD $AAAA
+02401  BFA2  AA AA              .WORD $AAAA
+02402  BFA4  AA AA              .WORD $AAAA
+02403  BFA6  AA AA              .WORD $AAAA
+02404  BFA8  AA AA              .WORD $AAAA
+02405  BFAA  AA AA              .WORD $AAAA
+02406  BFAC  AA AA              .WORD $AAAA
+02407  BFAE  AA AA              .WORD $AAAA
+02408  BFB0  AA AA              .WORD $AAAA
+02409  BFB2  AA AA              .WORD $AAAA
+02410  BFB4  AA AA              .WORD $AAAA
+02411  BFB6  AA AA              .WORD $AAAA
+02412  BFB8  AA AA              .WORD $AAAA
+02413  BFBA  AA AA              .WORD $AAAA
+02414  BFBC  AA AA              .WORD $AAAA
+02415  BFBE  AA AA              .WORD $AAAA
+02416  BFC0  AA AA              .WORD $AAAA
+02417  BFC2  AA AA              .WORD $AAAA
+02418  BFC4  AA AA              .WORD $AAAA
+02419  BFC6  AA AA              .WORD $AAAA
+02420  BFC8  AA AA              .WORD $AAAA
+02421  BFCA  AA AA              .WORD $AAAA
+02422  BFCC  AA AA              .WORD $AAAA
+
+
+
+
+
+
+VICMON$B000......PAGE 0046
+
+LINE# LOC   CODE        LINE
+
+
+02423  BFCE  AA AA              .WORD $AAAA
+02424  BFD0  AA AA              .WORD $AAAA
+02425  BFD2  AA AA              .WORD $AAAA
+02426  BFD4  AA AA              .WORD $AAAA
+02427  BFD6  AA AA              .WORD $AAAA
+02428  BFD8  AA AA              .WORD $AAAA
+02429  BFDA  AA AA              .WORD $AAAA
+02430  BFDC  AA AA              .WORD $AAAA
+02431  BFDE  AA AA              .WORD $AAAA
+02432  BFE0  AA AA              .WORD $AAAA
+02433  BFE2  AA AA              .WORD $AAAA
+02434  BFE4  AA AA              .WORD $AAAA
+02435  BFE6  AA AA              .WORD $AAAA
+02436  BFE8  AA AA              .WORD $AAAA
+02437  BFEA  AA AA              .WORD $AAAA
+02438  BFEC  AA AA              .WORD $AAAA
+02439  BFEE  AA AA              .WORD $AAAA
+02440  BFF0  AA AA              .WORD $AAAA
+02441  BFF2  AA AA              .WORD $AAAA
+02442  BFF4  4D 4F              .WORD $4F4D
+02443  BFF6  4E 54              .WORD $544E
+02444  BFF8  52 52              .WORD $5252
+02445  BFFA  4F 4C              .WORD $4C4F
+02446  BFFC  2E 41              .WORD $412E
+02447  BFFE  4D 00              .WORD $004D
+02448  C000              ;********************************
+02449  C000              ;********************************
+02450  C000              .END
+
+
+ERRORS = 00000
+
+
+SYMBOL TABLE
+
+SYMBOL VALUE
+ CHRIN    FFCF    CHROUT   FFD2    CLRCHN   FFCC    GETIN    FFE4
+ LOAD     FFD5    SETMSG   FF90    XX6000   B000    XX6006   B006
+ XX6009   B009    XX600C   B00C    XX603F   B03F    XX6084   B084
+ XX6087   B087    XX608A   B08A    XX608F   B08F    XX6097   B097
+ XX609C   B09C    XX60AC   B0AC    XX60B9   B0B9    XX60D0   B0D0
+ XX60D5   B0D5    XX60D9   B0D9    XX60DB   B0DB    XX60E5   B0E5
+ XX60E7   B0E7    XX60EA   B0EA    XX60F3   B0F3    XX60FA   B0FA
+ XX60FC   B0FC    XX610A   B10A    XX6111   B111    XX6115   B115
+ XX6121   B121    XX6125   B125    XX6127   B127    XX6137   B137
+ XX613F   B13F    XX6148   B148    XX6151   B151    XX6163   B163
+ XX6177   B177    XX6188   B188    XX618C   B18C    XX6197   B197
+ XX6198   B198    XX619B   B19B    XX61AB   B1AB    XX61BE   B1BE
+ XX61C1   B1C1    XX61C4   B1C4    XX61D9   B1D9    XX61E9   B1E9
+ XX61F0   B1F0    XX6203   B203    XX6208   B208    XX6212   B212
+ XX622C   B22C    XX6232   B232    XX623E   B23E    XX6241   B241
+ XX6244   B244    XX6256   B256    XX625B   B25B    XX625E   B25E
+ XX626E   B26E    XX6276   B276    XX6285   B285    XX6297   B297
+ XX629B   B29B    XX62A3   B2A3    XX62A8   B2A8    XX62B0   B2B0
+
+
+
+
+
+
+
+
+SYMBOL TABLE
+
+SYMBOL VALUE
+ XX62B2   B2B2    XX62BA   B2BA    XX62BB   B2BB    XX62C1   B2C1
+ XX62C6   B2C6    XX62C7   B2C7    XX62D6   B2D6    XX62E1   B2E1
+ XX62E5   B2E5    XX62E9   B2E9    XX62FE   B2FE    XX6302   B302
+ XX6309   B309    XX630D   B30D    XX6315   B315    XX6324   B324
+ XX632F   B32F    XX6333   B333    XX6346   B346    XX6357   B357
+ XX635A   B35A    XX6363   B363    XX6368   B368    XX636B   B36B
+ XX6372   B372    XX6385   B385    XX6388   B388    XX638D   B38D
+ XX6390   B390    XX6393   B393    XX63A9   B3A9    XX63B4   B3B4
+ XX63C5   B3C5    XX63D0   B3D0    XX63D3   B3D3    XX63E2   B3E2
+ XX63FA   B3FA    XX640B   B40B    XX640E   B40E    XX6415   B415
+ XX6419   B419    XX6427   B427    XX6431   B431    XX643B   B43B
+ XX643D   B43D    XX645F   B45F    XX6464   B464    XX646A   B46A
+ XX6486   B486    XX648E   B48E    XX649C   B49C    XX64AE   B4AE
+ XX64B3   B4B3    XX64B9   B4B9    XX64C2   B4C2    XX64DD   B4DD
+ XX64E4   B4E4    XX64EB   B4EB    XX64EE   B4EE    XX64F4   B4F4
+ XX6509   B509    XX652E   B52E    XX6531   B531    XX653B   B53B
+ XX6542   B542    XX6545   B545    XX654B   B54B    XX6552   B552
+ XX6554   B554    XX6559   B559    XX655B   B55B    XX655E   B55E
+ XX658A   B58A    XX6598   B598    XX65C9   B5C9    XX65F4   B5F4
+ XX65F6   B5F6    XX6612   B612    XX661B   B61B    XX6629   B629
+ XX663E   B63E    XX664A   B64A    XX6654   B654    XX6656   B656
+ XX6658   B658    XX6664   B664    XX6668   B668    XX666C   B66C
+ XX666E   B66E    XX6688   B688    XX6698   B698    XX669B   B69B
+ XX66C4   B6C4    XX66D6   B6D6    XX66DA   B6DA    XX66F1   B6F1
+ XX66F5   B6F5    XX6727   B727    XX6729   B729    XX672C   B72C
+ XX674F   B74F    XX6774   B774    XX6777   B777    XX6793   B793
+ XX6796   B796    XX679E   B79E    XX67A0   B7A0    XX67D7   B7D7
+ XX67DF   B7DF    XX67F0   B7F0    XX67F3   B7F3    XX67F8   B7F8
+ XX67FD   B7FD    XX6802   B802    XX6805   B805    XX6810   B810
+ XX6817   B817    XX6826   B826    XX682F   B82F    XX6836   B836
+ XX6839   B839    XX683B   B83B    XX6849   B849    XX684D   B84D
+ XX6859   B859    XX685C   B85C    XX6861   B861    XX6868   B868
+ XX686B   B86B    XX6872   B872    XX687F   B87F    XX688B   B88B
+ XX6892   B892    XX689C   B89C    XX689D   B89D    XX68A7   B8A7
+ XX68B4   B8B4    XX68B5   B8B5    XX68BE   B8BE    XX68CE   B8CE
+ XX68CF   B8CF    XX68E7   B8E7    XX68EC   B8EC    XX68F0   B8F0
+ XX6901   B901    XX6912   B912    XX6918   B918    XX6925   B925
+ XX692F   B92F    XX6930   B930    XX6936   B936    XX693B   B93B
+ XX693E   B93E    XX6943   B943    XX696A   B96A    XX696C   B96C
+ XX6993   B993    XX6999   B999    XX69A4   B9A4    XX69B0   B9B0
+ XX69BD   B9BD    XX69C0   B9C0    XX69D5   B9D5    XX69E2   B9E2
+ XX69E4   B9E4    XX69F6   B9F6    XX69FA   B9FA    XX69FE   B9FE
+ XX6A0C   BA0C    XX6A11   BA11    XX6A1A   BA1A    XX6A21   BA21
+ XX6A32   BA32    XX6A3C   BA3C    XX6A45   BA45    XX6A4E   BA4E
+ XX6A5F   BA5F    XX6A67   BA67    XX6A6D   BA6D    XX6A77   BA77
+ XX6A89   BA89    XX6AAB   BAAB    XX6AC7   BAC7    XX6ACD   BACD
+ XX6AD8   BAD8    XX6AED   BAED    XX6AFC   BAFC    XX6B0D   BB0D
+ XX6B14   BB14    XX6B1B   BB1B    XX6B27   BB27    XX6B49   BB49
+ XX6B50   BB50    XX6B53   BB53    XX6B6B   BB6B    XX6B71   BB71
+ XX6B7F   BB7F    XX6B82   BB82    XX6B90   BB90    XX6B9F   BB9F
+ XX6BAC   BBAC    XX6BBD   BBBD    XX6BD3   BBD3    XX6BDB   BBDB
+ XX6C00   BC00    XX6C20   BC20    XX6C24   BC24    XX6C2A   BC2A
+ XX6C2F   BC2F    XX6C35   BC35    XX6C5C   BC5C    XX6C5E   BC5E
+ XX6C73   BC73    XX6C7E   BC7E    XX6C7F   BC7F    XX6C96   BC96
+ XX6CA9   BCA9    XX6CB6   BCB6    XX6CB9   BCB9    XX6CC4   BCC4
+
+
+
+
+
+
+
+
+SYMBOL TABLE
+
+SYMBOL VALUE
+ XX6CD3   BCD3    XX6CD9   BCD9    XX6CE9   BCE9    XX6CF9   BCF9
+ XX6CFA   BCFA    XX6D05   BD05    XX6D09   BD09    XX6D0B   BD0B
+ XX6D13   BD13    XX6D17   BD17    XX6D19   BD19    XX6D23   BD23
+ XX6D35   BD35    XX6D3C   BD3C    XX6D63   BD63    XX6D6B   BD6B
+ XX6D79   BD79    XX6DBD   BDBD    XX6DCA   BDCA    XX6DD0   BDD0
+ XX6DD7   BDD7    XX6E17   BE17    XX6E57   BE57    XX6E6D   BE6D
+ XX6E82   BE82    XX6EAE   BEAE    XX6EB0   BEB0    XX6EB2   BEB2
+ XX6EB4   BEB4    XX6EB6   BEB6    ZZ6003   B003    ZZ656D   B56D
+
+
+END OF ASSEMBLY
+

@@ -1,0 +1,3 @@
+c64_1581 vice setting for drive 8 = 1581
+
+assembler 81.vsf snapshot with build disk

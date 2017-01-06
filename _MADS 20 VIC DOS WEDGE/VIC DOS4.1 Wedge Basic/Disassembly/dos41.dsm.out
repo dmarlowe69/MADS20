@@ -1,0 +1,859 @@
+
+DISASSEMBLER64.......PAGE 0001
+
+LINE# LOC   CODE        LINE
+
+
+00001  0401              *=$0401
+00002  0401              ;********************************
+00003  0401              ; EXTERNAL ADDRESS EQUATES
+00004  0401              ;********************************
+00005  0401              SECOND=$FF93
+00006  0401              TKSA=$FF96
+00007  0401              ACPTR=$FFA5
+00008  0401              CIOUT=$FFA8
+00009  0401              UNTLK=$FFAB
+00010  0401              UNLSN=$FFAE
+00011  0401              LISTEN=$FFB1
+00012  0401              TALK=$FFB4
+00013  0401              SETLFS=$FFBA
+00014  0401              SETNAM=$FFBD
+00015  0401              OPEN=$FFC0
+00016  0401              CLOSE=$FFC3
+00017  0401              CLRCHN=$FFCC
+00018  0401              CHROUT=$FFD2
+00019  0401              LOAD=$FFD5
+00020  0401              STOP=$FFE1
+00021  0401              GETIN=$FFE4
+00022  0401              ;********************************
+00023  0401              ;********************************
+00024  0401  18                 .BYTE $18
+00025  0402  04                 .BYTE $04
+00026  0403  0A                 .BYTE $0A
+00027  0404  00                 .BYTE $00
+00028  0405  99                 .BYTE $99
+00029  0406  22                 .BYTE $22
+00030  0407  93                 .BYTE $93
+00031  0408  22                 .BYTE $22
+00032  0409  A3                 .BYTE $A3
+00033  040A  36                 .BYTE $36
+00034  040B  29                 .BYTE $29
+00035  040C  22                 .BYTE $22
+00036  040D  12                 .BYTE $12
+00037  040E  56                 .BYTE $56
+00038  040F  49                 .BYTE $49
+00039  0410  43                 .BYTE $43
+00040  0411  20                 .BYTE $20
+00041  0412  57                 .BYTE $57
+00042  0413  45                 .BYTE $45
+00043  0414  44                 .BYTE $44
+00044  0415  47                 .BYTE $47
+00045  0416  45                 .BYTE $45
+00046  0417  00                 .BYTE $00
+00047  0418  33                 .BYTE $33
+00048  0419  04                 .BYTE $04
+00049  041A  14                 .BYTE $14
+00050  041B  00                 .BYTE $00
+00051  041C  99                 .BYTE $99
+00052  041D  22                 .BYTE $22
+00053  041E  11                 .BYTE $11
+00054  041F  20                 .BYTE $20
+
+
+
+
+
+
+
+DISASSEMBLER64.......PAGE 0002
+
+LINE# LOC   CODE        LINE
+
+
+00055  0420  20                 .BYTE $20
+00056  0421  20                 .BYTE $20
+00057  0422  42                 .BYTE $42
+00058  0423  59                 .BYTE $59
+00059  0424  20                 .BYTE $20
+00060  0425  44                 .BYTE $44
+00061  0426  41                 .BYTE $41
+00062  0427  56                 .BYTE $56
+00063  0428  49                 .BYTE $49
+00064  0429  44                 .BYTE $44
+00065  042A  20                 .BYTE $20
+00066  042B  41                 .BYTE $41
+00067  042C  2E                 .BYTE $2E
+00068  042D  20                 .BYTE $20
+00069  042E  48                 .BYTE $48
+00070  042F  4F                 .BYTE $4F
+00071  0430  4F                 .BYTE $4F
+00072  0431  4B                 .BYTE $4B
+00073  0432  00                 .BYTE $00
+00074  0433  50                 .BYTE $50
+00075  0434  04                 .BYTE $04
+00076  0435  1E                 .BYTE $1E
+00077  0436  00                 .BYTE $00
+00078  0437  99                 .BYTE $99
+00079  0438  22                 .BYTE $22
+00080  0439  11                 .BYTE $11
+00081  043A  3E                 .BYTE $3E
+00082  043B  20                 .BYTE $20
+00083  043C  20                 .BYTE $20
+00084  043D  20                 .BYTE $20
+00085  043E  20                 .BYTE $20
+00086  043F  20                 .BYTE $20
+00087  0440  20                 .BYTE $20
+00088  0441  20                 .BYTE $20
+00089  0442  20                 .BYTE $20
+00090  0443  20                 .BYTE $20
+00091  0444  44                 .BYTE $44
+00092  0445  49                 .BYTE $49
+00093  0446  53                 .BYTE $53
+00094  0447  4B                 .BYTE $4B
+00095  0448  20                 .BYTE $20
+00096  0449  53                 .BYTE $53
+00097  044A  54                 .BYTE $54
+00098  044B  41                 .BYTE $41
+00099  044C  54                 .BYTE $54
+00100  044D  55                 .BYTE $55
+00101  044E  53                 .BYTE $53
+00102  044F  00                 .BYTE $00
+00103  0450  6C                 .BYTE $6C
+00104  0451  04                 .BYTE $04
+00105  0452  28                 .BYTE $28
+00106  0453  00                 .BYTE $00
+00107  0454  99                 .BYTE $99
+00108  0455  22                 .BYTE $22
+
+
+
+
+
+
+
+DISASSEMBLER64.......PAGE 0003
+
+LINE# LOC   CODE        LINE
+
+
+00109  0456  40                 .BYTE $40
+00110  0457  20                 .BYTE $20
+00111  0458  20                 .BYTE $20
+00112  0459  20                 .BYTE $20
+00113  045A  20                 .BYTE $20
+00114  045B  20                 .BYTE $20
+00115  045C  20                 .BYTE $20
+00116  045D  20                 .BYTE $20
+00117  045E  20                 .BYTE $20
+00118  045F  20                 .BYTE $20
+00119  0460  4F                 .BYTE $4F
+00120  0461  52                 .BYTE $52
+00121  0462  20                 .BYTE $20
+00122  0463  43                 .BYTE $43
+00123  0464  4F                 .BYTE $4F
+00124  0465  4D                 .BYTE $4D
+00125  0466  4D                 .BYTE $4D
+00126  0467  41                 .BYTE $41
+00127  0468  4E                 .BYTE $4E
+00128  0469  44                 .BYTE $44
+00129  046A  53                 .BYTE $53
+00130  046B  00                 .BYTE $00
+00131  046C  89                 .BYTE $89
+00132  046D  04                 .BYTE $04
+00133  046E  32                 .BYTE $32
+00134  046F  00                 .BYTE $00
+00135  0470  99                 .BYTE $99
+00136  0471  22                 .BYTE $22
+00137  0472  11                 .BYTE $11
+00138  0473  3E                 .BYTE $3E
+00139  0474  24                 .BYTE $24
+00140  0475  30                 .BYTE $30
+00141  0476  20                 .BYTE $20
+00142  0477  20                 .BYTE $20
+00143  0478  20                 .BYTE $20
+00144  0479  20                 .BYTE $20
+00145  047A  20                 .BYTE $20
+00146  047B  20                 .BYTE $20
+00147  047C  20                 .BYTE $20
+00148  047D  20                 .BYTE $20
+00149  047E  20                 .BYTE $20
+00150  047F  44                 .BYTE $44
+00151  0480  49                 .BYTE $49
+00152  0481  52                 .BYTE $52
+00153  0482  45                 .BYTE $45
+00154  0483  43                 .BYTE $43
+00155  0484  54                 .BYTE $54
+00156  0485  4F                 .BYTE $4F
+00157  0486  52                 .BYTE $52
+00158  0487  59                 .BYTE $59
+00159  0488  00                 .BYTE $00
+00160  0489  93                 .BYTE $93
+00161  048A  04                 .BYTE $04
+00162  048B  3C                 .BYTE $3C
+
+
+
+
+
+
+
+DISASSEMBLER64.......PAGE 0004
+
+LINE# LOC   CODE        LINE
+
+
+00163  048C  00                 .BYTE $00
+00164  048D  99                 .BYTE $99
+00165  048E  22                 .BYTE $22
+00166  048F  40                 .BYTE $40
+00167  0490  24                 .BYTE $24
+00168  0491  30                 .BYTE $30
+00169  0492  00                 .BYTE $00
+00170  0493  B0                 .BYTE $B0
+00171  0494  04                 .BYTE $04
+00172  0495  46                 .BYTE $46
+00173  0496  00                 .BYTE $00
+00174  0497  99                 .BYTE $99
+00175  0498  22                 .BYTE $22
+00176  0499  11                 .BYTE $11
+00177  049A  2F                 .BYTE $2F
+00178  049B  46                 .BYTE $46
+00179  049C  49                 .BYTE $49
+00180  049D  4C                 .BYTE $4C
+00181  049E  45                 .BYTE $45
+00182  049F  4E                 .BYTE $4E
+00183  04A0  41                 .BYTE $41
+00184  04A1  4D                 .BYTE $4D
+00185  04A2  45                 .BYTE $45
+00186  04A3  20                 .BYTE $20
+00187  04A4  20                 .BYTE $20
+00188  04A5  20                 .BYTE $20
+00189  04A6  20                 .BYTE $20
+00190  04A7  20                 .BYTE $20
+00191  04A8  20                 .BYTE $20
+00192  04A9  20                 .BYTE $20
+00193  04AA  20                 .BYTE $20
+00194  04AB  4C                 .BYTE $4C
+00195  04AC  4F                 .BYTE $4F
+00196  04AD  41                 .BYTE $41
+00197  04AE  44                 .BYTE $44
+00198  04AF  00                 .BYTE $00
+00199  04B0  CB                 .BYTE $CB
+00200  04B1  04                 .BYTE $04
+00201  04B2  50                 .BYTE $50
+00202  04B3  00                 .BYTE $00
+00203  04B4  9E                 .BYTE $9E
+00204  04B5  28                 .BYTE $28
+00205  04B6  C2                 .BYTE $C2
+00206  04B7  28                 .BYTE $28
+00207  04B8  34                 .BYTE $34
+00208  04B9  33                 .BYTE $33
+00209  04BA  29                 .BYTE $29
+00210  04BB  AA                 .BYTE $AA
+00211  04BC  32                 .BYTE $32
+00212  04BD  35                 .BYTE $35
+00213  04BE  36                 .BYTE $36
+00214  04BF  AC                 .BYTE $AC
+00215  04C0  C2                 .BYTE $C2
+00216  04C1  28                 .BYTE $28
+
+
+
+
+
+
+
+DISASSEMBLER64.......PAGE 0005
+
+LINE# LOC   CODE        LINE
+
+
+00217  04C2  34                 .BYTE $34
+00218  04C3  34                 .BYTE $34
+00219  04C4  29                 .BYTE $29
+00220  04C5  AA                 .BYTE $AA
+00221  04C6  32                 .BYTE $32
+00222  04C7  31                 .BYTE $31
+00223  04C8  35                 .BYTE $35
+00224  04C9  29                 .BYTE $29
+00225  04CA  00                 .BYTE $00
+00226  04CB  D1                 .BYTE $D1
+00227  04CC  04                 .BYTE $04
+00228  04CD  5A                 .BYTE $5A
+00229  04CE  00                 .BYTE $00
+00230  04CF  A2                 .BYTE $A2
+00231  04D0  00                 .BYTE $00
+00232  04D1  00                 .BYTE $00
+00233  04D2  00                 .BYTE $00
+00234  04D3  AA                 .BYTE $AA
+00235  04D4  AA                 .BYTE $AA
+00236  04D5  AA                 .BYTE $AA
+00237  04D6  AA                 .BYTE $AA
+00238  04D7  AA                 .BYTE $AA
+00239  04D8              ;********************************
+00240  04D8  A5 37              LDA $37
+00241  04DA  38                 SEC 
+00242  04DB  E9 33              SBC #$33      ;'3'
+00243  04DD  85 37              STA $37
+00244  04DF  85 33              STA $33
+00245  04E1  A5 38              LDA $38
+00246  04E3  E9 01              SBC #$01
+00247  04E5  85 38              STA $38
+00248  04E7  85 34              STA $34
+00249  04E9  A0 33              LDY #$33      ;'3'
+00250  04EB  A5 2B              LDA $2B
+00251  04ED  A6 2C              LDX $2C
+00252  04EF  E8                 INX 
+00253  04F0  E8                 INX 
+00254  04F1  E8                 INX 
+00255  04F2  85 22              STA $22
+00256  04F4  86 23              STX $23
+00257  04F6  A5 37              LDA $37
+00258  04F8  A6 38              LDX $38
+00259  04FA  E8                 INX 
+00260  04FB  85 24              STA $24
+00261  04FD  86 25              STX $25
+00262  04FF  A2 01              LDX #$01
+00263  0501  B1 22       XX0501 LDA ($22),Y
+00264  0503  91 24              STA ($24),Y
+00265  0505  88                 DEY 
+00266  0506  D0 F9              BNE XX0501
+00267  0508  CA                 DEX 
+00268  0509  F0 02              BEQ XX050D
+00269  050B  30 0C              BMI XX0519
+00270  050D  B1 22       XX050D LDA ($22),Y
+
+
+
+
+
+
+
+DISASSEMBLER64.......PAGE 0006
+
+LINE# LOC   CODE        LINE
+
+
+00271  050F  91 24              STA ($24),Y
+00272  0511  C6 25              DEC $25
+00273  0513  C6 23              DEC $23
+00274  0515  A0 00              LDY #$00
+00275  0517  F0 E8              BEQ XX0501
+00276  0519  A9 4C       XX0519 LDA #$4C      ;'L'
+00277  051B  85 73              STA $73
+00278  051D  A4 37              LDY $37
+00279  051F  A6 38              LDX $38
+00280  0521  C8                 INY 
+00281  0522  D0 01              BNE XX0525
+00282  0524  E8                 INX 
+00283  0525  84 74       XX0525 STY $74
+00284  0527  86 75              STX $75
+00285  0529  60                 RTS 
+00286  052A              ;********************************
+00287  052A              ;********************************
+00288  052A  AA                 .BYTE $AA
+00289  052B  AA                 .BYTE $AA
+00290  052C  AA                 .BYTE $AA
+00291  052D  AA                 .BYTE $AA
+00292  052E  AA                 .BYTE $AA
+00293  052F  AA                 .BYTE $AA
+00294  0530  AA                 .BYTE $AA
+00295  0531  AA                 .BYTE $AA
+00296  0532  AA                 .BYTE $AA
+00297  0533  AA                 .BYTE $AA
+00298  0534  AA                 .BYTE $AA
+00299  0535  AA                 .BYTE $AA
+00300  0536  AA                 .BYTE $AA
+00301  0537  AA                 .BYTE $AA
+00302  0538  AA                 .BYTE $AA
+00303  0539  AA                 .BYTE $AA
+00304  053A  AA                 .BYTE $AA
+00305  053B  AA                 .BYTE $AA
+00306  053C  AA                 .BYTE $AA
+00307  053D  AA                 .BYTE $AA
+00308  053E  AA                 .BYTE $AA
+00309  053F  AA                 .BYTE $AA
+00310  0540  AA                 .BYTE $AA
+00311  0541  AA                 .BYTE $AA
+00312  0542  AA                 .BYTE $AA
+00313  0543  AA                 .BYTE $AA
+00314  0544  AA                 .BYTE $AA
+00315  0545  AA                 .BYTE $AA
+00316  0546  AA                 .BYTE $AA
+00317  0547  AA                 .BYTE $AA
+00318  0548  AA                 .BYTE $AA
+00319  0549  AA                 .BYTE $AA
+00320  054A  AA                 .BYTE $AA
+00321  054B  AA                 .BYTE $AA
+00322  054C  AA                 .BYTE $AA
+00323  054D  AA                 .BYTE $AA
+00324  054E  AA                 .BYTE $AA
+
+
+
+
+
+
+
+DISASSEMBLER64.......PAGE 0007
+
+LINE# LOC   CODE        LINE
+
+
+00325  054F  AA                 .BYTE $AA
+00326  0550  AA                 .BYTE $AA
+00327  0551  AA                 .BYTE $AA
+00328  0552  AA                 .BYTE $AA
+00329  0553  AA                 .BYTE $AA
+00330  0554  AA                 .BYTE $AA
+00331  0555  AA                 .BYTE $AA
+00332  0556  AA                 .BYTE $AA
+00333  0557  AA                 .BYTE $AA
+00334  0558  AA                 .BYTE $AA
+00335  0559  AA                 .BYTE $AA
+00336  055A  AA                 .BYTE $AA
+00337  055B  AA                 .BYTE $AA
+00338  055C  AA                 .BYTE $AA
+00339  055D  AA                 .BYTE $AA
+00340  055E  AA                 .BYTE $AA
+00341  055F  AA                 .BYTE $AA
+00342  0560  AA                 .BYTE $AA
+00343  0561  AA                 .BYTE $AA
+00344  0562  AA                 .BYTE $AA
+00345  0563  AA                 .BYTE $AA
+00346  0564  AA                 .BYTE $AA
+00347  0565  AA                 .BYTE $AA
+00348  0566  AA                 .BYTE $AA
+00349  0567  AA                 .BYTE $AA
+00350  0568  AA                 .BYTE $AA
+00351  0569  AA                 .BYTE $AA
+00352  056A  AA                 .BYTE $AA
+00353  056B  AA                 .BYTE $AA
+00354  056C  AA                 .BYTE $AA
+00355  056D  AA                 .BYTE $AA
+00356  056E  AA                 .BYTE $AA
+00357  056F  AA                 .BYTE $AA
+00358  0570  AA                 .BYTE $AA
+00359  0571  AA                 .BYTE $AA
+00360  0572  AA                 .BYTE $AA
+00361  0573  AA                 .BYTE $AA
+00362  0574  AA                 .BYTE $AA
+00363  0575  AA                 .BYTE $AA
+00364  0576  AA                 .BYTE $AA
+00365  0577  AA                 .BYTE $AA
+00366  0578  AA                 .BYTE $AA
+00367  0579  AA                 .BYTE $AA
+00368  057A  AA                 .BYTE $AA
+00369  057B  AA                 .BYTE $AA
+00370  057C  AA                 .BYTE $AA
+00371  057D  AA                 .BYTE $AA
+00372  057E  AA                 .BYTE $AA
+00373  057F  AA                 .BYTE $AA
+00374  0580  AA                 .BYTE $AA
+00375  0581  AA                 .BYTE $AA
+00376  0582  AA                 .BYTE $AA
+00377  0583  AA                 .BYTE $AA
+00378  0584  AA                 .BYTE $AA
+
+
+
+
+
+
+
+DISASSEMBLER64.......PAGE 0008
+
+LINE# LOC   CODE        LINE
+
+
+00379  0585  AA                 .BYTE $AA
+00380  0586  AA                 .BYTE $AA
+00381  0587  AA                 .BYTE $AA
+00382  0588  AA                 .BYTE $AA
+00383  0589  AA                 .BYTE $AA
+00384  058A  AA                 .BYTE $AA
+00385  058B  AA                 .BYTE $AA
+00386  058C  AA                 .BYTE $AA
+00387  058D  AA                 .BYTE $AA
+00388  058E  AA                 .BYTE $AA
+00389  058F  AA                 .BYTE $AA
+00390  0590  AA                 .BYTE $AA
+00391  0591  AA                 .BYTE $AA
+00392  0592  AA                 .BYTE $AA
+00393  0593  AA                 .BYTE $AA
+00394  0594  AA                 .BYTE $AA
+00395  0595  AA                 .BYTE $AA
+00396  0596  AA                 .BYTE $AA
+00397  0597  AA                 .BYTE $AA
+00398  0598  AA                 .BYTE $AA
+00399  0599  AA                 .BYTE $AA
+00400  059A  AA                 .BYTE $AA
+00401  059B  AA                 .BYTE $AA
+00402  059C  AA                 .BYTE $AA
+00403  059D  AA                 .BYTE $AA
+00404  059E  AA                 .BYTE $AA
+00405  059F  AA                 .BYTE $AA
+00406  05A0  AA                 .BYTE $AA
+00407  05A1  AA                 .BYTE $AA
+00408  05A2  AA                 .BYTE $AA
+00409  05A3  AA                 .BYTE $AA
+00410  05A4  AA                 .BYTE $AA
+00411  05A5  AA                 .BYTE $AA
+00412  05A6  AA                 .BYTE $AA
+00413  05A7  AA                 .BYTE $AA
+00414  05A8  AA                 .BYTE $AA
+00415  05A9  AA                 .BYTE $AA
+00416  05AA  AA                 .BYTE $AA
+00417  05AB  AA                 .BYTE $AA
+00418  05AC  AA                 .BYTE $AA
+00419  05AD  AA                 .BYTE $AA
+00420  05AE  AA                 .BYTE $AA
+00421  05AF  AA                 .BYTE $AA
+00422  05B0  AA                 .BYTE $AA
+00423  05B1  AA                 .BYTE $AA
+00424  05B2  AA                 .BYTE $AA
+00425  05B3  AA                 .BYTE $AA
+00426  05B4  AA                 .BYTE $AA
+00427  05B5  AA                 .BYTE $AA
+00428  05B6  AA                 .BYTE $AA
+00429  05B7  AA                 .BYTE $AA
+00430  05B8  AA                 .BYTE $AA
+00431  05B9  AA                 .BYTE $AA
+00432  05BA  AA                 .BYTE $AA
+
+
+
+
+
+
+
+DISASSEMBLER64.......PAGE 0009
+
+LINE# LOC   CODE        LINE
+
+
+00433  05BB  AA                 .BYTE $AA
+00434  05BC  AA                 .BYTE $AA
+00435  05BD  AA                 .BYTE $AA
+00436  05BE  AA                 .BYTE $AA
+00437  05BF  AA                 .BYTE $AA
+00438  05C0  AA                 .BYTE $AA
+00439  05C1  AA                 .BYTE $AA
+00440  05C2  AA                 .BYTE $AA
+00441  05C3  AA                 .BYTE $AA
+00442  05C4  AA                 .BYTE $AA
+00443  05C5  AA                 .BYTE $AA
+00444  05C6  AA                 .BYTE $AA
+00445  05C7  AA                 .BYTE $AA
+00446  05C8  AA                 .BYTE $AA
+00447  05C9  AA                 .BYTE $AA
+00448  05CA  AA                 .BYTE $AA
+00449  05CB  AA                 .BYTE $AA
+00450  05CC  AA                 .BYTE $AA
+00451  05CD  AA                 .BYTE $AA
+00452  05CE  AA                 .BYTE $AA
+00453  05CF  AA                 .BYTE $AA
+00454  05D0  AA                 .BYTE $AA
+00455  05D1  AA                 .BYTE $AA
+00456  05D2  AA                 .BYTE $AA
+00457  05D3  AA                 .BYTE $AA
+00458  05D4  AA                 .BYTE $AA
+00459  05D5  AA                 .BYTE $AA
+00460  05D6  AA                 .BYTE $AA
+00461  05D7  AA                 .BYTE $AA
+00462  05D8  AA                 .BYTE $AA
+00463  05D9  AA                 .BYTE $AA
+00464  05DA  AA                 .BYTE $AA
+00465  05DB  AA                 .BYTE $AA
+00466  05DC  AA                 .BYTE $AA
+00467  05DD  AA                 .BYTE $AA
+00468  05DE  AA                 .BYTE $AA
+00469  05DF  AA                 .BYTE $AA
+00470  05E0  AA                 .BYTE $AA
+00471  05E1  AA                 .BYTE $AA
+00472  05E2  AA                 .BYTE $AA
+00473  05E3  AA                 .BYTE $AA
+00474  05E4  AA                 .BYTE $AA
+00475  05E5  AA                 .BYTE $AA
+00476  05E6  AA                 .BYTE $AA
+00477  05E7  AA                 .BYTE $AA
+00478  05E8  AA                 .BYTE $AA
+00479  05E9  AA                 .BYTE $AA
+00480  05EA  AA                 .BYTE $AA
+00481  05EB  AA                 .BYTE $AA
+00482  05EC  AA                 .BYTE $AA
+00483  05ED  AA                 .BYTE $AA
+00484  05EE  AA                 .BYTE $AA
+00485  05EF  AA                 .BYTE $AA
+00486  05F0  AA                 .BYTE $AA
+
+
+
+
+
+
+
+DISASSEMBLER64.......PAGE 0010
+
+LINE# LOC   CODE        LINE
+
+
+00487  05F1  AA                 .BYTE $AA
+00488  05F2  AA                 .BYTE $AA
+00489  05F3  AA                 .BYTE $AA
+00490  05F4  AA                 .BYTE $AA
+00491  05F5  AA                 .BYTE $AA
+00492  05F6  AA                 .BYTE $AA
+00493  05F7  AA                 .BYTE $AA
+00494  05F8  AA                 .BYTE $AA
+00495  05F9  AA                 .BYTE $AA
+00496  05FA  AA                 .BYTE $AA
+00497  05FB  AA                 .BYTE $AA
+00498  05FC  AA                 .BYTE $AA
+00499  05FD  AA                 .BYTE $AA
+00500  05FE  AA                 .BYTE $AA
+00501  05FF  AA                 .BYTE $AA
+00502  0600  AA                 .BYTE $AA
+00503  0601  EA                 .BYTE $EA
+00504  0602              ;********************************
+00505  0602  E6 7A              INC $7A
+00506  0604  D0 02              BNE XX0608
+00507  0606  E6 7B              INC $7B
+00508  0608  86 9B       XX0608 STX $9B
+00509  060A  BA                 TSX 
+00510  060B  BD 01 01           LDA $0101,X
+00511  060E  C9 8C              CMP #$8C
+00512  0610  D0 36              BNE XX0648
+00513  0612  BD 02 01           LDA $0102,X
+00514  0615  C9 C4              CMP #$C4
+00515  0617  D0 2F              BNE XX0648
+00516  0619  A5 7A              LDA $7A
+00517  061B  D0 28              BNE XX0645
+00518  061D  A5 7B              LDA $7B
+00519  061F  C9 02              CMP #$02
+00520  0621  D0 22              BNE XX0645
+00521  0623  A0 00              LDY #$00
+00522  0625  84 9B              STY $9B
+00523  0627  B1 7A              LDA ($7A),Y
+00524  0629  C9 3E              CMP #$3E      ;'>'
+00525  062B  F0 0D              BEQ XX063A
+00526  062D  C9 40              CMP #$40      ;'@'
+00527  062F  F0 09              BEQ XX063A
+00528  0631  C8                 INY 
+00529  0632  85 9B              STA $9B
+00530  0634  C9 2F              CMP #$2F      ;'/'
+00531  0636  F0 55              BEQ XX068D
+00532  0638  D0 0B              BNE XX0645
+00533  063A  C8          XX063A INY 
+00534  063B  B1 7A              LDA ($7A),Y
+00535  063D  F0 2C              BEQ XX066B
+00536  063F  C9 24              CMP #$24      ;'$'
+00537  0641  F0 4A              BEQ XX068D
+00538  0643  D0 08              BNE XX064D
+00539  0645  4C 79 00    XX0645 JMP $0079
+00540  0648              ;********************************
+
+
+
+
+
+
+
+DISASSEMBLER64.......PAGE 0011
+
+LINE# LOC   CODE        LINE
+
+
+00541  0648  A6 9B       XX0648 LDX $9B
+00542  064A  4C 79 00           JMP $0079
+00543  064D              ;********************************
+00544  064D  A9 08       XX064D LDA #$08
+00545  064F  20 B1 FF           JSR LISTEN
+00546  0652  A9 6F              LDA #$6F
+00547  0654  20 93 FF           JSR SECOND
+00548  0657  E6 7A       XX0657 INC $7A
+00549  0659  A0 00              LDY #$00
+00550  065B  B1 7A              LDA ($7A),Y
+00551  065D  F0 06              BEQ XX0665
+00552  065F  20 A8 FF           JSR CIOUT
+00553  0662  B8                 CLV 
+00554  0663  50 F2              BVC XX0657
+00555  0665  20 AE FF    XX0665 JSR UNLSN
+00556  0668  B8                 CLV 
+00557  0669  50 1F              BVC XX068A
+00558  066B  84 7A       XX066B STY $7A
+00559  066D  A9 08              LDA #$08
+00560  066F  20 B4 FF           JSR TALK
+00561  0672  A9 6F              LDA #$6F
+00562  0674  20 96 FF           JSR TKSA
+00563  0677  20 A5 FF    XX0677 JSR ACPTR
+00564  067A  C9 0D              CMP #$0D
+00565  067C  F0 06              BEQ XX0684
+00566  067E  20 42 E7           JSR $E742
+00567  0681  B8                 CLV 
+00568  0682  50 F3              BVC XX0677
+00569  0684  20 42 E7    XX0684 JSR $E742
+00570  0687  20 AB FF           JSR UNTLK
+00571  068A  4C 79 00    XX068A JMP $0079
+00572  068D              ;********************************
+00573  068D  C8          XX068D INY 
+00574  068E  B1 7A              LDA ($7A),Y
+00575  0690  D0 FB              BNE XX068D
+00576  0692  88                 DEY 
+00577  0693  98                 TYA 
+00578  0694  A2 01              LDX #$01
+00579  0696  A0 02              LDY #$02
+00580  0698  20 BD FF           JSR SETNAM
+00581  069B  A2 08              LDX #$08
+00582  069D  A5 9B              LDA $9B
+00583  069F  D0 3E              BNE XX06DF
+00584  06A1  A9 0E              LDA #$0E
+00585  06A3  A0 60              LDY #$60
+00586  06A5  20 BA FF           JSR SETLFS
+00587  06A8  20 C0 FF           JSR OPEN
+00588  06AB  A9 08              LDA #$08
+00589  06AD  20 B4 FF           JSR TALK
+00590  06B0  A9 60              LDA #$60
+00591  06B2  20 96 FF           JSR TKSA
+00592  06B5  A9 00              LDA #$00
+00593  06B7  85 90              STA $90
+00594  06B9  A0 03              LDY #$03
+
+
+
+
+
+
+
+DISASSEMBLER64.......PAGE 0012
+
+LINE# LOC   CODE        LINE
+
+
+00595  06BB  84 B7       XX06BB STY $B7
+00596  06BD  20 A5 FF           JSR ACPTR
+00597  06C0  85 B0              STA $B0
+00598  06C2  A4 90              LDY $90
+00599  06C4  D0 1B              BNE XX06E1
+00600  06C6  20 A5 FF           JSR ACPTR
+00601  06C9  85 B1              STA $B1
+00602  06CB  A4 90              LDY $90
+00603  06CD  D0 12              BNE XX06E1
+00604  06CF  A4 B7              LDY $B7
+00605  06D1  88                 DEY 
+00606  06D2  D0 E7              BNE XX06BB
+00607  06D4  A6 B0              LDX $B0
+00608  06D6  A5 B1              LDA $B1
+00609  06D8  20 CD DD           JSR $DDCD
+00610  06DB  A9 20              LDA #$20      ;' '
+00611  06DD  D0 06              BNE XX06E5
+00612  06DF  D0 40       XX06DF BNE XX0721
+00613  06E1  D0 31       XX06E1 BNE XX0714
+00614  06E3  D0 D6       XX06E3 BNE XX06BB
+00615  06E5  20 D2 FF    XX06E5 JSR CHROUT
+00616  06E8  20 A5 FF    XX06E8 JSR ACPTR
+00617  06EB  A6 90              LDX $90
+00618  06ED  D0 25              BNE XX0714
+00619  06EF  C9 00              CMP #$00
+00620  06F1  F0 18              BEQ XX070B
+00621  06F3  20 D2 FF           JSR CHROUT
+00622  06F6  20 E1 FF           JSR STOP
+00623  06F9  F0 19              BEQ XX0714
+00624  06FB  20 E4 FF           JSR GETIN
+00625  06FE  F0 E8              BEQ XX06E8
+00626  0700  C9 20              CMP #$20      ;' '
+00627  0702  D0 E4              BNE XX06E8
+00628  0704  20 E4 FF    XX0704 JSR GETIN
+00629  0707  F0 FB              BEQ XX0704
+00630  0709  D0 DD              BNE XX06E8
+00631  070B  A9 0D       XX070B LDA #$0D
+00632  070D  20 D2 FF           JSR CHROUT
+00633  0710  A0 02              LDY #$02
+00634  0712  D0 CF              BNE XX06E3
+00635  0714  20 CC FF    XX0714 JSR CLRCHN
+00636  0717  A9 0E              LDA #$0E
+00637  0719  20 C3 FF           JSR CLOSE
+00638  071C  68                 PLA 
+00639  071D  68                 PLA 
+00640  071E  4C 67 E4           JMP $E467
+00641  0721              ;********************************
+00642  0721  A9 0E       XX0721 LDA #$0E
+00643  0723  A0 00              LDY #$00
+00644  0725  20 BA FF           JSR SETLFS
+00645  0728  A9 00              LDA #$00
+00646  072A  A6 2B              LDX $2B
+00647  072C  A4 2C              LDY $2C
+00648  072E  20 D5 FF           JSR LOAD
+
+
+
+
+
+
+
+DISASSEMBLER64.......PAGE 0013
+
+LINE# LOC   CODE        LINE
+
+
+00649  0731  4C 95 E1           JMP $E195
+00650  0734              ;********************************
+00651  0734              ;********************************
+00652  0734              .END
+
+
+ERRORS = 00000
+
+          0022             0023             0024             0025
+          002B             002C             0033             0034
+          0037             0038             0073             0074
+          0075             0079             007A             007B
+          0090             009B             00B0             00B1
+          00B7             0101             0102             0501
+          050D             0519             0525             0608
+          063A             0645             0648             064D
+          0657             0665             066B             0677
+          0684             068A             068D             06BB
+          06DF             06E1             06E3             06E5
+          06E8             0704             070B             0714
+          0721             DDCD             E195             E467
+          E742    .SECOND   FF93    .TKSA     FF96    .ACPTR    FFA5
+ .CIOUT    FFA8    .UNTLK    FFAB    .UNLSN    FFAE    .LISTEN   FFB1
+ .TALK     FFB4    .SETLFS   FFBA    .SETNAM   FFBD    .OPEN     FFC0
+ .CLOSE    FFC3    .CLRCHN   FFCC    .CHROUT   FFD2    .LOAD     FFD5
+ .STOP     FFE1    .GETIN    FFE4
+
+
+END OF DISASSEMBLY
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

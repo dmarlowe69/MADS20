@@ -1,0 +1,3426 @@
+6MON20.ASM......PAGE 0001
+
+LINE# LOC   CODE        LINE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MONITOR$6000......PAGE 0002
+
+LINE# LOC   CODE        LINE
+
+
+00003  0000              ;********************************
+00004  0000              ;
+00005  0000              ;        MONITOR$6000
+00006  0000              ;   MONITOR$6000.V20 V072882
+00007  0000              ;   MACHINE LANGUAGE MONITOR
+00008  0000              ; (C) 1982 BY COMMODORE MACHINES
+00009  0000              ;
+00010  0000              ;  DOCUMENTED BY DENTON MARLOWE
+00011  0000              ;  
+00012  0000              ;********************************
+00013  0000              ; RELOCATED MONITOR$6000
+00014  0000              ;********************************
+00015  0000              *=$6000                ;SYS 24576
+00016  6000              ;********************************
+00017  6000              ; MAIN CODE
+00018  6000              ;********************************
+00019  6000              .FIL   MON.ASM
+00020  6000              ;********************************
+00021  6000              ;
+00022  6000              ;        MONITOR$X000
+00023  6000              ;   MONITOR$X000.C64 V072882
+00024  6000              ;   MACHINE LANGUAGE MONITOR
+00025  6000              ; (C) 1982 BY COMMODORE MACHINES
+00026  6000              ;
+00027  6000              ;     BASED ON MONITOR$C000
+00028  6000              ;
+00029  6000              ;  DOCUMENTED BY DENTON MARLOWE
+00030  6000              ;
+00031  6000              ;********************************
+00032  6000              ; PAGE $0000 EQUATES
+00033  6000              ;********************************
+00034  6000              D6510=$0000
+00035  6000              UNUSED=$0002
+00036  6000              ADRAY1=$0003
+00037  6000              ADRAY2=$0005
+00038  6000              CHARAC=$0007
+00039  6000              ENDCHR=$0008
+00040  6000              DIMFLG=$000C
+00041  6000              VALTYP=$000D
+00042  6000              INTFLG=$000E
+00043  6000              GARBFL=$000F
+00044  6000              SUBFLG=$0010
+00045  6000              INPFLG=$0011
+00046  6000              TANSGN=$0012
+00047  6000              CHANNL=$0013
+00048  6000              LINNUM=$0014
+00049  6000              TEMPST=$0019
+00050  6000              INDEX=$0022
+00051  6000              RESHO=$0026
+00052  6000              TXTTAB=$002B
+00053  6000              VARTAB=$002D
+00054  6000              STREND=$0031
+00055  6000              FRETOP=$0033
+00056  6000              SAL=$00AC
+00057  6000              CMPO=$00B0
+
+
+
+
+
+
+MONITOR$6000......PAGE 0003
+
+LINE# LOC   CODE        LINE
+
+
+00058  6000              CAS1=$00C0
+00059  6000              STAL=$00C1
+00060  6000              MEMUSS=$00C3
+00061  6000              NDX=$00C6
+00062  6000              GDBLN=$00CE
+00063  6000              BLNON=$00CF
+00064  6000              PNT=$00D1
+00065  6000              PNTR=$00D3
+00066  6000              TBLX=$00D6
+00067  6000              ROBUF=$00F9
+00068  6000              ;********************************
+00069  6000              ; PAGE $0100 EQUATES
+00070  6000              ;********************************
+00071  6000              STACK=$0100
+00072  6000              ;********************************
+00073  6000              ; PAGE $0200 EQUATES
+00074  6000              ;********************************
+00075  6000              KEYD=$0277
+00076  6000              MEMSIZ=$0283
+00077  6000              ;********************************
+00078  6000              ; PAGE $0300 EQUATES
+00079  6000              ;********************************
+00080  6000              CINV=$0314
+00081  6000              CBINV=$0316
+00082  6000              NMINV=$0318            ;NMI VECTOR
+00083  6000              ;********************************
+00084  6000              ; PAGE $0400 EQUATES
+00085  6000              ;********************************
+00086  6000              VICSCN=$0400
+00087  6000              ;********************************
+00088  6000              ; EXTERNAL ADDRESS EQUATES
+00089  6000              ;********************************
+00090  6000              SETMSG=$FF90
+00091  6000              CLRCHN=$FFCC
+00092  6000              CHRIN=$FFCF
+00093  6000              CHROUT=$FFD2
+00094  6000              LOAD=$FFD5
+00095  6000              SAVE=$FFD8
+00096  6000              GETIN=$FFE4
+00097  6000              ;********************************
+00098  6000              ; ENTRY POINT
+00099  6000              ; 
+00100  6000              ; ?
+00101  6000              ;********************************
+00102  6000              ;ENTRY  JMP XXC00C
+00103  6000  4C F8 6E    ENTRY  JMP PXC00C
+00104  6003              ;********************************
+00105  6003  4C 3F 60    XXC003 JMP XXC03F
+00106  6006              ;********************************
+00107  6006  4C CF FF    MCHRIN JMP CHRIN
+00108  6009              ;********************************
+00109  6009  4C D2 FF    MCHROT JMP CHROUT
+00110  600C              ;********************************
+00111  600C  78          XXC00C SEI 
+00112  600D  AD 18 03           LDA NMINV
+
+
+
+
+
+
+MONITOR$6000......PAGE 0004
+
+LINE# LOC   CODE        LINE
+
+
+00113  6010  85 11              STA INPFLG
+00114  6012  AD 19 03           LDA NMINV+1
+00115  6015  85 12              STA TANSGN
+00116  6017  AD F2 6E           LDA XXCEF2
+00117  601A  AE F3 6E           LDX XXCEF3
+00118  601D  8D 16 03           STA CBINV
+00119  6020  8E 17 03           STX CBINV+1
+00120  6023  20 19 6D           JSR XXCD19
+00121  6026  A9 00              LDA #$00
+00122  6028  85 F9              STA ROBUF
+00123  602A  85 FA              STA ROBUF+1
+00124  602C  A9 80              LDA #$80
+00125  602E  20 90 FF           JSR SETMSG
+00126  6031  A9 FF              LDA #$FF
+00127  6033  85 1A              STA TEMPST+1
+00128  6035  A9 00              LDA #$00
+00129  6037  85 13              STA CHANNL
+00130  6039  85 10              STA SUBFLG
+00131  603B  85 31              STA STREND
+00132  603D  58                 CLI 
+00133  603E  00                 BRK 
+00134  603F              ;********************************
+00135  603F              ; NMI SERVICE ROUTINE
+00136  603F              ;********************************
+00137  603F  20 F9 6C    XXC03F JSR XXCCF9
+00138  6042  68                 PLA 
+00139  6043  85 07              STA CHARAC
+00140  6045  68                 PLA 
+00141  6046  85 06              STA ADRAY2+1
+00142  6048  68                 PLA 
+00143  6049  85 05              STA ADRAY2
+00144  604B  68                 PLA 
+00145  604C  85 04              STA ADRAY1+1
+00146  604E  68                 PLA 
+00147  604F  85 03              STA ADRAY1
+00148  6051  68                 PLA 
+00149  6052  85 02              STA UNUSED
+00150  6054  BA                 TSX 
+00151  6055  86 08              STX ENDCHR
+00152  6057  38                 SEC 
+00153  6058  A5 03              LDA ADRAY1
+00154  605A  E9 02              SBC #$02
+00155  605C  85 03              STA ADRAY1
+00156  605E  A5 02              LDA UNUSED
+00157  6060  E9 00              SBC #$00
+00158  6062  85 02              STA UNUSED
+00159  6064  20 19 6D           JSR XXCD19
+00160  6067  A5 1A              LDA TEMPST+1
+00161  6069  C9 FF              CMP #$FF
+00162  606B  F0 1D              BEQ XXC08A
+00163  606D  A6 14              LDX LINNUM
+00164  606F  86 C1              STX STAL
+00165  6071  A6 15              LDX LINNUM+1
+00166  6073  86 C2              STX STAL+1
+00167  6075  A0 00              LDY #$00
+
+
+
+
+
+
+MONITOR$6000......PAGE 0005
+
+LINE# LOC   CODE        LINE
+
+
+00168  6077  20 AB 6D           JSR XXCDAB
+00169  607A  A5 2D              LDA VARTAB
+00170  607C  D0 06              BNE XXC084
+00171  607E  A5 2E              LDA VARTAB+1
+00172  6080  D0 05              BNE XXC087
+00173  6082  F0 06              BEQ XXC08A
+00174  6084  4C 94 66    XXC084 JMP XXC694
+00175  6087              ;********************************
+00176  6087  4C 92 66    XXC087 JMP XXC692
+00177  608A              ;********************************
+00178  608A  20 7C 69    XXC08A JSR XXC97C
+00179  608D  A2 42              LDX #$42        ;'B'
+00180  608F  A9 2A       XXC08F LDA #$2A        ;'*'
+00181  6091  20 64 68           JSR PRTXA
+00182  6094  4C A8 69           JMP XXC9A8
+00183  6097              ;********************************
+00184  6097  A9 3F       XXC097 LDA #$3F        ;'?'
+00185  6099  20 09 60           JSR MCHROT
+00186  609C  20 7C 69    XXC09C JSR XXC97C
+00187  609F  A9 2E              LDA #$2E        ;'.'
+00188  60A1  20 09 60           JSR MCHROT
+00189  60A4  A9 00              LDA #$00
+00190  60A6  85 0F              STA GARBFL
+00191  60A8  85 29              STA RESHO+3
+00192  60AA  85 31              STA STREND
+00193  60AC  20 DB 68    XXC0AC JSR XXC8DB
+00194  60AF  C9 2E              CMP #$2E        ;'.'
+00195  60B1  F0 F9              BEQ XXC0AC
+00196  60B3  C9 20              CMP #$20        ;' '
+00197  60B5  F0 F5              BEQ XXC0AC
+00198  60B7  A2 14              LDX #$14
+00199  60B9  DD AD 6E    XXC0B9 CMP XXCEAD,X
+00200  60BC  D0 12              BNE XXC0D0
+00201  60BE  85 1E              STA $1E
+00202  60C0  8A                 TXA 
+00203  60C1  0A                 ASL A
+00204  60C2  AA                 TAX 
+00205  60C3  BD C2 6E           LDA XXCEC2,X
+00206  60C6  85 C1              STA STAL
+00207  60C8  BD C3 6E           LDA XXCEC3,X
+00208  60CB  85 C2              STA STAL+1
+00209  60CD  6C C1 00           JMP ($00C1)
+00210  60D0              ;********************************
+00211  60D0  CA          XXC0D0 DEX 
+00212  60D1  10 E6              BPL XXC0B9
+00213  60D3  30 C2              BMI XXC097
+00214  60D5  A2 02       XXC0D5 LDX #$02
+00215  60D7  D0 02              BNE XXC0DB
+00216  60D9  A2 00       XXC0D9 LDX #$00
+00217  60DB  B4 C1       XXC0DB LDY STAL,X
+00218  60DD  D0 08              BNE XXC0E7
+00219  60DF  B4 C2              LDY STAL+1,X
+00220  60E1  D0 02              BNE XXC0E5
+00221  60E3  E6 29              INC RESHO+3
+00222  60E5  D6 C2       XXC0E5 DEC STAL+1,X
+
+
+
+
+
+
+MONITOR$6000......PAGE 0006
+
+LINE# LOC   CODE        LINE
+
+
+00223  60E7  D6 C1       XXC0E7 DEC STAL,X
+00224  60E9  60                 RTS 
+00225  60EA              ;********************************
+00226  60EA  A9 00       XXC0EA LDA #$00
+00227  60EC  85 23              STA INDEX+1
+00228  60EE  20 5B 62           JSR XXC25B
+00229  60F1  A2 02              LDX #$02
+00230  60F3  20 79 69    XXC0F3 JSR XXC979
+00231  60F6  CA                 DEX 
+00232  60F7  D0 FA              BNE XXC0F3
+00233  60F9  60                 RTS 
+00234  60FA              ;********************************
+00235  60FA  A2 02       XXC0FA LDX #$02
+00236  60FC  B5 C0       XXC0FC LDA CAS1,X
+00237  60FE  48                 PHA 
+00238  60FF  B5 26              LDA RESHO,X
+00239  6101  95 C0              STA CAS1,X
+00240  6103  68                 PLA 
+00241  6104  95 26              STA RESHO,X
+00242  6106  CA                 DEX 
+00243  6107  D0 F3              BNE XXC0FC
+00244  6109  60                 RTS 
+00245  610A              ;********************************
+00246  610A  A5 27       XXC10A LDA RESHO+1
+00247  610C  A4 28              LDY RESHO+2
+00248  610E  4C 15 61           JMP XXC115
+00249  6111              ;********************************
+00250  6111  A5 C3       XXC111 LDA MEMUSS
+00251  6113  A4 C4              LDY MEMUSS+1
+00252  6115  38          XXC115 SEC 
+00253  6116  E5 C1              SBC STAL
+00254  6118  85 26              STA RESHO
+00255  611A  98                 TYA 
+00256  611B  E5 C2              SBC STAL+1
+00257  611D  A8                 TAY 
+00258  611E  05 26              ORA RESHO
+00259  6120  60                 RTS 
+00260  6121              ;********************************
+00261  6121              ; C
+00262  6121              ;********************************
+00263  6121  A9 00       ZZC121 LDA #$00
+00264  6123  F0 02              BEQ XXC127
+00265  6125              ;********************************
+00266  6125              ; T
+00267  6125              ;********************************
+00268  6125  A9 01       ZZC125 LDA #$01
+00269  6127  85 2A       XXC127 STA RESHO+4
+00270  6129  20 1D 68           JSR XXC81D
+00271  612C  20 7C 69           JSR XXC97C
+00272  612F  20 11 61           JSR XXC111
+00273  6132  20 77 68           JSR XXC877
+00274  6135  90 1A              BCC XXC151
+00275  6137  20 0A 61    XXC137 JSR XXC10A
+00276  613A  B0 03              BCS XXC13F
+00277  613C  4C C1 61           JMP XXC1C1
+
+
+
+
+
+
+MONITOR$6000......PAGE 0007
+
+LINE# LOC   CODE        LINE
+
+
+00278  613F              ;********************************
+00279  613F  20 77 61    XXC13F JSR XXC177
+00280  6142  E6 C3              INC MEMUSS
+00281  6144  D0 02              BNE XXC148
+00282  6146  E6 C4              INC MEMUSS+1
+00283  6148  20 63 69    XXC148 JSR XXC963
+00284  614B  A4 29              LDY RESHO+3
+00285  614D  D0 49              BNE XXC198
+00286  614F  F0 E6              BEQ XXC137
+00287  6151  20 0A 61    XXC151 JSR XXC10A
+00288  6154  18                 CLC 
+00289  6155  A5 26              LDA RESHO
+00290  6157  65 C3              ADC MEMUSS
+00291  6159  85 C3              STA MEMUSS
+00292  615B  98                 TYA 
+00293  615C  65 C4              ADC MEMUSS+1
+00294  615E  85 C4              STA MEMUSS+1
+00295  6160  20 FA 60           JSR XXC0FA
+00296  6163  20 77 61    XXC163 JSR XXC177
+00297  6166  20 0A 61           JSR XXC10A
+00298  6169  B0 56              BCS XXC1C1
+00299  616B  20 D5 60           JSR XXC0D5
+00300  616E  20 D9 60           JSR XXC0D9
+00301  6171  A4 29              LDY RESHO+3
+00302  6173  D0 23              BNE XXC198
+00303  6175  F0 EC              BEQ XXC163
+00304  6177  A2 00       XXC177 LDX #$00
+00305  6179  20 49 6D           JSR XXCD49
+00306  617C  48                 PHA 
+00307  617D  20 45 6D           JSR XXCD45
+00308  6180  68                 PLA 
+00309  6181  A4 2A              LDY RESHO+4
+00310  6183  F0 03              BEQ XXC188
+00311  6185  20 53 6D           JSR XXCD53
+00312  6188  C1 0D       XXC188 CMP (VALTYP,X)
+00313  618A  F0 0B              BEQ XXC197
+00314  618C  20 4E 68    XXC18C JSR XXC84E
+00315  618F  20 79 69           JSR XXC979
+00316  6192  20 E5 68           JSR XXC8E5
+00317  6195  F0 01              BEQ XXC198
+00318  6197  60          XXC197 RTS 
+00319  6198              ;********************************
+00320  6198  4C 9C 60    XXC198 JMP XXC09C
+00321  619B              ;********************************
+00322  619B              ; F
+00323  619B              ;********************************
+00324  619B  20 36 68    ZZC19B JSR XXC836
+00325  619E  20 40 68           JSR XXC840
+00326  61A1  20 DB 68           JSR XXC8DB
+00327  61A4  20 A9 68           JSR XXC8A9
+00328  61A7  90 15              BCC XXC1BE
+00329  61A9  85 20              STA TEMPST+7
+00330  61AB  A6 29       XXC1AB LDX RESHO+3
+00331  61AD  D0 12              BNE XXC1C1
+00332  61AF  20 11 61           JSR XXC111
+
+
+
+
+
+
+MONITOR$6000......PAGE 0008
+
+LINE# LOC   CODE        LINE
+
+
+00333  61B2  90 0D              BCC XXC1C1
+00334  61B4  A5 20              LDA TEMPST+7
+00335  61B6  20 57 6D           JSR XXCD57
+00336  61B9  20 63 69           JSR XXC963
+00337  61BC  D0 ED              BNE XXC1AB
+00338  61BE  4C 97 60    XXC1BE JMP XXC097
+00339  61C1              ;********************************
+00340  61C1  4C 9C 60    XXC1C1 JMP XXC09C
+00341  61C4              ;********************************
+00342  61C4              ; H
+00343  61C4              ;********************************
+00344  61C4  20 36 68    ZZC1C4 JSR XXC836
+00345  61C7  20 40 68           JSR XXC840
+00346  61CA  20 DB 68           JSR XXC8DB
+00347  61CD  A2 00              LDX #$00
+00348  61CF  20 DB 68           JSR XXC8DB
+00349  61D2  C9 27              CMP #$27        ;'''
+00350  61D4  D0 13              BNE XXC1E9
+00351  61D6  20 DB 68           JSR XXC8DB
+00352  61D9  95 33       XXC1D9 STA FRETOP,X
+00353  61DB  E8                 INX 
+00354  61DC  20 06 60           JSR MCHRIN
+00355  61DF  C9 0D              CMP #$0D
+00356  61E1  F0 20              BEQ XXC203
+00357  61E3  E0 20              CPX #$20        ;' '
+00358  61E5  D0 F2              BNE XXC1D9
+00359  61E7  F0 1A              BEQ XXC203
+00360  61E9  86 2C       XXC1E9 STX TXTTAB+1
+00361  61EB  20 B0 68           JSR XXC8B0
+00362  61EE  90 CE              BCC XXC1BE
+00363  61F0  95 33       XXC1F0 STA FRETOP,X
+00364  61F2  E8                 INX 
+00365  61F3  20 06 60           JSR MCHRIN
+00366  61F6  C9 0D              CMP #$0D
+00367  61F8  F0 09              BEQ XXC203
+00368  61FA  20 A9 68           JSR XXC8A9
+00369  61FD  90 BF              BCC XXC1BE
+00370  61FF  E0 20              CPX #$20        ;' '
+00371  6201  D0 ED              BNE XXC1F0
+00372  6203  86 1F       XXC203 STX $1F
+00373  6205  20 7C 69           JSR XXC97C
+00374  6208  A2 00       XXC208 LDX #$00
+00375  620A  A0 00              LDY #$00
+00376  620C  A5 C1              LDA STAL
+00377  620E  48                 PHA 
+00378  620F  A5 C2              LDA STAL+1
+00379  6211  48                 PHA 
+00380  6212  20 7C 6D    XXC212 JSR XXCD7C
+00381  6215  D5 33              CMP FRETOP,X
+00382  6217  D0 13              BNE XXC22C
+00383  6219  20 63 69           JSR XXC963
+00384  621C  E8                 INX 
+00385  621D  E4 1F              CPX $1F
+00386  621F  D0 F1              BNE XXC212
+00387  6221  68                 PLA 
+
+
+
+
+
+
+MONITOR$6000......PAGE 0009
+
+LINE# LOC   CODE        LINE
+
+
+00388  6222  85 C2              STA STAL+1
+00389  6224  68                 PLA 
+00390  6225  85 C1              STA STAL
+00391  6227  20 8C 61           JSR XXC18C
+00392  622A  D0 06              BNE XXC232
+00393  622C  68          XXC22C PLA 
+00394  622D  85 C2              STA STAL+1
+00395  622F  68                 PLA 
+00396  6230  85 C1              STA STAL
+00397  6232  20 63 69    XXC232 JSR XXC963
+00398  6235  A4 29              LDY RESHO+3
+00399  6237  D0 05              BNE XXC23E
+00400  6239  20 11 61           JSR XXC111
+00401  623C  B0 CA              BCS XXC208
+00402  623E  4C 9C 60    XXC23E JMP XXC09C
+00403  6241              ;********************************
+00404  6241              ; D
+00405  6241              ;********************************
+00406  6241  20 38 64    ZZC241 JSR XXC438
+00407  6244  20 11 61    XXC244 JSR XXC111
+00408  6247  90 0D              BCC XXC256
+00409  6249  A0 2C              LDY #$2C        ;','
+00410  624B  20 EA 60           JSR XXC0EA
+00411  624E  20 B5 62           JSR XXC2B5
+00412  6251  20 E5 68           JSR XXC8E5
+00413  6254  D0 EE              BNE XXC244
+00414  6256  20 97 65    XXC256 JSR XXC597
+00415  6259  D0 E3              BNE XXC23E
+00416  625B  20 6E 69    XXC25B JSR XXC96E
+00417  625E  20 4E 68    XXC25E JSR XXC84E
+00418  6261  20 79 69           JSR XXC979
+00419  6264  20 1B 6C           JSR XXCC1B
+00420  6267  48                 PHA 
+00421  6268  20 CC 62           JSR XXC2CC
+00422  626B  68                 PLA 
+00423  626C  A2 03              LDX #$03
+00424  626E  20 52 63           JSR XXC352
+00425  6271  A2 06              LDX #$06
+00426  6273  E0 03       XXC273 CPX #$03
+00427  6275  D0 13              BNE XXC28A
+00428  6277  A4 22              LDY INDEX
+00429  6279  F0 0F              BEQ XXC28A
+00430  627B  A5 2B       XXC27B LDA TXTTAB
+00431  627D  C9 E8              CMP #$E8
+00432  627F  20 7C 6D           JSR XXCD7C
+00433  6282  B0 1C              BCS XXC2A0
+00434  6284  20 AD 62           JSR XXC2AD
+00435  6287  88                 DEY 
+00436  6288  D0 F1              BNE XXC27B
+00437  628A  06 2B       XXC28A ASL TXTTAB
+00438  628C  90 0E              BCC XXC29C
+00439  628E  BD 0A 6E           LDA XXCE0A,X
+00440  6291  20 92 65           JSR XXC592
+00441  6294  BD 10 6E           LDA XXCE10,X
+00442  6297  F0 03              BEQ XXC29C
+
+
+
+
+
+
+MONITOR$6000......PAGE 0010
+
+LINE# LOC   CODE        LINE
+
+
+00443  6299  20 92 65           JSR XXC592
+00444  629C  CA          XXC29C DEX 
+00445  629D  D0 D4              BNE XXC273
+00446  629F  60                 RTS 
+00447  62A0              ;********************************
+00448  62A0  20 C0 62    XXC2A0 JSR XXC2C0
+00449  62A3  AA                 TAX 
+00450  62A4  E8                 INX 
+00451  62A5  D0 01              BNE XXC2A8
+00452  62A7  C8                 INY 
+00453  62A8  98          XXC2A8 TYA 
+00454  62A9  20 AD 62           JSR XXC2AD
+00455  62AC  8A                 TXA 
+00456  62AD  86 1F       XXC2AD STX $1F
+00457  62AF  20 55 68           JSR XXC855
+00458  62B2  A6 1F              LDX $1F
+00459  62B4  60                 RTS 
+00460  62B5              ;********************************
+00461  62B5  A5 22       XXC2B5 LDA INDEX
+00462  62B7  20 BF 62    XXC2B7 JSR XXC2BF
+00463  62BA  85 C1              STA STAL
+00464  62BC  84 C2              STY STAL+1
+00465  62BE  60                 RTS 
+00466  62BF              ;********************************
+00467  62BF  38          XXC2BF SEC 
+00468  62C0  A4 C2       XXC2C0 LDY STAL+1
+00469  62C2  AA                 TAX 
+00470  62C3  10 01              BPL XXC2C6
+00471  62C5  88                 DEY 
+00472  62C6  65 C1       XXC2C6 ADC STAL
+00473  62C8  90 01              BCC XXC2CB
+00474  62CA  C8                 INY 
+00475  62CB  60          XXC2CB RTS 
+00476  62CC              ;********************************
+00477  62CC  A4 22       XXC2CC LDY INDEX
+00478  62CE  C8                 INY 
+00479  62CF  98                 TYA 
+00480  62D0  48                 PHA 
+00481  62D1  20 2A 69           JSR XXC92A
+00482  62D4  68                 PLA 
+00483  62D5  85 21              STA $21
+00484  62D7  38                 SEC 
+00485  62D8  A5 C1              LDA STAL
+00486  62DA  E5 21              SBC $21
+00487  62DC  85 C1              STA STAL
+00488  62DE  B0 02              BCS XXC2E2
+00489  62E0  C6 C2              DEC STAL+1
+00490  62E2  A5 22       XXC2E2 LDA INDEX
+00491  62E4  18                 CLC 
+00492  62E5  65 22              ADC INDEX
+00493  62E7  65 22              ADC INDEX
+00494  62E9  A8                 TAY 
+00495  62EA  A9 20       XXC2EA LDA #$20        ;' '
+00496  62EC  20 09 60           JSR MCHROT
+00497  62EF  C8                 INY 
+
+
+
+
+
+
+MONITOR$6000......PAGE 0011
+
+LINE# LOC   CODE        LINE
+
+
+00498  62F0  C0 07              CPY #$07
+00499  62F2  D0 F6              BNE XXC2EA
+00500  62F4  60                 RTS 
+00501  62F5              ;********************************
+00502  62F5  A8          XXC2F5 TAY 
+00503  62F6  4A                 LSR A
+00504  62F7  90 0B              BCC XXC304
+00505  62F9  4A                 LSR A
+00506  62FA  B0 17              BCS XXC313
+00507  62FC  C9 22              CMP #$22        ;'"'
+00508  62FE  F0 13              BEQ XXC313
+00509  6300  29 07              AND #$07
+00510  6302  09 80              ORA #$80
+00511  6304  4A          XXC304 LSR A
+00512  6305  AA                 TAX 
+00513  6306  BD B9 6D           LDA XXCDB9,X
+00514  6309  B0 04              BCS XXC30F
+00515  630B  4A                 LSR A
+00516  630C  4A                 LSR A
+00517  630D  4A                 LSR A
+00518  630E  4A                 LSR A
+00519  630F  29 0F       XXC30F AND #$0F
+00520  6311  D0 04              BNE XXC317
+00521  6313  A0 80       XXC313 LDY #$80
+00522  6315  A9 00              LDA #$00
+00523  6317  AA          XXC317 TAX 
+00524  6318  BD FD 6D           LDA XXCDFD,X
+00525  631B  85 2B              STA TXTTAB
+00526  631D  29 03              AND #$03
+00527  631F  85 22              STA INDEX
+00528  6321  98                 TYA 
+00529  6322  29 8F              AND #$8F
+00530  6324  AA                 TAX 
+00531  6325  98                 TYA 
+00532  6326  A0 03              LDY #$03
+00533  6328  E0 8A              CPX #$8A
+00534  632A  F0 0B              BEQ XXC337
+00535  632C  4A          XXC32C LSR A
+00536  632D  90 08              BCC XXC337
+00537  632F  4A                 LSR A
+00538  6330  4A          XXC330 LSR A
+00539  6331  09 20              ORA #$20        ;' '
+00540  6333  88                 DEY 
+00541  6334  D0 FA              BNE XXC330
+00542  6336  C8                 INY 
+00543  6337  88          XXC337 DEY 
+00544  6338  D0 F2              BNE XXC32C
+00545  633A  60                 RTS 
+00546  633B              ;********************************
+00547  633B  20 7C 6D    XXC33B JSR XXCD7C
+00548  633E  20 AD 62           JSR XXC2AD
+00549  6341  A2 01              LDX #$01
+00550  6343  20 F3 60    XXC343 JSR XXC0F3
+00551  6346  C4 22              CPY INDEX
+00552  6348  C8                 INY 
+
+
+
+
+
+
+MONITOR$6000......PAGE 0012
+
+LINE# LOC   CODE        LINE
+
+
+00553  6349  90 F0              BCC XXC33B
+00554  634B  A2 03              LDX #$03
+00555  634D  C0 03              CPY #$03
+00556  634F  90 F2              BCC XXC343
+00557  6351  60                 RTS 
+00558  6352              ;********************************
+00559  6352  A8          XXC352 TAY 
+00560  6353  B9 17 6E           LDA XXCE17,Y
+00561  6356  85 27              STA RESHO+1
+00562  6358  B9 57 6E           LDA XXCE57,Y
+00563  635B  85 28              STA RESHO+2
+00564  635D  A9 00       XXC35D LDA #$00
+00565  635F  A0 05              LDY #$05
+00566  6361  06 28       XXC361 ASL RESHO+2
+00567  6363  26 27              ROL RESHO+1
+00568  6365  2A                 ROL A
+00569  6366  88                 DEY 
+00570  6367  D0 F8              BNE XXC361
+00571  6369  69 3F              ADC #$3F        ;'?'
+00572  636B  20 09 60           JSR MCHROT
+00573  636E  CA                 DEX 
+00574  636F  D0 EC              BNE XXC35D
+00575  6371  4C 79 69           JMP XXC979
+00576  6374              ;********************************
+00577  6374  AD F5 6E    XXC374 LDA XXCEF5
+00578  6377  48                 PHA 
+00579  6378  AD F4 6E           LDA XXCEF4
+00580  637B  48                 PHA 
+00581  637C  A9 00              LDA #$00
+00582  637E  48                 PHA 
+00583  637F  48                 PHA 
+00584  6380  48                 PHA 
+00585  6381  48                 PHA 
+00586  6382  6C 18 00           JMP ($0018)
+00587  6385              ;********************************
+00588  6385  85 20       XXC385 STA TEMPST+7
+00589  6387  48                 PHA 
+00590  6388  20 DB 68    XXC388 JSR XXC8DB
+00591  638B  20 3F 69           JSR XXC93F
+00592  638E  D0 F8              BNE XXC388
+00593  6390  68                 PLA 
+00594  6391  49 FF       XXC391 EOR #$FF
+00595  6393  4C B7 62           JMP XXC2B7
+00596  6396              ;********************************
+00597  6396              ; I
+00598  6396              ;********************************
+00599  6396  A9 40       ZZC396 LDA #$40        ;'@'
+00600  6398              ;ERR-ASSEMBLER MAKES THIS ZERO PAGE.   
+00601  6398                                     ;BIT $00A9
+00602  6398  2C                 .BYTE $2C
+00603  6399              ;********************************
+00604  6399              ; M
+00605  6399              ;********************************
+00606  6399  A9          ZZC399 .BYTE $A9,$00
+00606  639A  00 
+
+
+
+
+
+
+MONITOR$6000......PAGE 0013
+
+LINE# LOC   CODE        LINE
+
+
+00607  639B              ;ZZC399 LDA #$00
+00608  639B  85 20              STA TEMPST+7
+00609  639D  20 38 64           JSR XXC438
+00610  63A0  A6 29       XXC3A0 LDX RESHO+3
+00611  63A2  D0 17              BNE XXC3BB
+00612  63A4  20 11 61           JSR XXC111
+00613  63A7  90 12              BCC XXC3BB
+00614  63A9  24 20              BIT TEMPST+7
+00615  63AB  50 06              BVC XXC3B3
+00616  63AD  20 BE 63           JSR XXC3BE
+00617  63B0  4C B6 63           JMP XXC3B6
+00618  63B3              ;********************************
+00619  63B3              ;       JSR XXC40E
+00620  63B3  20 0E 64    XXC3B3 JSR XXC40E
+00621  63B6  20 E5 68    XXC3B6 JSR XXC8E5
+00622  63B9  D0 E5              BNE XXC3A0
+00623  63BB  4C 56 62    XXC3BB JMP XXC256
+00624  63BE              ;********************************
+00625  63BE  20 7C 69    XXC3BE JSR XXC97C
+00626  63C1  A2 2E       XXC3C1 LDX #$2E        ;'.'
+00627  63C3  A9 27              LDA #$27        ;'''
+00628  63C5  20 64 68           JSR PRTXA
+00629  63C8  20 79 69           JSR XXC979
+00630  63CB  20 4E 68           JSR XXC84E
+00631  63CE  A9 12              LDA #$12
+00632  63D0  20 09 60           JSR MCHROT
+00633  63D3  A0 08              LDY #$08
+00634  63D5  A2 00              LDX #$00
+00635  63D7  20 49 6D    XXC3D7 JSR XXCD49
+00636  63DA  29 7F              AND #$7F
+00637  63DC  C9 20              CMP #$20        ;' '
+00638  63DE  B0 02              BCS XXC3E2
+00639  63E0  A9 2E              LDA #$2E        ;'.'
+00640  63E2  20 09 60    XXC3E2 JSR MCHROT
+00641  63E5  C9 22              CMP #$22        ;'"'
+00642  63E7  D0 0A              BNE XXC3F3
+00643  63E9  A9 14              LDA #$14
+00644  63EB  20 09 60           JSR MCHROT
+00645  63EE  A9 22              LDA #$22        ;'"'
+00646  63F0  20 09 60           JSR MCHROT
+00647  63F3  20 63 69    XXC3F3 JSR XXC963
+00648  63F6  88                 DEY 
+00649  63F7  D0 DE              BNE XXC3D7
+00650  63F9  A9 92              LDA #$92
+00651  63FB  20 09 60           JSR MCHROT
+00652  63FE  A5 C1              LDA STAL
+00653  6400  38                 SEC 
+00654  6401  E9 08              SBC #$08
+00655  6403  85 C1              STA STAL
+00656  6405  B0 02              BCS XXC409
+00657  6407  C6 C2              DEC STAL+1
+00658  6409  A9 08       XXC409 LDA #$08
+00659  640B  4C 2A 69           JMP XXC92A
+00660  640E              ;********************************
+00661  640E  20 7C 69    XXC40E JSR XXC97C
+
+
+
+
+
+
+MONITOR$6000......PAGE 0014
+
+LINE# LOC   CODE        LINE
+
+
+00662  6411  A2 2E       XXC411 LDX #$2E        ;'.'
+00663  6413  A9 3A              LDA #$3A        ;':'
+00664  6415  20 64 68           JSR PRTXA
+00665  6418  20 4E 68           JSR XXC84E
+00666  641B  A9 08              LDA #$08
+00667  641D  4C 2A 69           JMP XXC92A
+00668  6420              ;********************************
+00669  6420              ; :
+00670  6420              ;********************************
+00671  6420  20 36 68    ZZC420 JSR XXC836
+00672  6423  A9 08              LDA #$08
+00673  6425  20 85 63           JSR XXC385
+00674  6428  20 97 65           JSR XXC597
+00675  642B  20 0E 64           JSR XXC40E
+00676  642E  A9 3A              LDA #$3A        ;':'
+00677  6430  8D 77 02           STA KEYD
+00678  6433  A9 00              LDA #$00
+00679  6435  4C 47 65           JMP XXC547
+00680  6438              ;********************************
+00681  6438  20 36 68    XXC438 JSR XXC836
+00682  643B  85 C3              STA MEMUSS
+00683  643D  86 C4              STX MEMUSS+1
+00684  643F  20 06 60           JSR MCHRIN
+00685  6442  C9 0D              CMP #$0D
+00686  6444  F0 03              BEQ XXC449
+00687  6446  20 3B 68           JSR XXC83B
+00688  6449  4C 7C 69    XXC449 JMP XXC97C
+00689  644C              ;********************************
+00690  644C              ; A AND ,
+00691  644C              ;********************************
+00692  644C  20 87 68    ZZC44C JSR XXC887
+00693  644F  85 C3              STA MEMUSS
+00694  6451  86 C4              STX MEMUSS+1
+00695  6453  A2 00       XXC453 LDX #$00
+00696  6455  86 34              STX FRETOP+1
+00697  6457  20 DB 68    XXC457 JSR XXC8DB
+00698  645A  C9 20              CMP #$20        ;' '
+00699  645C  F0 F5              BEQ XXC453
+00700  645E  95 24              STA $24,X
+00701  6460  E8                 INX 
+00702  6461  E0 03              CPX #$03
+00703  6463  D0 F2              BNE XXC457
+00704  6465  CA          XXC465 DEX 
+00705  6466  30 11              BMI XXC479
+00706  6468  B5 24              LDA $24,X
+00707  646A  38                 SEC 
+00708  646B  E9 3F              SBC #$3F        ;'?'
+00709  646D  A0 05              LDY #$05
+00710  646F  4A          XXC46F LSR A
+00711  6470  66 34              ROR FRETOP+1
+00712  6472  66 33              ROR FRETOP
+00713  6474  88                 DEY 
+00714  6475  D0 F8              BNE XXC46F
+00715  6477  F0 EC              BEQ XXC465
+00716  6479  A2 02       XXC479 LDX #$02
+
+
+
+
+
+
+MONITOR$6000......PAGE 0015
+
+LINE# LOC   CODE        LINE
+
+
+00717  647B  20 06 60    XXC47B JSR MCHRIN
+00718  647E  C9 0D              CMP #$0D
+00719  6480  F0 20              BEQ XXC4A2
+00720  6482  C9 3A              CMP #$3A        ;':'
+00721  6484  F0 1C              BEQ XXC4A2
+00722  6486  C9 20              CMP #$20        ;' '
+00723  6488  F0 F1              BEQ XXC47B
+00724  648A  20 89 65           JSR XXC589
+00725  648D  B0 0E              BCS XXC49D
+00726  648F  20 BD 68           JSR XXC8BD
+00727  6492  A4 C1              LDY STAL
+00728  6494  84 C2              STY STAL+1
+00729  6496  85 C1              STA STAL
+00730  6498  A9 30              LDA #$30        ;'0'
+00731  649A  95 33              STA FRETOP,X
+00732  649C  E8                 INX 
+00733  649D  95 33       XXC49D STA FRETOP,X
+00734  649F  E8                 INX 
+00735  64A0  D0 D9              BNE XXC47B
+00736  64A2  86 27       XXC4A2 STX RESHO+1
+00737  64A4  A2 00              LDX #$00
+00738  64A6  86 29              STX RESHO+3
+00739  64A8  A2 00       XXC4A8 LDX #$00
+00740  64AA  86 20              STX TEMPST+7
+00741  64AC  A5 29              LDA RESHO+3
+00742  64AE  20 F5 62           JSR XXC2F5
+00743  64B1  A6 2B              LDX TXTTAB
+00744  64B3  86 28              STX RESHO+2
+00745  64B5  AA                 TAX 
+00746  64B6  BD 57 6E           LDA XXCE57,X
+00747  64B9  20 6F 65           JSR XXC56F
+00748  64BC  BD 17 6E           LDA XXCE17,X
+00749  64BF  20 6F 65           JSR XXC56F
+00750  64C2  A2 06              LDX #$06
+00751  64C4  E0 03       XXC4C4 CPX #$03
+00752  64C6  D0 12              BNE XXC4DA
+00753  64C8  A4 22              LDY INDEX
+00754  64CA  F0 0E              BEQ XXC4DA
+00755  64CC  A5 2B       XXC4CC LDA TXTTAB
+00756  64CE  C9 E8              CMP #$E8
+00757  64D0  A9 30              LDA #$30        ;'0'
+00758  64D2  B0 1D              BCS XXC4F1
+00759  64D4  20 6C 65           JSR XXC56C
+00760  64D7  88                 DEY 
+00761  64D8  D0 F2              BNE XXC4CC
+00762  64DA  06 2B       XXC4DA ASL TXTTAB
+00763  64DC  90 0E              BCC XXC4EC
+00764  64DE  BD 0A 6E           LDA XXCE0A,X
+00765  64E1  20 6F 65           JSR XXC56F
+00766  64E4  BD 10 6E           LDA XXCE10,X
+00767  64E7  F0 03              BEQ XXC4EC
+00768  64E9  20 6F 65           JSR XXC56F
+00769  64EC  CA          XXC4EC DEX 
+00770  64ED  D0 D5              BNE XXC4C4
+00771  64EF  F0 06              BEQ XXC4F7
+
+
+
+
+
+
+MONITOR$6000......PAGE 0016
+
+LINE# LOC   CODE        LINE
+
+
+00772  64F1  20 6C 65    XXC4F1 JSR XXC56C
+00773  64F4  20 6C 65           JSR XXC56C
+00774  64F7  A5 27       XXC4F7 LDA RESHO+1
+00775  64F9  C5 20              CMP TEMPST+7
+00776  64FB  F0 03              BEQ XXC500
+00777  64FD  4C 79 65           JMP XXC579
+00778  6500              ;********************************
+00779  6500  20 77 68    XXC500 JSR XXC877
+00780  6503  A4 22              LDY INDEX
+00781  6505  F0 2B              BEQ XXC532
+00782  6507  A5 28              LDA RESHO+2
+00783  6509  C9 9D              CMP #$9D
+00784  650B  D0 1C              BNE XXC529
+00785  650D  20 11 61           JSR XXC111
+00786  6510  90 09              BCC XXC51B
+00787  6512  98                 TYA 
+00788  6513  D0 6B              BNE XXC580
+00789  6515  A6 26              LDX RESHO
+00790  6517  30 67              BMI XXC580
+00791  6519  10 07              BPL XXC522
+00792  651B  C8          XXC51B INY 
+00793  651C  D0 62              BNE XXC580
+00794  651E  A6 26              LDX RESHO
+00795  6520  10 5E              BPL XXC580
+00796  6522  CA          XXC522 DEX 
+00797  6523  CA                 DEX 
+00798  6524  8A                 TXA 
+00799  6525  A4 22              LDY INDEX
+00800  6527  D0 03              BNE XXC52C
+00801  6529  B9 C2 00    XXC529 LDA $00C2,Y
+00802  652C  20 AB 6D    XXC52C JSR XXCDAB
+00803  652F  88                 DEY 
+00804  6530  D0 F7              BNE XXC529
+00805  6532  A5 29       XXC532 LDA RESHO+3
+00806  6534  20 AB 6D           JSR XXCDAB
+00807  6537  A0 41              LDY #$41        ;'A'
+00808  6539  8C 77 02           STY KEYD
+00809  653C  20 97 65           JSR XXC597
+00810  653F  20 EA 60           JSR XXC0EA
+00811  6542  20 B5 62           JSR XXC2B5
+00812  6545  A9 20              LDA #$20        ;' '
+00813  6547  8D 78 02    XXC547 STA KEYD+1
+00814  654A  A5 C2              LDA STAL+1
+00815  654C  20 9C 65           JSR XXC59C
+00816  654F  8E 79 02           STX KEYD+2
+00817  6552  8D 7A 02           STA KEYD+3
+00818  6555  A5 C1              LDA STAL
+00819  6557  20 9C 65           JSR XXC59C
+00820  655A  8E 7B 02           STX KEYD+4
+00821  655D  8D 7C 02           STA KEYD+5
+00822  6560  A9 20              LDA #$20        ;' '
+00823  6562  8D 7D 02           STA KEYD+6
+00824  6565  A9 07              LDA #$07
+00825  6567  85 C6              STA NDX
+00826  6569  4C 9C 60           JMP XXC09C
+
+
+
+
+
+
+MONITOR$6000......PAGE 0017
+
+LINE# LOC   CODE        LINE
+
+
+00827  656C              ;********************************
+00828  656C  20 6F 65    XXC56C JSR XXC56F
+00829  656F  86 1F       XXC56F STX $1F
+00830  6571  A6 20              LDX TEMPST+7
+00831  6573  D5 33              CMP FRETOP,X
+00832  6575  F0 0C              BEQ XXC583
+00833  6577  68                 PLA 
+00834  6578  68                 PLA 
+00835  6579  E6 29       XXC579 INC RESHO+3
+00836  657B  F0 03              BEQ XXC580
+00837  657D  4C A8 64           JMP XXC4A8
+00838  6580              ;********************************
+00839  6580  4C 97 60    XXC580 JMP XXC097
+00840  6583              ;********************************
+00841  6583  E8          XXC583 INX 
+00842  6584  86 20              STX TEMPST+7
+00843  6586  A6 1F              LDX $1F
+00844  6588  60                 RTS 
+00845  6589              ;********************************
+00846  6589  C9 30       XXC589 CMP #$30        ;'0'
+00847  658B  90 03              BCC XXC590
+00848  658D  C9 47              CMP #$47        ;'G'
+00849  658F  60                 RTS 
+00850  6590              ;********************************
+00851  6590  38          XXC590 SEC 
+00852  6591  60                 RTS 
+00853  6592              ;********************************
+00854  6592  C5 23       XXC592 CMP INDEX+1
+00855  6594  D0 03              BNE XXC599
+00856  6596  60                 RTS 
+00857  6597              ;********************************
+00858  6597  A9 91       XXC597 LDA #$91
+00859  6599  4C 09 60    XXC599 JMP MCHROT
+00860  659C              ;********************************
+00861  659C              ;
+00862  659C              ;********************************
+00863  659C  48          XXC59C PHA 
+00864  659D  4A                 LSR A
+00865  659E  4A                 LSR A
+00866  659F  4A                 LSR A
+00867  65A0  4A                 LSR A
+00868  65A1  20 6D 68           JSR XXC86D
+00869  65A4  AA                 TAX 
+00870  65A5  68                 PLA 
+00871  65A6  29 0F              AND #$0F
+00872  65A8  4C 6D 68           JMP XXC86D
+00873  65AB              ;********************************
+00874  65AB              ;
+00875  65AB              ;********************************
+00876  65AB  85 05       XXC5AB STA ADRAY2
+00877  65AD  08                 PHP 
+00878  65AE  68                 PLA 
+00879  65AF  29 EF              AND #$EF
+00880  65B1  85 04              STA ADRAY1+1
+00881  65B3  86 06              STX ADRAY2+1
+
+
+
+
+
+
+MONITOR$6000......PAGE 0018
+
+LINE# LOC   CODE        LINE
+
+
+00882  65B5  84 07              STY CHARAC
+00883  65B7  68                 PLA 
+00884  65B8  18                 CLC 
+00885  65B9  69 01              ADC #$01
+00886  65BB  85 03              STA ADRAY1
+00887  65BD  68                 PLA 
+00888  65BE  69 00              ADC #$00
+00889  65C0  85 02              STA UNUSED
+00890  65C2  A9 80              LDA #$80
+00891  65C4  85 10              STA SUBFLG
+00892  65C6  D0 3F              BNE XXC607
+00893  65C8  48          XXC5C8 PHA 
+00894  65C9  8A                 TXA 
+00895  65CA  48                 PHA 
+00896  65CB  98                 TYA 
+00897  65CC  48                 PHA 
+00898  65CD  BA                 TSX 
+00899  65CE  BD 04 01           LDA STACK+4,X
+00900  65D1  29 04              AND #$04
+00901  65D3  D0 01              BNE XXC5D6
+00902  65D5  58                 CLI 
+00903  65D6  A0 32       XXC5D6 LDY #$32        ;'2'
+00904  65D8  B1 F9              LDA (ROBUF),Y
+00905  65DA  8D AA AA           STA $AAAA
+00906  65DD  EA                 NOP 
+00907  65DE  78                 SEI 
+00908  65DF  20 F9 6C           JSR XXCCF9
+00909  65E2  68                 PLA 
+00910  65E3  85 07              STA CHARAC
+00911  65E5  68                 PLA 
+00912  65E6  85 06              STA ADRAY2+1
+00913  65E8  68                 PLA 
+00914  65E9  85 05              STA ADRAY2
+00915  65EB  D8                 CLD 
+00916  65EC  68                 PLA 
+00917  65ED  85 04              STA ADRAY1+1
+00918  65EF  68                 PLA 
+00919  65F0  85 03              STA ADRAY1
+00920  65F2  68                 PLA 
+00921  65F3  85 02              STA UNUSED
+00922  65F5              ;********************************
+00923  65F5              ;.END
+00924  65F5              ;*=$C5F5
+00925  65F5              ;********************************
+00926  65F5  A5 11              LDA INPFLG
+00927  65F7  8D 18 03           STA NMINV
+00928  65FA  A5 12              LDA TANSGN
+00929  65FC  8D 19 03           STA NMINV+1
+00930  65FF  20 19 6D           JSR XXCD19
+00931  6602  A9 20              LDA #$20        ;' '
+00932  6604  8D AA AA           STA $AAAA
+00933  6607  BA          XXC607 TSX 
+00934  6608  86 08              STX ENDCHR
+00935  660A  AD AA AA           LDA $AAAA
+00936  660D  8D AA AA           STA $AAAA
+
+
+
+
+
+
+MONITOR$6000......PAGE 0019
+
+LINE# LOC   CODE        LINE
+
+
+00937  6610  58                 CLI 
+00938  6611  24 13              BIT CHANNL
+00939  6613  10 1F              BPL XXC634
+00940  6615  A5 14              LDA LINNUM
+00941  6617  85 C1              STA STAL
+00942  6619  A5 15              LDA LINNUM+1
+00943  661B  85 C2              STA STAL+1
+00944  661D  A0 00              LDY #$00
+00945  661F  20 7C 6D           JSR XXCD7C
+00946  6622  85 1A              STA TEMPST+1
+00947  6624  A9 00              LDA #$00
+00948  6626  20 AB 6D           JSR XXCDAB
+00949  6629  24 13              BIT CHANNL
+00950  662B  50 05              BVC XXC632
+00951  662D  85 13              STA CHANNL
+00952  662F  4C D9 66           JMP XXC6D9
+00953  6632              ;********************************
+00954  6632  85 13       XXC632 STA CHANNL
+00955  6634  24 10       XXC634 BIT SUBFLG
+00956  6636  50 18              BVC XXC650
+00957  6638  A5 02              LDA UNUSED
+00958  663A  C5 15              CMP LINNUM+1
+00959  663C  D0 58              BNE XXC696
+00960  663E  A5 03              LDA ADRAY1
+00961  6640  C5 14              CMP LINNUM
+00962  6642  D0 52              BNE XXC696
+00963  6644  A5 2D              LDA VARTAB
+00964  6646  D0 4C              BNE XXC694
+00965  6648  A5 2E              LDA VARTAB+1
+00966  664A  D0 46              BNE XXC692
+00967  664C  A9 80              LDA #$80
+00968  664E  85 10              STA SUBFLG
+00969  6650                                     ;BMI XXC667
+00970  6650  30 15       XXC650 BMI XXC667
+00971  6652  46 10              LSR SUBFLG
+00972  6654  B0 03              BCS XXC659
+00973  6656  4C 8A 60           JMP XXC08A
+00974  6659              ;********************************
+00975  6659  A6 08       XXC659 LDX ENDCHR
+00976  665B  9A                 TXS 
+00977  665C  AD F7 6E           LDA XXCEF7
+00978  665F  48                 PHA 
+00979  6660  AD F6 6E           LDA XXCEF6
+00980  6663  48                 PHA 
+00981  6664  4C 33 67           JMP XXC733
+00982  6667              ;********************************
+00983  6667  20 7C 69    XXC667 JSR XXC97C
+00984  666A  A5 03              LDA ADRAY1
+00985  666C  A6 02              LDX UNUSED
+00986  666E  85 C1              STA STAL
+00987  6670  86 C2              STX STAL+1
+00988  6672  20 79 69           JSR XXC979
+00989  6675  A9 24              LDA #$24        ;'$'
+00990  6677  85 23              STA INDEX+1
+00991  6679  20 5E 62           JSR XXC25E
+
+
+
+
+
+
+MONITOR$6000......PAGE 0020
+
+LINE# LOC   CODE        LINE
+
+
+00992  667C  20 E4 FF    XXC67C JSR GETIN
+00993  667F  F0 FB              BEQ XXC67C
+00994  6681  C9 03              CMP #$03
+00995  6683  D0 03              BNE XXC688
+00996  6685  4C 9C 60           JMP XXC09C
+00997  6688              ;********************************
+00998  6688  C9 4A       XXC688 CMP #$4A        ;'J'
+00999  668A  D0 4D              BNE XXC6D9
+01000  668C  A9 01              LDA #$01
+01001  668E  85 10              STA SUBFLG
+01002  6690  D0 47              BNE XXC6D9
+01003  6692  C6 2E       XXC692 DEC VARTAB+1
+01004  6694  C6 2D       XXC694 DEC VARTAB
+01005  6696  AD 00 DC    XXC696 LDA $DC00
+01006  6699  C9 FA              CMP #$FA
+01007  669B  D0 3C              BNE XXC6D9
+01008  669D  A2 53              LDX #$53        ;'S'
+01009  669F  4C 8F 60           JMP XXC08F
+01010  66A2              ;********************************
+01011  66A2              ; G
+01012  66A2              ;********************************
+01013  66A2  A9 00       ZZC6A2 LDA #$00
+01014  66A4  F0 06              BEQ XXC6AC
+01015  66A6              ;********************************
+01016  66A6              ; Q
+01017  66A6              ;********************************
+01018  66A6  A9 40       ZZC6A6 LDA #$40        ;'@'
+01019  66A8  D0 02              BNE XXC6AC
+01020  66AA              ;********************************
+01021  66AA              ; W
+01022  66AA              ;********************************
+01023  66AA  A9 80       ZZC6AA LDA #$80
+01024  66AC  85 10       XXC6AC STA SUBFLG
+01025  66AE  85 31              STA STREND
+01026  66B0  A4 16              LDY $16
+01027  66B2  84 2D              STY VARTAB
+01028  66B4  A4 17              LDY $17
+01029  66B6  84 2E              STY VARTAB+1
+01030  66B8  20 06 60           JSR MCHRIN
+01031  66BB  C9 0D              CMP #$0D
+01032  66BD  F0 17              BEQ XXC6D6
+01033  66BF  C9 20              CMP #$20        ;' '
+01034  66C1  F0 03              BEQ XXC6C6
+01035  66C3  4C 67 67           JMP XXC767
+01036  66C6              ;********************************
+01037  66C6  20 9A 68    XXC6C6 JSR XXC89A
+01038  66C9  20 25 69           JSR XXC925
+01039  66CC  20 06 60           JSR MCHRIN
+01040  66CF  C9 0D              CMP #$0D
+01041  66D1  F0 03              BEQ XXC6D6
+01042  66D3  4C 67 67           JMP XXC767
+01043  66D6              ;********************************
+01044  66D6  20 7C 69    XXC6D6 JSR XXC97C
+01045  66D9  A5 1A       XXC6D9 LDA TEMPST+1
+01046  66DB  C9 FF              CMP #$FF
+
+
+
+
+
+
+MONITOR$6000......PAGE 0021
+
+LINE# LOC   CODE        LINE
+
+
+01047  66DD  F0 35              BEQ XXC714
+01048  66DF  A6 14              LDX LINNUM
+01049  66E1  E4 03              CPX ADRAY1
+01050  66E3  D0 1D              BNE XXC702
+01051  66E5  A4 15              LDY LINNUM+1
+01052  66E7  C4 02              CPY UNUSED
+01053  66E9  D0 17              BNE XXC702
+01054  66EB  84 C2              STY STAL+1
+01055  66ED  86 C1              STX STAL
+01056  66EF  A6 10              LDX SUBFLG
+01057  66F1  D0 25              BNE XXC718
+01058  66F3  A0 00              LDY #$00
+01059  66F5  20 AB 6D           JSR XXCDAB
+01060  66F8  A9 80              LDA #$80
+01061  66FA  85 13              STA CHANNL
+01062  66FC  A9 C0              LDA #$C0
+01063  66FE  85 13              STA CHANNL
+01064  6700  D0 16              BNE XXC718
+01065  6702  A5 10       XXC702 LDA SUBFLG
+01066  6704  D0 12              BNE XXC718
+01067  6706  86 C1              STX STAL
+01068  6708  A4 0F              LDY GARBFL
+01069  670A  84 C2              STY STAL+1
+01070  670C  A0 00              LDY #$00
+01071  670E  A9 00              LDA #$00
+01072  6710  A8                 TAY 
+01073  6711  20 AB 6D           JSR XXCDAB
+01074  6714  A5 10       XXC714 LDA SUBFLG
+01075  6716  F0 17              BEQ XXC72F
+01076  6718  78          XXC718 SEI 
+01077  6719  A9 A0              LDA #$A0
+01078  671B  8D AA AA           STA $AAAA
+01079  671E  A9 00              LDA #$00
+01080  6720  8D AA AA           STA $AAAA
+01081  6723  AD F1 6E           LDA XXCEF1
+01082  6726  8D 19 03           STA NMINV+1
+01083  6729  AD F0 6E           LDA XXCEF0
+01084  672C  8D 18 03           STA NMINV
+01085  672F  78          XXC72F SEI 
+01086  6730  A6 08              LDX ENDCHR
+01087  6732  9A                 TXS 
+01088  6733  A5 02       XXC733 LDA UNUSED
+01089  6735  48                 PHA 
+01090  6736  A5 03              LDA ADRAY1
+01091  6738  48                 PHA 
+01092  6739  A5 04              LDA ADRAY1+1
+01093  673B  48                 PHA 
+01094  673C  A5 05              LDA ADRAY2
+01095  673E  48                 PHA 
+01096  673F  A6 06              LDX ADRAY2+1
+01097  6741  A4 07              LDY CHARAC
+01098  6743  A5 10              LDA SUBFLG
+01099  6745  05 13              ORA CHANNL
+01100  6747  08                 PHP 
+01101  6748  AD AA AA           LDA $AAAA
+
+
+
+
+
+
+MONITOR$6000......PAGE 0022
+
+LINE# LOC   CODE        LINE
+
+
+01102  674B  85 32              STA $32
+01103  674D  20 3A 6D           JSR XXCD3A
+01104  6750  20 F9 6C           JSR XXCCF9
+01105  6753  28                 PLP 
+01106  6754  F0 0F              BEQ XXC765
+01107  6756  A9 7F              LDA #$7F
+01108  6758  8D AA AA           STA $AAAA
+01109  675B  A9 09              LDA #$09
+01110  675D  8D 06 DD           STA $DD06
+01111  6760  A9 00              LDA #$00
+01112  6762  8D 07 DD           STA $DD07
+01113  6765  68          XXC765 PLA 
+01114  6766  40                 RTI 
+01115  6767              ;********************************
+01116  6767  4C 97 60    XXC767 JMP XXC097
+01117  676A              ;********************************
+01118  676A              ; B
+01119  676A              ;********************************
+01120  676A  20 87 68    ZZC76A JSR XXC887
+01121  676D  85 C1              STA STAL
+01122  676F  86 C2              STX STAL+1
+01123  6771  85 14              STA LINNUM
+01124  6773  86 15              STX LINNUM+1
+01125  6775  A0 00              LDY #$00
+01126  6777  20 7C 6D           JSR XXCD7C
+01127  677A  85 1A              STA TEMPST+1
+01128  677C  98                 TYA 
+01129  677D  A9 00              LDA #$00
+01130  677F  85 16              STA $16
+01131  6781  85 17              STA $17
+01132  6783  20 97 68           JSR XXC897
+01133  6786  85 16              STA $16
+01134  6788  86 17              STX $17
+01135  678A  4C 9C 60           JMP XXC09C
+01136  678D              ;********************************
+01137  678D              ; N
+01138  678D              ;********************************
+01139  678D  20 1D 68    ZZC78D JSR XXC81D
+01140  6790  85 2F              STA $2F
+01141  6792  86 30              STX $30
+01142  6794  20 97 68           JSR XXC897
+01143  6797  85 24              STA $24
+01144  6799  86 25              STX $25
+01145  679B  20 97 68           JSR XXC897
+01146  679E  85 AE              STA SAL+2
+01147  67A0  86 AF              STX SAL+3
+01148  67A2  20 06 60           JSR MCHRIN
+01149  67A5  C9 0D              CMP #$0D
+01150  67A7  F0 09              BEQ XXC7B2
+01151  67A9  20 06 60           JSR MCHRIN
+01152  67AC  C9 57              CMP #$57        ;'W'
+01153  67AE  D0 02              BNE XXC7B2
+01154  67B0  E6 23              INC INDEX+1
+01155  67B2  20 77 68    XXC7B2 JSR XXC877
+01156  67B5  A6 29       XXC7B5 LDX RESHO+3
+
+
+
+
+
+
+MONITOR$6000......PAGE 0023
+
+LINE# LOC   CODE        LINE
+
+
+01157  67B7  D0 18              BNE XXC7D1
+01158  67B9  20 0A 61           JSR XXC10A
+01159  67BC  90 13              BCC XXC7D1
+01160  67BE  A4 23              LDY INDEX+1
+01161  67C0  D0 1A              BNE XXC7DC
+01162  67C2  20 7C 6D           JSR XXCD7C
+01163  67C5  20 F5 62           JSR XXC2F5
+01164  67C8  AA                 TAX 
+01165  67C9  BD 17 6E           LDA XXCE17,X
+01166  67CC  D0 06              BNE XXC7D4
+01167  67CE  20 EA 60           JSR XXC0EA
+01168  67D1  4C 9C 60    XXC7D1 JMP XXC09C
+01169  67D4              ;********************************
+01170  67D4  A4 22       XXC7D4 LDY INDEX
+01171  67D6  C0 02              CPY #$02
+01172  67D8  D0 3B              BNE XXC815
+01173  67DA  F0 02              BEQ XXC7DE
+01174  67DC  84 22       XXC7DC STY INDEX
+01175  67DE  88          XXC7DE DEY 
+01176  67DF  38                 SEC 
+01177  67E0  20 7C 6D           JSR XXCD7C
+01178  67E3  AA                 TAX 
+01179  67E4  E5 24              SBC $24
+01180  67E6  C8                 INY 
+01181  67E7  20 7C 6D           JSR XXCD7C
+01182  67EA  E5 25              SBC $25
+01183  67EC  90 27              BCC XXC815
+01184  67EE  88                 DEY 
+01185  67EF  20 7C 6D           JSR XXCD7C
+01186  67F2  85 0B              STA $0B
+01187  67F4  A5 AE              LDA SAL+2
+01188  67F6  E5 0B              SBC $0B
+01189  67F8  C8                 INY 
+01190  67F9  20 7C 6D           JSR XXCD7C
+01191  67FC  85 0B              STA $0B
+01192  67FE  A5 AF              LDA SAL+3
+01193  6800  E5 0B              SBC $0B
+01194  6802  90 11              BCC XXC815
+01195  6804  88                 DEY 
+01196  6805  18                 CLC 
+01197  6806  8A                 TXA 
+01198  6807  65 2F              ADC $2F
+01199  6809  20 AB 6D           JSR XXCDAB
+01200  680C  C8                 INY 
+01201  680D  20 7C 6D           JSR XXCD7C
+01202  6810  65 30              ADC $30
+01203  6812  20 AB 6D           JSR XXCDAB
+01204  6815  20 63 69    XXC815 JSR XXC963
+01205  6818  88                 DEY 
+01206  6819  10 FA              BPL XXC815
+01207  681B  30 98              BMI XXC7B5
+01208  681D  20 87 68    XXC81D JSR XXC887
+01209  6820  85 C3              STA MEMUSS
+01210  6822  86 C4              STX MEMUSS+1
+01211  6824  20 97 68           JSR XXC897
+
+
+
+
+
+
+MONITOR$6000......PAGE 0024
+
+LINE# LOC   CODE        LINE
+
+
+01212  6827  85 27              STA RESHO+1
+01213  6829  86 28              STX RESHO+2
+01214  682B  20 DB 68           JSR XXC8DB
+01215  682E  20 9A 68    XXC82E JSR XXC89A
+01216  6831  85 C1       XXC831 STA STAL
+01217  6833  86 C2              STX STAL+1
+01218  6835  60                 RTS 
+01219  6836              ;********************************
+01220  6836  20 87 68    XXC836 JSR XXC887
+01221  6839  B0 F6              BCS XXC831
+01222  683B  20 9A 68    XXC83B JSR XXC89A
+01223  683E  B0 03              BCS XXC843
+01224  6840  20 97 68    XXC840 JSR XXC897
+01225  6843  85 C3       XXC843 STA MEMUSS
+01226  6845  86 C4              STX MEMUSS+1
+01227  6847  60                 RTS 
+01228  6848              ;********************************
+01229  6848  20 FA 60           JSR XXC0FA
+01230  684B  4C 97 68           JMP XXC897
+01231  684E              ;********************************
+01232  684E  A5 C2       XXC84E LDA STAL+1
+01233  6850  20 55 68           JSR XXC855
+01234  6853  A5 C1              LDA STAL
+01235  6855  48          XXC855 PHA 
+01236  6856  4A                 LSR A
+01237  6857  4A                 LSR A
+01238  6858  4A                 LSR A
+01239  6859  4A                 LSR A
+01240  685A  20 6D 68           JSR XXC86D
+01241  685D  AA                 TAX 
+01242  685E  68                 PLA 
+01243  685F  29 0F              AND #$0F
+01244  6861  20 6D 68           JSR XXC86D
+01245  6864              ;********************************
+01246  6864              ; PRINT CHARACTERS IN X AND A
+01247  6864              ;********************************
+01248  6864  48          PRTXA  PHA 
+01249  6865  8A                 TXA 
+01250  6866  20 09 60           JSR MCHROT
+01251  6869  68                 PLA 
+01252  686A  4C 09 60           JMP MCHROT
+01253  686D              ;********************************
+01254  686D  18          XXC86D CLC 
+01255  686E  69 F6              ADC #$F6
+01256  6870  90 02              BCC XXC874
+01257  6872  69 06              ADC #$06
+01258  6874  69 3A       XXC874 ADC #$3A        ;':'
+01259  6876  60                 RTS 
+01260  6877              ;********************************
+01261  6877  A2 02       XXC877 LDX #$02
+01262  6879  B5 C0       XXC879 LDA CAS1,X
+01263  687B  48                 PHA 
+01264  687C  B5 C2              LDA STAL+1,X
+01265  687E  95 C0              STA CAS1,X
+01266  6880  68                 PLA 
+
+
+
+
+
+
+MONITOR$6000......PAGE 0025
+
+LINE# LOC   CODE        LINE
+
+
+01267  6881  95 C2              STA STAL+1,X
+01268  6883  CA                 DEX 
+01269  6884  D0 F3              BNE XXC879
+01270  6886  60                 RTS 
+01271  6887              ;********************************
+01272  6887  A9 00       XXC887 LDA #$00
+01273  6889  85 2C              STA TXTTAB+1
+01274  688B  20 DB 68    XXC88B JSR XXC8DB
+01275  688E  C9 20              CMP #$20        ;' '
+01276  6890  F0 F9              BEQ XXC88B
+01277  6892  20 BD 68           JSR XXC8BD
+01278  6895  B0 08              BCS XXC89F
+01279  6897  20 DB 68    XXC897 JSR XXC8DB
+01280  689A  20 A9 68    XXC89A JSR XXC8A9
+01281  689D  90 07              BCC XXC8A6
+01282  689F  AA          XXC89F TAX 
+01283  68A0  20 A9 68           JSR XXC8A9
+01284  68A3  90 01              BCC XXC8A6
+01285  68A5  60                 RTS 
+01286  68A6              ;********************************
+01287  68A6  4C 97 60    XXC8A6 JMP XXC097
+01288  68A9              ;********************************
+01289  68A9  A9 00       XXC8A9 LDA #$00
+01290  68AB  85 2C              STA TXTTAB+1
+01291  68AD  20 DB 68           JSR XXC8DB
+01292  68B0  C9 20       XXC8B0 CMP #$20        ;' '
+01293  68B2  D0 09              BNE XXC8BD
+01294  68B4  20 DB 68           JSR XXC8DB
+01295  68B7  C9 20              CMP #$20        ;' '
+01296  68B9  D0 0E              BNE XXC8C9
+01297  68BB  18                 CLC 
+01298  68BC  60                 RTS 
+01299  68BD              ;********************************
+01300  68BD  20 D0 68    XXC8BD JSR XXC8D0
+01301  68C0  0A                 ASL A
+01302  68C1  0A                 ASL A
+01303  68C2  0A                 ASL A
+01304  68C3  0A                 ASL A
+01305  68C4  85 2C              STA TXTTAB+1
+01306  68C6  20 DB 68           JSR XXC8DB
+01307  68C9  20 D0 68    XXC8C9 JSR XXC8D0
+01308  68CC  05 2C              ORA TXTTAB+1
+01309  68CE  38                 SEC 
+01310  68CF  60                 RTS 
+01311  68D0              ;********************************
+01312  68D0  C9 3A       XXC8D0 CMP #$3A        ;':'
+01313  68D2  08                 PHP 
+01314  68D3  29 0F              AND #$0F
+01315  68D5  28                 PLP 
+01316  68D6  90 02              BCC XXC8DA
+01317  68D8  69 08              ADC #$08
+01318  68DA  60          XXC8DA RTS 
+01319  68DB              ;********************************
+01320  68DB  20 06 60    XXC8DB JSR MCHRIN
+01321  68DE  C9 0D              CMP #$0D
+
+
+
+
+
+
+MONITOR$6000......PAGE 0026
+
+LINE# LOC   CODE        LINE
+
+
+01322  68E0  D0 F8              BNE XXC8DA
+01323  68E2  4C 9C 60           JMP XXC09C
+01324  68E5              ;********************************
+01325  68E5  A5 91       XXC8E5 LDA $91
+01326  68E7  C9 FE              CMP #$FE
+01327  68E9  D0 07              BNE XXC8F2
+01328  68EB  08                 PHP 
+01329  68EC  20 CC FF           JSR CLRCHN
+01330  68EF  85 C6              STA NDX
+01331  68F1  28                 PLP 
+01332  68F2  60          XXC8F2 RTS 
+01333  68F3              ;********************************
+01334  68F3  20 FC 68    XXC8F3 JSR XXC8FC
+01335  68F6  2C AA AA           BIT $AAAA
+01336  68F9  30 F8              BMI XXC8F3
+01337  68FB  60                 RTS 
+01338  68FC              ;********************************
+01339  68FC  20 E5 68    XXC8FC JSR XXC8E5
+01340  68FF  D0 0B              BNE XXC90C
+01341  6901  20 0D 69           JSR XXC90D
+01342  6904  A9 03              LDA #$03
+01343  6906  85 9A              STA $9A
+01344  6908  A9 00              LDA #$00
+01345  690A  85 99              STA $99
+01346  690C  60          XXC90C RTS 
+01347  690D              ;********************************
+01348  690D  08          XXC90D PHP 
+01349  690E  78                 SEI 
+01350  690F  AD AA AA           LDA $AAAA
+01351  6912  09 02              ORA #$02
+01352  6914  8D AA AA           STA $AAAA
+01353  6917  AD EE 6E           LDA XXCEEE
+01354  691A  8D 14 03           STA CINV
+01355  691D  AD EF 6E           LDA XXCEEF
+01356  6920  8D 15 03           STA CINV+1
+01357  6923  28                 PLP 
+01358  6924  60                 RTS 
+01359  6925              ;********************************
+01360  6925  85 03       XXC925 STA ADRAY1
+01361  6927  86 02              STX UNUSED
+01362  6929  60                 RTS 
+01363  692A              ;********************************
+01364  692A  85 21       XXC92A STA $21
+01365  692C  A0 00              LDY #$00
+01366  692E  20 79 69    XXC92E JSR XXC979
+01367  6931  20 7C 6D           JSR XXCD7C
+01368  6934  20 55 68           JSR XXC855
+01369  6937  20 63 69           JSR XXC963
+01370  693A  C6 21              DEC $21
+01371  693C  D0 F0              BNE XXC92E
+01372  693E  60                 RTS 
+01373  693F              ;********************************
+01374  693F  20 A9 68    XXC93F JSR XXC8A9
+01375  6942  90 0C              BCC XXC950
+01376  6944  A2 00              LDX #$00
+
+
+
+
+
+
+MONITOR$6000......PAGE 0027
+
+LINE# LOC   CODE        LINE
+
+
+01377  6946  20 57 6D           JSR XXCD57
+01378  6949  C1 0D              CMP (VALTYP,X)
+01379  694B  F0 03              BEQ XXC950
+01380  694D  4C 97 60           JMP XXC097
+01381  6950              ;********************************
+01382  6950  20 63 69    XXC950 JSR XXC963
+01383  6953  C6 20              DEC TEMPST+7
+01384  6955  60                 RTS 
+01385  6956              ;********************************
+01386  6956  A9 04       XXC956 LDA #$04
+01387  6958  85 C1              STA STAL
+01388  695A  A9 00              LDA #$00
+01389  695C  85 C2              STA STAL+1
+01390  695E  A9 05              LDA #$05
+01391  6960  E6 0F              INC GARBFL
+01392  6962  60                 RTS 
+01393  6963              ;********************************
+01394  6963  E6 C1       XXC963 INC STAL
+01395  6965  D0 06              BNE XXC96D
+01396  6967  E6 C2              INC STAL+1
+01397  6969  D0 02              BNE XXC96D
+01398  696B  E6 29              INC RESHO+3
+01399  696D  60          XXC96D RTS 
+01400  696E              ;********************************
+01401  696E  98          XXC96E TYA 
+01402  696F  48                 PHA 
+01403  6970  20 7C 69           JSR XXC97C
+01404  6973  68                 PLA 
+01405  6974  A2 2E       XXC974 LDX #$2E        ;'.'
+01406  6976  20 64 68           JSR PRTXA
+01407  6979  A9 20       XXC979 LDA #$20        ;' '
+01408  697B              ;********************************
+01409  697B  2C                 .BYTE $2C
+01410  697C              ;********************************
+01411  697C  A9 0D       XXC97C LDA #$0D
+01412  697E  4C 09 60           JMP MCHROT
+01413  6981              ;********************************
+01414  6981              ; R
+01415  6981              ;********************************
+01416  6981  A5 C8       ZZC981 LDA $C8
+01417  6983  C9 02              CMP #$02
+01418  6985  90 21              BCC XXC9A8
+01419  6987  20 06 60           JSR MCHRIN
+01420  698A  C9 42              CMP #$42        ;'B'
+01421  698C  D0 1A              BNE XXC9A8
+01422  698E  A5 1A              LDA TEMPST+1
+01423  6990  C9 FF              CMP #$FF
+01424  6992  F0 14              BEQ XXC9A8
+01425  6994  A6 14              LDX LINNUM
+01426  6996  A4 15              LDY LINNUM+1
+01427  6998  86 C1              STX STAL
+01428  699A  84 C2              STY STAL+1
+01429  699C  A0 00              LDY #$00
+01430  699E  20 AB 6D           JSR XXCDAB
+01431  69A1  A9 FF              LDA #$FF
+
+
+
+
+
+
+MONITOR$6000......PAGE 0028
+
+LINE# LOC   CODE        LINE
+
+
+01432  69A3  85 1A              STA TEMPST+1
+01433  69A5  4C 9C 60           JMP XXC09C
+01434  69A8              ;********************************
+01435  69A8  A2 00       XXC9A8 LDX #$00
+01436  69AA  BD 97 6E    XXC9AA LDA XXCE97,X
+01437  69AD  20 09 60           JSR MCHROT
+01438  69B0  E8                 INX 
+01439  69B1  E0 16              CPX #$16
+01440  69B3  D0 F5              BNE XXC9AA
+01441  69B5  20 7C 69           JSR XXC97C
+01442  69B8  A2 2E              LDX #$2E        ;'.'
+01443  69BA  A9 3B              LDA #$3B        ;';'
+01444  69BC  20 64 68           JSR PRTXA
+01445  69BF  A5 02              LDA UNUSED
+01446  69C1  20 55 68           JSR XXC855
+01447  69C4  A5 03              LDA ADRAY1
+01448  69C6  20 55 68           JSR XXC855
+01449  69C9  20 56 69           JSR XXC956
+01450  69CC  20 2A 69           JSR XXC92A
+01451  69CF  C6 0F              DEC GARBFL
+01452  69D1  4C 9C 60    XXC9D1 JMP XXC09C
+01453  69D4              ;********************************
+01454  69D4  4C 97 60           JMP XXC097
+01455  69D7              ;********************************
+01456  69D7              ; ;
+01457  69D7              ;********************************
+01458  69D7  20 87 68    ZZC9D7 JSR XXC887
+01459  69DA  20 25 69           JSR XXC925
+01460  69DD  20 56 69           JSR XXC956
+01461  69E0  85 20              STA TEMPST+7
+01462  69E2  20 DB 68    XXC9E2 JSR XXC8DB
+01463  69E5  20 3F 69           JSR XXC93F
+01464  69E8  D0 F8              BNE XXC9E2
+01465  69EA  C6 0F              DEC GARBFL
+01466  69EC  F0 E3              BEQ XXC9D1
+01467  69EE              ;********************************
+01468  69EE              ; X
+01469  69EE              ;********************************
+01470  69EE  78          ZZC9EE SEI 
+01471  69EF  20 3A 6D           JSR XXCD3A
+01472  69F2  A6 08              LDX ENDCHR
+01473  69F4  9A                 TXS 
+01474  69F5  20 F9 6C           JSR XXCCF9
+01475  69F8                                     ;JMP ($A002);BASIC WARM ST
+ART
+01476  69F8  6C FC FF           JMP ($FFFC)     ; KERNAL RESET VECTOR
+01477  69FB              ;********************************
+01478  69FB  4C 97 60    XXC9FB JMP XXC097
+01479  69FE              ;********************************
+01480  69FE              ; L AND S
+01481  69FE              ;********************************
+01482  69FE  A0 01       ZZC9FE LDY #$01
+01483  6A00  84 BA              STY $BA
+01484  6A02  84 B9              STY $B9
+01485  6A04  88                 DEY 
+01486  6A05  84 B7              STY $B7
+
+
+
+
+
+
+MONITOR$6000......PAGE 0029
+
+LINE# LOC   CODE        LINE
+
+
+01487  6A07  84 90              STY $90
+01488  6A09  84 93              STY $93
+01489  6A0B  A9 00              LDA #$00
+01490  6A0D  85 BC              STA $BC
+01491  6A0F  A9 33              LDA #$33        ;'3'
+01492  6A11  85 BB              STA $BB
+01493  6A13  20 06 60    XXCA13 JSR MCHRIN
+01494  6A16  C9 20              CMP #$20        ;' '
+01495  6A18  F0 F9              BEQ XXCA13
+01496  6A1A  C9 0D              CMP #$0D
+01497  6A1C  F0 1A              BEQ XXCA38
+01498  6A1E  C9 22              CMP #$22        ;'"'
+01499  6A20  D0 D9       XXCA20 BNE XXC9FB
+01500  6A22  20 06 60    XXCA22 JSR MCHRIN
+01501  6A25  C9 22              CMP #$22        ;'"'
+01502  6A27  F0 26              BEQ XXCA4F
+01503  6A29  C9 0D              CMP #$0D
+01504  6A2B  F0 0B              BEQ XXCA38
+01505  6A2D  91 BB              STA ($BB),Y
+01506  6A2F  E6 B7              INC $B7
+01507  6A31  C8                 INY 
+01508  6A32  C0 10              CPY #$10
+01509  6A34  F0 C5       XXCA34 BEQ XXC9FB
+01510  6A36  D0 EA              BNE XXCA22
+01511  6A38  A5 1E       XXCA38 LDA $1E
+01512  6A3A  C9 4C              CMP #$4C        ;'L'
+01513  6A3C  D0 E2       XXCA3C BNE XXCA20
+01514  6A3E  A9 00              LDA #$00
+01515  6A40  20 D5 FF           JSR LOAD
+01516  6A43  20 F3 68           JSR XXC8F3
+01517  6A46  A5 90              LDA $90
+01518  6A48  29 10              AND #$10
+01519  6A4A  D0 F0       XXCA4A BNE XXCA3C
+01520  6A4C  4C 9C 60           JMP XXC09C
+01521  6A4F              ;********************************
+01522  6A4F  20 06 60    XXCA4F JSR MCHRIN
+01523  6A52  C9 0D              CMP #$0D
+01524  6A54  F0 E2              BEQ XXCA38
+01525  6A56  C9 2C              CMP #$2C        ;','
+01526  6A58  D0 F0       XXCA58 BNE XXCA4A
+01527  6A5A  20 A9 68           JSR XXC8A9
+01528  6A5D  29 0F              AND #$0F
+01529  6A5F  F0 D3       XXCA5F BEQ XXCA34
+01530  6A61  C9 03              CMP #$03
+01531  6A63  F0 FA              BEQ XXCA5F
+01532  6A65  85 BA              STA $BA
+01533  6A67  20 06 60           JSR MCHRIN
+01534  6A6A  C9 0D              CMP #$0D
+01535  6A6C  F0 CA              BEQ XXCA38
+01536  6A6E  C9 2C              CMP #$2C        ;','
+01537  6A70  D0 E6       XXCA70 BNE XXCA58
+01538  6A72  20 2E 68           JSR XXC82E
+01539  6A75  20 06 60           JSR MCHRIN
+01540  6A78  C9 2C              CMP #$2C        ;','
+01541  6A7A  D0 F4       XXCA7A BNE XXCA70
+
+
+
+
+
+
+MONITOR$6000......PAGE 0030
+
+LINE# LOC   CODE        LINE
+
+
+01542  6A7C  20 9A 68           JSR XXC89A
+01543  6A7F  85 AE              STA SAL+2
+01544  6A81  86 AF              STX SAL+3
+01545  6A83  20 06 60    XXCA83 JSR MCHRIN
+01546  6A86  C9 20              CMP #$20        ;' '
+01547  6A88  F0 F9              BEQ XXCA83
+01548  6A8A  C9 0D              CMP #$0D
+01549  6A8C  D0 EC       XXCA8C BNE XXCA7A
+01550  6A8E  A5 1E              LDA $1E
+01551  6A90  C9 53              CMP #$53        ;'S'
+01552  6A92  D0 F8              BNE XXCA8C
+01553  6A94  20 7C 69           JSR XXC97C
+01554  6A97  A9 00              LDA #$00
+01555  6A99  85 B9              STA $B9
+01556  6A9B  A6 AE              LDX SAL+2
+01557  6A9D  A4 AF              LDY SAL+3
+01558  6A9F  A9 C1              LDA #$C1
+01559  6AA1  20 D8 FF           JSR SAVE
+01560  6AA4  4C 9C 60           JMP XXC09C
+01561  6AA7              ;********************************
+01562  6AA7              ;
+01563  6AA7              ;********************************
+01564  6AA7  A5 31       XXCAA7 LDA STREND
+01565  6AA9  D0 04              BNE XXCAAF
+01566  6AAB  A5 C6              LDA NDX
+01567  6AAD  D0 06              BNE XXCAB5
+01568  6AAF  68          XXCAAF PLA 
+01569  6AB0  A8                 TAY 
+01570  6AB1  68                 PLA 
+01571  6AB2  AA                 TAX 
+01572  6AB3  68                 PLA 
+01573  6AB4  40                 RTI 
+01574  6AB5              ;********************************
+01575  6AB5  AD 77 02    XXCAB5 LDA KEYD
+01576  6AB8  C9 11              CMP #$11
+01577  6ABA  F0 03              BEQ XXCABF
+01578  6ABC  4C 55 6B           JMP XXCB55
+01579  6ABF              ;********************************
+01580  6ABF  A5 D6       XXCABF LDA TBLX
+01581  6AC1  C9 18              CMP #$18
+01582  6AC3  D0 EA              BNE XXCAAF
+01583  6AC5  A5 D1              LDA PNT
+01584  6AC7  85 C3              STA MEMUSS
+01585  6AC9  A5 D2              LDA PNT+1
+01586  6ACB  85 C4              STA MEMUSS+1
+01587  6ACD  A9 19              LDA #$19
+01588  6ACF  85 2D              STA VARTAB
+01589  6AD1  A0 01       XXCAD1 LDY #$01
+01590  6AD3  20 B3 6C           JSR XXCCB3
+01591  6AD6  C9 3A              CMP #$3A        ;':'
+01592  6AD8  F0 19              BEQ XXCAF3
+01593  6ADA  C9 2C              CMP #$2C        ;','
+01594  6ADC  F0 15              BEQ XXCAF3
+01595  6ADE  C9 27              CMP #$27        ;'''
+01596  6AE0  F0 11              BEQ XXCAF3
+
+
+
+
+
+
+MONITOR$6000......PAGE 0031
+
+LINE# LOC   CODE        LINE
+
+
+01597  6AE2  C6 2D              DEC VARTAB
+01598  6AE4  F0 C9              BEQ XXCAAF
+01599  6AE6  38                 SEC 
+01600  6AE7  A5 C3              LDA MEMUSS
+01601  6AE9  E9 28              SBC #$28        ;'('
+01602  6AEB  85 C3              STA MEMUSS
+01603  6AED  B0 E2              BCS XXCAD1
+01604  6AEF  C6 C4              DEC MEMUSS+1
+01605  6AF1  D0 DE              BNE XXCAD1
+01606  6AF3  85 1E       XXCAF3 STA $1E
+01607  6AF5  20 6F 6C           JSR XXCC6F
+01608  6AF8  B0 B5              BCS XXCAAF
+01609  6AFA  A5 1E              LDA $1E
+01610  6AFC  C9 3A              CMP #$3A        ;':'
+01611  6AFE  F0 15              BEQ XXCB15
+01612  6B00  C9 27              CMP #$27        ;'''
+01613  6B02  D0 31              BNE XXCB35
+01614  6B04  18                 CLC 
+01615  6B05  A9 08              LDA #$08
+01616  6B07  65 C1              ADC STAL
+01617  6B09  85 C1              STA STAL
+01618  6B0B  90 02              BCC XXCB0F
+01619  6B0D  E6 C2              INC STAL+1
+01620  6B0F  20 BE 63    XXCB0F JSR XXC3BE
+01621  6B12  4C 44 6B           JMP XXCB44
+01622  6B15              ;********************************
+01623  6B15  18          XXCB15 CLC 
+01624  6B16  A5 C1              LDA STAL
+01625  6B18  69 08              ADC #$08
+01626  6B1A  85 C1              STA STAL
+01627  6B1C  90 02              BCC XXCB20
+01628  6B1E  E6 C2              INC STAL+1
+01629  6B20  20 7C 69    XXCB20 JSR XXC97C
+01630  6B23  A2 2E              LDX #$2E        ;'.'
+01631  6B25  A9 3A              LDA #$3A        ;':'
+01632  6B27  20 64 68           JSR PRTXA
+01633  6B2A  20 4E 68           JSR XXC84E
+01634  6B2D  A9 08              LDA #$08
+01635  6B2F  20 2A 69           JSR XXC92A
+01636  6B32  4C 44 6B           JMP XXCB44
+01637  6B35              ;********************************
+01638  6B35  20 1B 6C    XXCB35 JSR XXCC1B
+01639  6B38  20 B5 62           JSR XXC2B5
+01640  6B3B  A9 00              LDA #$00
+01641  6B3D  85 23              STA INDEX+1
+01642  6B3F  A0 2C              LDY #$2C        ;','
+01643  6B41  20 5B 62           JSR XXC25B
+01644  6B44  A9 00       XXCB44 LDA #$00
+01645  6B46  85 C6              STA NDX
+01646  6B48  85 31              STA STREND
+01647  6B4A  85 29              STA RESHO+3
+01648  6B4C  20 97 65           JSR XXC597
+01649  6B4F  20 7C 69           JSR XXC97C
+01650  6B52  4C AF 6A           JMP XXCAAF
+01651  6B55              ;********************************
+
+
+
+
+
+
+MONITOR$6000......PAGE 0032
+
+LINE# LOC   CODE        LINE
+
+
+01652  6B55  C9 91       XXCB55 CMP #$91
+01653  6B57  F0 03              BEQ XXCB5C
+01654  6B59  4C AF 6A           JMP XXCAAF
+01655  6B5C              ;********************************
+01656  6B5C  A5 D6       XXCB5C LDA TBLX
+01657  6B5E  F0 03              BEQ XXCB63
+01658  6B60  4C AF 6A           JMP XXCAAF
+01659  6B63              ;********************************
+01660  6B63  A5 D1       XXCB63 LDA PNT
+01661  6B65  85 C3              STA MEMUSS
+01662  6B67  A5 D2              LDA PNT+1
+01663  6B69  85 C4              STA MEMUSS+1
+01664  6B6B  A9 19              LDA #$19
+01665  6B6D  85 2D              STA VARTAB
+01666  6B6F  A0 01       XXCB6F LDY #$01
+01667  6B71  20 B3 6C           JSR XXCCB3
+01668  6B74  C9 3A              CMP #$3A        ;':'
+01669  6B76  F0 19              BEQ XXCB91
+01670  6B78  C9 2C              CMP #$2C        ;','
+01671  6B7A  F0 15              BEQ XXCB91
+01672  6B7C  C9 27              CMP #$27        ;'''
+01673  6B7E  F0 11              BEQ XXCB91
+01674  6B80  C6 2D              DEC VARTAB
+01675  6B82  F0 14              BEQ XXCB98
+01676  6B84  18                 CLC 
+01677  6B85  A5 C3              LDA MEMUSS
+01678  6B87  69 28              ADC #$28        ;'('
+01679  6B89  85 C3              STA MEMUSS
+01680  6B8B  90 E2              BCC XXCB6F
+01681  6B8D  E6 C4              INC MEMUSS+1
+01682  6B8F  D0 DE              BNE XXCB6F
+01683  6B91  85 1E       XXCB91 STA $1E
+01684  6B93  20 6F 6C           JSR XXCC6F
+01685  6B96  90 03              BCC XXCB9B
+01686  6B98  4C AF 6A    XXCB98 JMP XXCAAF
+01687  6B9B              ;********************************
+01688  6B9B  A5 1E       XXCB9B LDA $1E
+01689  6B9D  C9 3A              CMP #$3A        ;':'
+01690  6B9F  F0 18              BEQ XXCBB9
+01691  6BA1  C9 27              CMP #$27        ;'''
+01692  6BA3  D0 33              BNE XXCBD8
+01693  6BA5  20 23 6C           JSR XXCC23
+01694  6BA8  38                 SEC 
+01695  6BA9  A5 C1              LDA STAL
+01696  6BAB  E9 08              SBC #$08
+01697  6BAD  85 C1              STA STAL
+01698  6BAF  B0 02              BCS XXCBB3
+01699  6BB1  C6 C2              DEC STAL+1
+01700  6BB3  20 C1 63    XXCBB3 JSR XXC3C1
+01701  6BB6  4C CA 6B           JMP XXCBCA
+01702  6BB9              ;********************************
+01703  6BB9  20 23 6C    XXCBB9 JSR XXCC23
+01704  6BBC  38                 SEC 
+01705  6BBD  A5 C1              LDA STAL
+01706  6BBF  E9 08              SBC #$08
+
+
+
+
+
+
+MONITOR$6000......PAGE 0033
+
+LINE# LOC   CODE        LINE
+
+
+01707  6BC1  85 C1              STA STAL
+01708  6BC3  B0 02              BCS XXCBC7
+01709  6BC5  C6 C2              DEC STAL+1
+01710  6BC7  20 11 64    XXCBC7 JSR XXC411
+01711  6BCA  A9 00       XXCBCA LDA #$00
+01712  6BCC  85 C6              STA NDX
+01713  6BCE  85 31              STA STREND
+01714  6BD0  85 29              STA RESHO+3
+01715  6BD2  20 6A 6C           JSR XXCC6A
+01716  6BD5  4C AF 6A           JMP XXCAAF
+01717  6BD8              ;********************************
+01718  6BD8  20 23 6C    XXCBD8 JSR XXCC23
+01719  6BDB  A5 C1              LDA STAL
+01720  6BDD  A6 C2              LDX STAL+1
+01721  6BDF  85 C3              STA MEMUSS
+01722  6BE1  86 C4              STX MEMUSS+1
+01723  6BE3  A9 10              LDA #$10
+01724  6BE5  85 2D              STA VARTAB
+01725  6BE7  38          XXCBE7 SEC 
+01726  6BE8  A5 C3              LDA MEMUSS
+01727  6BEA  E5 2D              SBC VARTAB
+01728  6BEC  85 C1              STA STAL
+01729  6BEE  A5 C4              LDA MEMUSS+1
+01730  6BF0  E9 00              SBC #$00
+01731  6BF2  85 C2              STA STAL+1
+01732  6BF4  20 1B 6C    XXCBF4 JSR XXCC1B
+01733  6BF7  20 B5 62           JSR XXC2B5
+01734  6BFA  20 11 61           JSR XXC111
+01735  6BFD  F0 06              BEQ XXCC05
+01736  6BFF  B0 F3              BCS XXCBF4
+01737  6C01  C6 2D              DEC VARTAB
+01738  6C03  D0 E2              BNE XXCBE7
+01739  6C05  E6 22       XXCC05 INC INDEX
+01740  6C07  A5 22              LDA INDEX
+01741  6C09  20 91 63           JSR XXC391
+01742  6C0C  A2 00              LDX #$00
+01743  6C0E  86 23              STX INDEX+1
+01744  6C10  A9 2C              LDA #$2C        ;','
+01745  6C12  20 74 69           JSR XXC974
+01746  6C15  20 5E 62           JSR XXC25E
+01747  6C18  4C CA 6B           JMP XXCBCA
+01748  6C1B              ;********************************
+01749  6C1B  A2 00       XXCC1B LDX #$00
+01750  6C1D  20 49 6D           JSR XXCD49
+01751  6C20  4C F5 62           JMP XXC2F5
+01752  6C23              ;********************************
+01753  6C23              ;********************************
+01754  6C23              ;.END
+01755  6C23              ;*=$CC23
+01756  6C23              ;********************************
+01757  6C23  A9 00       XXCC23 LDA #$00
+01758  6C25  85 AE              STA SAL+2
+01759  6C27  A9 DB              LDA #$DB
+01760  6C29  85 AF              STA SAL+3
+01761  6C2B  85 B1              STA CMPO+1
+
+
+
+
+
+
+MONITOR$6000......PAGE 0034
+
+LINE# LOC   CODE        LINE
+
+
+01762  6C2D  A9 07              LDA #$07
+01763  6C2F  85 AD              STA SAL+1
+01764  6C31  85 C4              STA MEMUSS+1
+01765  6C33  A9 00              LDA #$00
+01766  6C35  85 AC              STA SAL
+01767  6C37  A9 28              LDA #$28        ;'('
+01768  6C39  85 C3              STA MEMUSS
+01769  6C3B  85 B0              STA CMPO
+01770  6C3D  A0 BF              LDY #$BF
+01771  6C3F  A2 04              LDX #$04
+01772  6C41  B1 AC       XXCC41 LDA (SAL),Y
+01773  6C43  91 C3              STA (MEMUSS),Y
+01774  6C45  B1 AE              LDA (SAL+2),Y
+01775  6C47  91 B0              STA (CMPO),Y
+01776  6C49  88                 DEY 
+01777  6C4A  D0 F5              BNE XXCC41
+01778  6C4C  B1 AC              LDA (SAL),Y
+01779  6C4E  91 C3              STA (MEMUSS),Y
+01780  6C50  B1 AE              LDA (SAL+2),Y
+01781  6C52  91 B0              STA (CMPO),Y
+01782  6C54  88                 DEY 
+01783  6C55  C6 AD              DEC SAL+1
+01784  6C57  C6 C4              DEC MEMUSS+1
+01785  6C59  C6 AF              DEC SAL+3
+01786  6C5B  C6 B1              DEC CMPO+1
+01787  6C5D  CA                 DEX 
+01788  6C5E  D0 E1              BNE XXCC41
+01789  6C60  A2 27              LDX #$27        ;'''
+01790  6C62  A9 20              LDA #$20        ;' '
+01791  6C64  9D 00 04    XXCC64 STA VICSCN,X
+01792  6C67  CA                 DEX 
+01793  6C68  10 FA              BPL XXCC64
+01794  6C6A  A9 13       XXCC6A LDA #$13
+01795  6C6C  4C 09 60           JMP MCHROT
+01796  6C6F              ;********************************
+01797  6C6F  C0 28       XXCC6F CPY #$28        ;'('
+01798  6C71  D0 02              BNE XXCC75
+01799  6C73  38                 SEC 
+01800  6C74  60                 RTS 
+01801  6C75              ;********************************
+01802  6C75  20 B3 6C    XXCC75 JSR XXCCB3
+01803  6C78  C9 20              CMP #$20        ;' '
+01804  6C7A  F0 F3              BEQ XXCC6F
+01805  6C7C  88                 DEY 
+01806  6C7D  20 9E 6C           JSR XXCC9E
+01807  6C80  AA                 TAX 
+01808  6C81  20 9E 6C           JSR XXCC9E
+01809  6C84  85 C1              STA STAL
+01810  6C86  86 C2              STX STAL+1
+01811  6C88  A9 FF              LDA #$FF
+01812  6C8A  85 31              STA STREND
+01813  6C8C  85 CC              STA $CC
+01814  6C8E  A5 CF              LDA BLNON
+01815  6C90  F0 0A              BEQ XXCC9C
+01816  6C92  A5 CE              LDA GDBLN
+
+
+
+
+
+
+MONITOR$6000......PAGE 0035
+
+LINE# LOC   CODE        LINE
+
+
+01817  6C94  A4 D3              LDY PNTR
+01818  6C96  91 D1              STA (PNT),Y
+01819  6C98  A9 00              LDA #$00
+01820  6C9A  85 CF              STA BLNON
+01821  6C9C  18          XXCC9C CLC 
+01822  6C9D  60                 RTS 
+01823  6C9E              ;********************************
+01824  6C9E  20 B3 6C    XXCC9E JSR XXCCB3
+01825  6CA1  20 D0 68           JSR XXC8D0
+01826  6CA4  0A                 ASL A
+01827  6CA5  0A                 ASL A
+01828  6CA6  0A                 ASL A
+01829  6CA7  0A                 ASL A
+01830  6CA8  85 2C              STA TXTTAB+1
+01831  6CAA  20 B3 6C           JSR XXCCB3
+01832  6CAD  20 D0 68           JSR XXC8D0
+01833  6CB0  05 2C              ORA TXTTAB+1
+01834  6CB2  60                 RTS 
+01835  6CB3              ;********************************
+01836  6CB3  B1 C3       XXCCB3 LDA (MEMUSS),Y
+01837  6CB5  C8                 INY 
+01838  6CB6  29 7F              AND #$7F
+01839  6CB8  C9 20              CMP #$20        ;' '
+01840  6CBA  B0 02              BCS XXCCBE
+01841  6CBC  09 40              ORA #$40        ;'@'
+01842  6CBE  60          XXCCBE RTS 
+01843  6CBF              ;********************************
+01844  6CBF              ; E
+01845  6CBF              ;********************************
+01846  6CBF  20 87 68    ZZCCBF JSR XXC887
+01847  6CC2  E0 04              CPX #$04
+01848  6CC4  90 23              BCC XXCCE9
+01849  6CC6  85 F9              STA ROBUF
+01850  6CC8  86 FA              STX ROBUF+1
+01851  6CCA  8D 83 02           STA MEMSIZ
+01852  6CCD  8E 84 02           STX MEMSIZ+1
+01853  6CD0  85 C3              STA MEMUSS
+01854  6CD2  86 C4              STX MEMUSS+1
+01855  6CD4  A0 00              LDY #$00
+01856  6CD6  A9 55       XXCCD6 LDA #$55        ;'U'
+01857  6CD8  91 C3              STA (MEMUSS),Y
+01858  6CDA  D1 C3              CMP (MEMUSS),Y
+01859  6CDC  D0 0B              BNE XXCCE9
+01860  6CDE  B9 00 00           LDA D6510,Y
+01861  6CE1  91 C3              STA (MEMUSS),Y
+01862  6CE3  C8                 INY 
+01863  6CE4  D0 F0              BNE XXCCD6
+01864  6CE6  4C 9C 60           JMP XXC09C
+01865  6CE9              ;********************************
+01866  6CE9  86 C3       XXCCE9 STX MEMUSS
+01867  6CEB  05 C3              ORA MEMUSS
+01868  6CED  D0 07              BNE XXCCF6
+01869  6CEF  85 F9              STA ROBUF
+01870  6CF1  86 FA              STX ROBUF+1
+01871  6CF3  4C 9C 60           JMP XXC09C
+
+
+
+
+
+
+MONITOR$6000......PAGE 0036
+
+LINE# LOC   CODE        LINE
+
+
+01872  6CF6              ;********************************
+01873  6CF6  4C 97 60    XXCCF6 JMP XXC097
+01874  6CF9              ;********************************
+01875  6CF9  48          XXCCF9 PHA 
+01876  6CFA  8A                 TXA 
+01877  6CFB  48                 PHA 
+01878  6CFC  98                 TYA 
+01879  6CFD  48                 PHA 
+01880  6CFE  A5 FA              LDA ROBUF+1
+01881  6D00  F0 11              BEQ XXCD13
+01882  6D02  A0 00              LDY #$00
+01883  6D04  B9 00 00    XXCD04 LDA D6510,Y
+01884  6D07  AA                 TAX 
+01885  6D08  B1 F9              LDA (ROBUF),Y
+01886  6D0A  99 00 00           STA D6510,Y
+01887  6D0D  8A                 TXA 
+01888  6D0E  91 F9              STA (ROBUF),Y
+01889  6D10  C8                 INY 
+01890  6D11  D0 F1              BNE XXCD04
+01891  6D13  68          XXCD13 PLA 
+01892  6D14  A8                 TAY 
+01893  6D15  68                 PLA 
+01894  6D16  AA                 TAX 
+01895  6D17  68                 PLA 
+01896  6D18  60                 RTS 
+01897  6D19              ;********************************
+01898  6D19  AD 14 03    XXCD19 LDA CINV
+01899  6D1C  AE 15 03           LDX CINV+1
+01900  6D1F  CD EE 6E           CMP XXCEEE
+01901  6D22  D0 05              BNE SVEC18
+01902  6D24  EC EF 6E           CPX XXCEEF
+01903  6D27  F0 10              BEQ XXCD39
+01904  6D29              ;********************************
+01905  6D29              ; STORE A AND X IN $0018 VECTOR
+01906  6D29              ;********************************
+01907  6D29  85 18       SVEC18 STA $18
+01908  6D2B  86 19              STX $19
+01909  6D2D  AD EE 6E           LDA XXCEEE
+01910  6D30  AE EF 6E           LDX XXCEEF
+01911  6D33  8D 14 03           STA CINV
+01912  6D36  8E 15 03           STX CINV+1
+01913  6D39  60          XXCD39 RTS 
+01914  6D3A              ;********************************
+01915  6D3A  A5 18       XXCD3A LDA $18
+01916  6D3C  8D 14 03           STA CINV
+01917  6D3F  A5 19              LDA $19
+01918  6D41  8D 15 03           STA CINV+1
+01919  6D44  60                 RTS 
+01920  6D45              ;********************************
+01921  6D45  A2 02       XXCD45 LDX #$02
+01922  6D47  D0 02              BNE XXCD4B
+01923  6D49  A2 00       XXCD49 LDX #$00
+01924  6D4B  20 63 6D    XXCD4B JSR XXCD63
+01925  6D4E  A2 00              LDX #$00
+01926  6D50  A1 0D              LDA (VALTYP,X)
+
+
+
+
+
+
+MONITOR$6000......PAGE 0037
+
+LINE# LOC   CODE        LINE
+
+
+01927  6D52  60                 RTS 
+01928  6D53              ;********************************
+01929  6D53  A2 02       XXCD53 LDX #$02
+01930  6D55  D0 02              BNE XXCD59
+01931  6D57  A2 00       XXCD57 LDX #$00
+01932  6D59  48          XXCD59 PHA 
+01933  6D5A  20 63 6D           JSR XXCD63
+01934  6D5D  68                 PLA 
+01935  6D5E  A2 00              LDX #$00
+01936  6D60  81 0D              STA (VALTYP,X)
+01937  6D62  60                 RTS 
+01938  6D63              ;********************************
+01939  6D63  B5 C2       XXCD63 LDA STAL+1,X
+01940  6D65  D0 0E              BNE XXCD75
+01941  6D67  18                 CLC 
+01942  6D68  A5 F9              LDA ROBUF
+01943  6D6A  75 C1              ADC STAL,X
+01944  6D6C  85 0D              STA VALTYP
+01945  6D6E  A5 FA              LDA ROBUF+1
+01946  6D70  75 C2              ADC STAL+1,X
+01947  6D72  85 0E              STA INTFLG
+01948  6D74  60                 RTS 
+01949  6D75              ;********************************
+01950  6D75  85 0E       XXCD75 STA INTFLG
+01951  6D77  B5 C1              LDA STAL,X
+01952  6D79  85 0D              STA VALTYP
+01953  6D7B  60                 RTS 
+01954  6D7C              ;********************************
+01955  6D7C  08          XXCD7C PHP 
+01956  6D7D  68                 PLA 
+01957  6D7E  29 EF              AND #$EF
+01958  6D80  48                 PHA 
+01959  6D81  84 0C              STY DIMFLG
+01960  6D83  98                 TYA 
+01961  6D84  18                 CLC 
+01962  6D85  65 C1              ADC STAL
+01963  6D87  85 0D              STA VALTYP
+01964  6D89  A9 00              LDA #$00
+01965  6D8B  65 C2              ADC STAL+1
+01966  6D8D  85 0E              STA INTFLG
+01967  6D8F  C9 01              CMP #$01
+01968  6D91  B0 10              BCS XXCDA3
+01969  6D93  A5 0F              LDA GARBFL
+01970  6D95  D0 0C              BNE XXCDA3
+01971  6D97  A5 0D              LDA VALTYP
+01972  6D99  65 F9              ADC ROBUF
+01973  6D9B  85 0D              STA VALTYP
+01974  6D9D  A5 0E              LDA INTFLG
+01975  6D9F  65 FA              ADC ROBUF+1
+01976  6DA1  85 0E              STA INTFLG
+01977  6DA3  A0 00       XXCDA3 LDY #$00
+01978  6DA5  B1 0D              LDA (VALTYP),Y
+01979  6DA7  A4 0C              LDY DIMFLG
+01980  6DA9  28                 PLP 
+01981  6DAA  60                 RTS 
+
+
+
+
+
+
+MONITOR$6000......PAGE 0038
+
+LINE# LOC   CODE        LINE
+
+
+01982  6DAB              ;********************************
+01983  6DAB  48          XXCDAB PHA 
+01984  6DAC  20 7C 6D           JSR XXCD7C
+01985  6DAF  84 0C              STY DIMFLG
+01986  6DB1  A0 00              LDY #$00
+01987  6DB3  68                 PLA 
+01988  6DB4  91 0D              STA (VALTYP),Y
+01989  6DB6  A4 0C              LDY DIMFLG
+01990  6DB8  60                 RTS 
+01991  6DB9              ;********************************
+01992  6DB9              ; MODE TABLE... NYBBLE ORGANIZED
+01993  6DB9              ;
+01994  6DB9              ; 0= ERR  4= IMPLIED  8= ZER,X   C= ZER,Y
+01995  6DB9              ; 1= IMM  5= ACC      9= ABS,X   D= REL
+01996  6DB9              ; 2= ZER  6= (IND,X)  A= ABS,Y
+01997  6DB9              ; 3= ABS  7= (IND),Y  B= (IND)
+01998  6DB9              ;
+01999  6DB9              ;********************************
+02000  6DB9              ; SUPERMON
+02001  6DB9              ;********************************
+02002  6DB9              ; MODE TABLE... NYBBLE ORGANIZED
+02003  6DB9              ; 0= ERR  4= IMPLIED  8= ZER,X   C= ZER,Y
+02004  6DB9              ; 1= IMM  5= ACC      9= ABS,X   D= REL
+02005  6DB9              ; 2= ZER  6= (IND,X)  A= ABS,Y
+02006  6DB9              ; 3= ABS  7= (IND),Y  B= (IND)
+02007  6DB9              ;MODE
+02008  6DB9              ;.BYTE $40,$02,$45,$03
+02009  6DB9              ;.BYTE $D0,$08,$40,$09
+02010  6DB9              ;.BYTE $30,$22,$45,$33
+02011  6DB9              ;.BYTE $D0,$08,$40,$09
+02012  6DB9              ;.BYTE $40,$02,$45,$33
+02013  6DB9              ;.BYTE $D0,$08,$40,$09
+02014  6DB9              ;.BYTE $40,$02,$45,$B3
+02015  6DB9              ;.BYTE $D0,$08,$40,$09
+02016  6DB9              ;.BYTE $00,$22,$44,$33
+02017  6DB9              ;.BYTE $D0,$8C,$44,$00
+02018  6DB9              ;.BYTE $11,$22,$44,$33
+02019  6DB9              ;.BYTE $D0,$8C,$44,$9A
+02020  6DB9              ;.BYTE $10,$22,$44,$33
+02021  6DB9              ;.BYTE $D0,$08,$40,$09
+02022  6DB9              ;.BYTE $10,$22,$44,$33
+02023  6DB9              ;.BYTE $D0,$08,$40,$09
+02024  6DB9              ;.BYTE $62,$13,$78,$A9
+02025  6DB9              ;********************************
+02026  6DB9              ;XXCDB9 RTI 
+02027  6DB9  40          XXCDB9 .BYTE $40
+02028  6DBA  02                 .BYTE $02
+02029  6DBB  45                 .BYTE $45       ;'E'
+02030  6DBC  03                 .BYTE $03
+02031  6DBD  D0                 .BYTE $D0
+02032  6DBE  08                 .BYTE $08
+02033  6DBF  40                 .BYTE $40       ;'@'
+02034  6DC0  09                 .BYTE $09
+02035  6DC1  30                 .BYTE $30       ;'0'
+02036  6DC2  22                 .BYTE $22       ;'"'
+
+
+
+
+
+
+MONITOR$6000......PAGE 0039
+
+LINE# LOC   CODE        LINE
+
+
+02037  6DC3  45                 .BYTE $45       ;'E'
+02038  6DC4  33                 .BYTE $33       ;'3'
+02039  6DC5  D0                 .BYTE $D0
+02040  6DC6  08                 .BYTE $08
+02041  6DC7  40                 .BYTE $40       ;'@'
+02042  6DC8  09                 .BYTE $09
+02043  6DC9  40                 .BYTE $40 '@'
+02044  6DCA  02                 .BYTE $02
+02045  6DCB  45                 .BYTE $45       ;'E'
+02046  6DCC  33                 .BYTE $33       ;'3'
+02047  6DCD  D0                 .BYTE $D0
+02048  6DCE  08                 .BYTE $08
+02049  6DCF  40                 .BYTE $40       ;'@'
+02050  6DD0  09                 .BYTE $09
+02051  6DD1  40                 .BYTE $40       ;'@'
+02052  6DD2  02                 .BYTE $02
+02053  6DD3  45                 .BYTE $45       ;'E'
+02054  6DD4  B3                 .BYTE $B3
+02055  6DD5  D0                 .BYTE $D0
+02056  6DD6  08                 .BYTE $08
+02057  6DD7  40                 .BYTE $40       ;'@'
+02058  6DD8  09                 .BYTE $09
+02059  6DD9  00                 .BYTE $00
+02060  6DDA  22                 .BYTE $22       ;'"'
+02061  6DDB  44                 .BYTE $44       ;'D'
+02062  6DDC  33                 .BYTE $33       ;'3'
+02063  6DDD  D0                 .BYTE $D0
+02064  6DDE  8C                 .BYTE $8C
+02065  6DDF  44                 .BYTE $44       ;'D'
+02066  6DE0  00                 .BYTE $00
+02067  6DE1  11                 .BYTE $11
+02068  6DE2  22                 .BYTE $22       ;'"'
+02069  6DE3  44                 .BYTE $44       ;'D'
+02070  6DE4  33                 .BYTE $33       ;'3'
+02071  6DE5  D0                 .BYTE $D0
+02072  6DE6  8C                 .BYTE $8C
+02073  6DE7  44                 .BYTE $44       ;'D'
+02074  6DE8  9A                 .BYTE $9A
+02075  6DE9  10                 .BYTE $10
+02076  6DEA  22                 .BYTE $22       ;'"'
+02077  6DEB  44                 .BYTE $44       ;'D'
+02078  6DEC  33                 .BYTE $33       ;'3'
+02079  6DED  D0                 .BYTE $D0
+02080  6DEE  08                 .BYTE $08
+02081  6DEF  40                 .BYTE $40       ;'@'
+02082  6DF0  09                 .BYTE $09
+02083  6DF1  10                 .BYTE $10
+02084  6DF2  22                 .BYTE $22       ;'"'
+02085  6DF3  44                 .BYTE $44       ;'D'
+02086  6DF4  33                 .BYTE $33       ;'3'
+02087  6DF5  D0                 .BYTE $D0
+02088  6DF6  08                 .BYTE $08
+02089  6DF7  40                 .BYTE $40       ;'@'
+02090  6DF8  09                 .BYTE $09
+02091  6DF9  62                 .BYTE $62
+
+
+
+
+
+
+MONITOR$6000......PAGE 0040
+
+LINE# LOC   CODE        LINE
+
+
+02092  6DFA  13                 .BYTE $13
+02093  6DFB  78                 .BYTE $78
+02094  6DFC  A9                 .BYTE $A9
+02095  6DFD              ;********************************
+02096  6DFD              ; MASTER MODES
+02097  6DFD              ; SIX HI-ORDER BITS MODE OPTIONS
+02098  6DFD              ; TWO LO-ORDER BIT OPERAND LENGHT
+02099  6DFD              ;
+02100  6DFD              ;********************************
+02101  6DFD              ; SUPERMON
+02102  6DFD              ;********************************
+02103  6DFD              ;MASTER MODES
+02104  6DFD              ;SIX HI-ORDER BITS  MODE OPTIONS
+02105  6DFD              ;TWO LO-ORDER BITS  OPERAND LENGTHREADY.
+02106  6DFD              ;MODE2
+02107  6DFD              ;.BYTE $00,$21,$81,$82
+02108  6DFD              ;.BYTE $00,$00,$59,$4D
+02109  6DFD              ;.BYTE $91,$92,$86,$4A,$85,$9D
+02110  6DFD              ;CHAR1
+02111  6DFD              ;.BYTE $2C,$29,$2C,$23,$28,$24
+02112  6DFD              ;CHAR2
+02113  6DFD              ;.BYTE $59,$00,$58,$24,$24,$00
+02114  6DFD              ;********************************
+02115  6DFD  00          XXCDFD .BYTE $00
+02116  6DFE  21                 .BYTE $21       ;'!'
+02117  6DFF  81                 .BYTE $81
+02118  6E00  82                 .BYTE $82
+02119  6E01  00                 .BYTE $00
+02120  6E02  00                 .BYTE $00
+02121  6E03  59                 .BYTE $59       ;'Y'
+02122  6E04  4D                 .BYTE $4D       ;'M'
+02123  6E05  91                 .BYTE $91
+02124  6E06  92                 .BYTE $92
+02125  6E07  86                 .BYTE $86
+02126  6E08  4A                 .BYTE $4A       ;'J'
+02127  6E09  85                 .BYTE $85
+02128  6E0A  9D          XXCE0A .BYTE $9D
+02129  6E0B  2C          XXCE0B .BYTE $2C       ;','
+02130  6E0C  29          XXCE0C .BYTE $29       ;')'
+02131  6E0D  2C          XXCE0D .BYTE $2C       ;','
+02132  6E0E  23          XXCE0E .BYTE $23       ;'#'
+02133  6E0F  28          XXCE0F .BYTE $28       ;'('
+02134  6E10  24          XXCE10 .BYTE $24       ;'$'
+02135  6E11  59                 .BYTE $59       ;'Y'
+02136  6E12  00                 .BYTE $00
+02137  6E13  58                 .BYTE $58       ;'X'
+02138  6E14  24                 .BYTE $24       ;'$'
+02139  6E15  24                 .BYTE $24       ;'$'
+02140  6E16  00                 .BYTE $00
+02141  6E17              ;********************************
+02142  6E17              ; PACKED MNEMONICS
+02143  6E17              ;********************************
+02144  6E17              ; SUPERMON
+02145  6E17              ;********************************
+02146  6E17              ;MNEML
+
+
+
+
+
+
+MONITOR$6000......PAGE 0041
+
+LINE# LOC   CODE        LINE
+
+
+02147  6E17              ;.BYTE $1C,$8A,$1C,$23
+02148  6E17              ;.BYTE $5D,$8B,$1B,$A1
+02149  6E17              ;.BYTE $9D,$8A,$1D,$23
+02150  6E17              ;.BYTE $9D,$8B,$1D,$A1
+02151  6E17              ;.BYTE $00,$29,$19,$AE
+02152  6E17              ;.BYTE $69,$A8,$19,$23
+02153  6E17              ;.BYTE $24,$53,$1B,$23
+02154  6E17              ;.BYTE $24,$53,$19,$A1
+02155  6E17              ;.BYTE $00,$1A,$5B,$5B
+02156  6E17              ;.BYTE $A5,$69,$24,$24
+02157  6E17              ;.BYTE $AE,$AE,$A8,$AD
+02158  6E17              ;.BYTE $29,$00,$7C,$00
+02159  6E17              ;.BYTE $15,$9C,$6D,$9C
+02160  6E17              ;.BYTE $A5,$69,$29,$53
+02161  6E17              ;.BYTE $84,$13,$34,$11
+02162  6E17              ;.BYTE $A5,$69,$23,$A0
+02163  6E17              ;********************************
+02164  6E17  1C          XXCE17 .BYTE $1C
+02165  6E18  8A                 .BYTE $8A
+02166  6E19  1C                 .BYTE $1C
+02167  6E1A  23                 .BYTE $23       ;'#'
+02168  6E1B  5D                 .BYTE $5D       ;']'
+02169  6E1C  8B                 .BYTE $8B
+02170  6E1D  1B                 .BYTE $1B
+02171  6E1E  A1                 .BYTE $A1
+02172  6E1F  9D                 .BYTE $9D
+02173  6E20  8A                 .BYTE $8A
+02174  6E21  1D                 .BYTE $1D
+02175  6E22  23                 .BYTE $23       ;'#'
+02176  6E23  9D                 .BYTE $9D
+02177  6E24  8B                 .BYTE $8B
+02178  6E25  1D                 .BYTE $1D
+02179  6E26  A1                 .BYTE $A1
+02180  6E27  00                 .BYTE $00
+02181  6E28  29                 .BYTE $29       ;')'
+02182  6E29  19                 .BYTE $19
+02183  6E2A  AE                 .BYTE $AE
+02184  6E2B  69                 .BYTE $69
+02185  6E2C  A8                 .BYTE $A8
+02186  6E2D  19                 .BYTE $19
+02187  6E2E  23                 .BYTE $23       ;'#'
+02188  6E2F  24                 .BYTE $24       ;'$'
+02189  6E30  53                 .BYTE $53       ;'S'
+02190  6E31  1B                 .BYTE $1B
+02191  6E32  23                 .BYTE $23       ;'#'
+02192  6E33  24                 .BYTE $24       ;'$'
+02193  6E34  53                 .BYTE $53       ;'S'
+02194  6E35  19                 .BYTE $19
+02195  6E36  A1                 .BYTE $A1
+02196  6E37  00                 .BYTE $00
+02197  6E38  1A                 .BYTE $1A
+02198  6E39  5B                 .BYTE $5B       ;'['
+02199  6E3A  5B                 .BYTE $5B       ;'['
+02200  6E3B  A5                 .BYTE $A5
+02201  6E3C  69                 .BYTE $69
+
+
+
+
+
+
+MONITOR$6000......PAGE 0042
+
+LINE# LOC   CODE        LINE
+
+
+02202  6E3D  24                 .BYTE $24       ;'$'
+02203  6E3E  24                 .BYTE $24       ;'$'
+02204  6E3F  AE                 .BYTE $AE
+02205  6E40  AE                 .BYTE $AE
+02206  6E41  A8                 .BYTE $A8
+02207  6E42  AD                 .BYTE $AD
+02208  6E43  29                 .BYTE $29       ;')'
+02209  6E44  00                 .BYTE $00
+02210  6E45  7C                 .BYTE $7C
+02211  6E46  00                 .BYTE $00
+02212  6E47  15                 .BYTE $15
+02213  6E48  9C                 .BYTE $9C
+02214  6E49  6D                 .BYTE $6D
+02215  6E4A  9C                 .BYTE $9C
+02216  6E4B  A5                 .BYTE $A5
+02217  6E4C  69                 .BYTE $69
+02218  6E4D  29                 .BYTE $29       ;')'
+02219  6E4E  53                 .BYTE $53       ;'S'
+02220  6E4F  84                 .BYTE $84
+02221  6E50  13                 .BYTE $13
+02222  6E51  34                 .BYTE $34       ;'4'
+02223  6E52  11                 .BYTE $11
+02224  6E53  A5                 .BYTE $A5
+02225  6E54  69                 .BYTE $69
+02226  6E55  23                 .BYTE $23       ;'#'
+02227  6E56  A0                 .BYTE $A0
+02228  6E57              ;********************************
+02229  6E57              ; PACKED MNEMONICS
+02230  6E57              ;********************************
+02231  6E57              ; SUPERMON
+02232  6E57              ;********************************
+02233  6E57              ;MNEMR
+02234  6E57              ;.BYTE $D8,$62,$5A,$48
+02235  6E57              ;.BYTE $26,$62,$94,$88
+02236  6E57              ;.BYTE $54,$44,$C8,$54
+02237  6E57              ;.BYTE $68,$44,$E8,$94
+02238  6E57              ;.BYTE $00,$B4,$08,$84
+02239  6E57              ;.BYTE $74,$B4,$28,$6E
+02240  6E57              ;.BYTE $74,$F4,$CC,$4A
+02241  6E57              ;.BYTE $72,$F2,$A4,$8A
+02242  6E57              ;.BYTE $00,$AA,$A2,$A2
+02243  6E57              ;.BYTE $74,$74,$74,$72
+02244  6E57              ;.BYTE $44,$68,$B2,$32
+02245  6E57              ;.BYTE $B2,$00,$22,$00
+02246  6E57              ;.BYTE $1A,$1A,$26,$26
+02247  6E57              ;.BYTE $72,$72,$88,$C8
+02248  6E57              ;.BYTE $C4,$CA,$26,$48
+02249  6E57              ;.BYTE $44,$44,$A2,$C8
+02250  6E57              ;********************************
+02251  6E57  D8          XXCE57 .BYTE $D8
+02252  6E58  62                 .BYTE $62
+02253  6E59  5A                 .BYTE $5A       ;'Z'
+02254  6E5A  48                 .BYTE $48       ;'H'
+02255  6E5B  26                 .BYTE $26       ;'&'
+02256  6E5C  62                 .BYTE $62
+
+
+
+
+
+
+MONITOR$6000......PAGE 0043
+
+LINE# LOC   CODE        LINE
+
+
+02257  6E5D  94                 .BYTE $94
+02258  6E5E  88                 .BYTE $88
+02259  6E5F  54                 .BYTE $54       ;'T'
+02260  6E60  44                 .BYTE $44       ;'D'
+02261  6E61  C8                 .BYTE $C8
+02262  6E62  54                 .BYTE $54       ;'T'
+02263  6E63  68                 .BYTE $68
+02264  6E64  44                 .BYTE $44       ;'D'
+02265  6E65  E8                 .BYTE $E8
+02266  6E66  94                 .BYTE $94
+02267  6E67  00                 .BYTE $00
+02268  6E68  B4                 .BYTE $B4
+02269  6E69  08                 .BYTE $08
+02270  6E6A  84                 .BYTE $84
+02271  6E6B  74                 .BYTE $74
+02272  6E6C  B4                 .BYTE $B4
+02273  6E6D  28                 .BYTE $28       ;'('
+02274  6E6E  6E                 .BYTE $6E
+02275  6E6F  74                 .BYTE $74
+02276  6E70  F4                 .BYTE $F4
+02277  6E71  CC                 .BYTE $CC
+02278  6E72  4A                 .BYTE $4A       ;'J'
+02279  6E73  72                 .BYTE $72
+02280  6E74  F2                 .BYTE $F2
+02281  6E75  A4                 .BYTE $A4
+02282  6E76  8A                 .BYTE $8A
+02283  6E77  00                 .BYTE $00
+02284  6E78  AA                 .BYTE $AA
+02285  6E79  A2                 .BYTE $A2
+02286  6E7A  A2                 .BYTE $A2
+02287  6E7B  74                 .BYTE $74
+02288  6E7C  74                 .BYTE $74
+02289  6E7D  74                 .BYTE $74
+02290  6E7E  72                 .BYTE $72
+02291  6E7F  44                 .BYTE $44       ;'D'
+02292  6E80  68                 .BYTE $68
+02293  6E81  B2                 .BYTE $B2
+02294  6E82  32                 .BYTE $32       ;'2'
+02295  6E83  B2                 .BYTE $B2
+02296  6E84  00                 .BYTE $00
+02297  6E85  22                 .BYTE $22       ;'"'
+02298  6E86  00                 .BYTE $00
+02299  6E87  1A                 .BYTE $1A
+02300  6E88  1A                 .BYTE $1A
+02301  6E89  26                 .BYTE $26       ;'&'
+02302  6E8A  26                 .BYTE $26       ;'&'
+02303  6E8B  72                 .BYTE $72
+02304  6E8C  72                 .BYTE $72
+02305  6E8D  88                 .BYTE $88
+02306  6E8E  C8                 .BYTE $C8
+02307  6E8F  C4                 .BYTE $C4
+02308  6E90  CA                 .BYTE $CA
+02309  6E91  26                 .BYTE $26       ;'&'
+02310  6E92  48                 .BYTE $48       ;'H'
+02311  6E93  44                 .BYTE $44       ;'D'
+
+
+
+
+
+
+MONITOR$6000......PAGE 0044
+
+LINE# LOC   CODE        LINE
+
+
+02312  6E94  44                 .BYTE $44       ;'D'
+02313  6E95  A2                 .BYTE $A2
+02314  6E96  C8                 .BYTE $C8
+02315  6E97              ;*****************************
+02316  6E97              ; REGISTER HEADING
+02317  6E97              ;*****************************
+02318  6E97  0D          XXCE97 .BYTE $0D
+02319  6E98  20 20              .BYTE '   PC  SR AC XR YR SP'
+02320  6EAD              ;*****************************
+02321  6EAD              ; COMMANDS
+02322  6EAD              ;
+02323  6EAD              ;MONITOR COMMAND SUMMARY
+02324  6EAD              ;
+02325  6EAD              ;ASSEMBLE     A  A....... . .... .. ....... ....
+02326  6EAD              ;             B
+02327  6EAD              ;COMPARE      C  C...... ... ........ .. ...... .
+.. ...... ...........
+02328  6EAD              ;DISASSEMBLE  D  D.......... . .... .. 6502 ....
+02329  6EAD              ;FILL         F  F... ...... .... ... ......... .
+...
+02330  6EAD              ;GO           G  S.... ......... .. ... .........
+ .......
+02331  6EAD              ;HUNT         H  H... ....... ...... ... ... ....
+....... .. ....... .....
+02332  6EAD              ;INTERROGATE  I  S... ASCII ...... .. ...... ....
+.....
+02333  6EAD              ;LOAD         L  L... . .... .... .... .. ....
+02334  6EAD              ;MEMORY       M  D...... ... ........... ...... .
+. ...... .........
+02335  6EAD              ;NEW LOCATOR  N  A..... ....... ........ ....... 
+..... ...... ..
+02336  6EAD              ;             Q
+02337  6EAD              ;REGISTERS    R  D...... ... CPU .........
+02338  6EAD              ;SAVE         S  S... .. .... .. ....
+02339  6EAD              ;TRANSFER     T  T....... .... .... ... ....... .
+. ...... .. .......
+02340  6EAD              ;             W
+02341  6EAD              ;EXIT         X  E... 64MON (BASIC .... .... .. .
+. .....)
+02342  6EAD              ;             , SAME AS A
+02343  6EAD              ;             :
+02344  6EAD              ;             ;
+02345  6EAD              ;             E
+02346  6EAD              ;             UNDEFINED JMP TO START ADDRESS
+02347  6EAD              ;
+02348  6EAD              ;*****************************
+02349  6EAD  41 42       XXCEAD .BYTE 'ABCDFGHILMNQRSTWX,:'
+02350  6EC0  3B 45              .BYTE ';E'
+02351  6EC2              ;*****************************
+02352  6EC2              ; COMMAND VECTOR TABLE
+02353  6EC2              ;*****************************
+02354  6EC2              ;A
+02355  6EC2  4C          XXCEC2 .BYTE <ZZC44C   ;'$4C ;L'
+02356  6EC3  64          XXCEC3 .BYTE >ZZC44C   ;$C4
+02357  6EC4              ;B
+02358  6EC4  6A                 .BYTE <ZZC76A   ;$6A
+02359  6EC5  67                 .BYTE >ZZC76A   ;$C7
+02360  6EC6              ;C
+02361  6EC6  21                 .BYTE <ZZC121   ;$21 ;'!'
+02362  6EC7  61                 .BYTE >ZZC121   ;$C1
+02363  6EC8              ;D
+02364  6EC8  41                 .BYTE <ZZC241   ;$41 ;'A'
+02365  6EC9  62                 .BYTE >ZZC241   ;$C2
+02366  6ECA              ;F
+
+
+
+
+
+
+MONITOR$6000......PAGE 0045
+
+LINE# LOC   CODE        LINE
+
+
+02367  6ECA  9B                 .BYTE <ZZC19B   ;$9B
+02368  6ECB  61                 .BYTE >ZZC19B   ;$C1
+02369  6ECC              ;G
+02370  6ECC  A2                 .BYTE <ZZC6A2   ;$A2
+02371  6ECD  66                 .BYTE >ZZC6A2 $C6
+02372  6ECE              ;H
+02373  6ECE  C4                 .BYTE <ZZC1C4   ;$C4
+02374  6ECF  61                 .BYTE >ZZC1C4   ;$C1
+02375  6ED0              ;I
+02376  6ED0  96                 .BYTE <ZZC396   ;$96
+02377  6ED1  63                 .BYTE >ZZC396   ;$C3
+02378  6ED2              ;L
+02379  6ED2  FE                 .BYTE <ZZC9FE   ;$FE
+02380  6ED3  69                 .BYTE >ZZC9FE   ;$C9
+02381  6ED4              ;M
+02382  6ED4  99                 .BYTE <ZZC399   ;$99
+02383  6ED5  63                 .BYTE >ZZC399 $C3
+02384  6ED6              ;N
+02385  6ED6  8D                 .BYTE <ZZC78D   ;$8D
+02386  6ED7  67                 .BYTE >ZZC78D   ;$C7
+02387  6ED8              ;Q
+02388  6ED8  A6                 .BYTE <ZZC6A6   ;$A6
+02389  6ED9  66                 .BYTE >ZZC6A6   ;$C6
+02390  6EDA              ;R
+02391  6EDA  81                 .BYTE <ZZC981   ;$81
+02392  6EDB  69                 .BYTE >ZZC981   ;$C9
+02393  6EDC              ;S
+02394  6EDC  FE                 .BYTE <ZZC9FE   ;$FE
+02395  6EDD  69                 .BYTE >ZZC9FE   ;$C9
+02396  6EDE              ;T
+02397  6EDE  25                 .BYTE <ZZC125   ;$25 ;'%'
+02398  6EDF  61                 .BYTE >ZZC125   ;$C1
+02399  6EE0              ;W
+02400  6EE0  AA                 .BYTE <ZZC6AA   ;$AA
+02401  6EE1  66                 .BYTE >ZZC6AA   ;$C6
+02402  6EE2              ;X
+02403  6EE2  EE                 .BYTE <ZZC9EE   ;$EE
+02404  6EE3  69                 .BYTE >ZZC9EE   ;$C9
+02405  6EE4              ;,
+02406  6EE4  4C                 .BYTE <ZZC44C   ;$4C ;'L'
+02407  6EE5  64                 .BYTE >ZZC44C   ;$C4
+02408  6EE6              ;:
+02409  6EE6  20                 .BYTE <ZZC420   ;$20 ;' '
+02410  6EE7  64                 .BYTE >ZZC420   ;$C4
+02411  6EE8              ;;
+02412  6EE8  D7                 .BYTE <ZZC9D7   ;$D7
+02413  6EE9  69                 .BYTE >ZZC9D7   ;$C9
+02414  6EEA              ;E
+02415  6EEA  BF                 .BYTE <ZZCCBF   ;$BF
+02416  6EEB  6C                 .BYTE >ZZCCBF   ;$CC
+02417  6EEC              ;?
+02418  6EEC  00                 .BYTE <ENTRY    ;$00
+02419  6EED  60                 .BYTE >ENTRY    ;$C0
+02420  6EEE              ;*****************************
+02421  6EEE              ;
+
+
+
+
+
+
+MONITOR$6000......PAGE 0046
+
+LINE# LOC   CODE        LINE
+
+
+02422  6EEE              ;*****************************
+02423  6EEE              ;XXCEEE .BYTE $74
+02424  6EEE              ;XXCEEF .BYTE $C3
+02425  6EEE  74          XXCEEE .BYTE <XXC374
+02426  6EEF  63          XXCEEF .BYTE >XXC374
+02427  6EF0              ;XXCEEE .WORD XXC374
+02428  6EF0              ;*****************************
+02429  6EF0              ;
+02430  6EF0              ;*****************************
+02431  6EF0              ;XXCEF0 .BYTE $C8
+02432  6EF0              ;XXCEF1 .BYTE $C5
+02433  6EF0  C8          XXCEF0 .BYTE <XXC5C8
+02434  6EF1  65          XXCEF1 .BYTE >XXC5C8
+02435  6EF2              ;XXCEF0 .WORD XXC5C8
+02436  6EF2              ;*****************************
+02437  6EF2              ; NMI VECTOR
+02438  6EF2              ;*****************************
+02439  6EF2              ;XXCEF2 .BYTE $3F ;'?'
+02440  6EF2              ;XXCEF3 .BYTE $C0
+02441  6EF2  3F          XXCEF2 .BYTE <XXC03F
+02442  6EF3  60          XXCEF3 .BYTE >XXC03F
+02443  6EF4              ;XXCEF2 .WORD XXC03F
+02444  6EF4              ;*****************************
+02445  6EF4              ;
+02446  6EF4              ;*****************************
+02447  6EF4              ;XXCEF4 .BYTE $A7
+02448  6EF4              ;XXCEF5 .BYTE $CA
+02449  6EF4  A7          XXCEF4 .BYTE <XXCAA7
+02450  6EF5  6A          XXCEF5 .BYTE >XXCAA7
+02451  6EF6              ;XXCEF4 .WORD XXCAA7
+02452  6EF6              ;*****************************
+02453  6EF6              ;
+02454  6EF6              ;*****************************
+02455  6EF6              ;XXCEF6 .BYTE $AA
+02456  6EF6              ;XXCEF7 .BYTE $C5
+02457  6EF6  AA          XXCEF6 .BYTE <XXC5AB-1
+02458  6EF7  65          XXCEF7 .BYTE >XXC5AB
+02459  6EF8              ;XXCEF6 .WORD XXC5AB-1
+02460  6EF8              ;*****************************
+02461  6EF8              ; PATCH AREA
+02462  6EF8              ;*****************************
+02463  6EF8              PXC00C =*
+02464  6EF8              ;*********************************
+02465  6EF8              ; STRING OUTPUT ROUTINE
+02466  6EF8              ;*********************************
+02467  6EF8  A0 00              LDY #$00
+02468  6EFA  B9 08 6F    SOUT   LDA XTITLE,Y
+02469  6EFD  F0 06              BEQ XOUT
+02470  6EFF  20 09 60           JSR MCHROT
+02471  6F02  C8                 INY 
+02472  6F03  D0 F5              BNE SOUT
+02473  6F05  4C 0C 60    XOUT   JMP XXC00C
+02474  6F08              ;*********************************
+02475  6F08              ;
+02476  6F08              ;*********************************
+
+
+
+
+
+
+MONITOR$6000......PAGE 0047
+
+LINE# LOC   CODE        LINE
+
+
+02477  6F08  0D          XTITLE .BYTE $0D
+02478  6F09  4D 4F              .BYTE 'MONITOR.C64 V072882',$0D
+02478  6F1C  0D 
+02479  6F1D  0D                 .BYTE $0D
+02480  6F1E  28 43              .BYTE '(C) 1982 BY COMMODORE BUSINESS '
+02481  6F3D  4D 41              .BYTE 'MACHINES'
+02482  6F45  0D                 .BYTE $0D
+02483  6F46  00                 .BYTE $00
+02484  6F47              ;*****************************
+02485  6F47              ; PATCH AREA
+02486  6F47              ;*****************************
+02487  6F47              ;       .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02488  6F47              ;       .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02489  6F47              ;       .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02490  6F47              ;       .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02491  6F47              ;       .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02492  6F47              ;       .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02493  6F47              ;       .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02494  6F47              ;       .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02495  6F47              ;       .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02496  6F47              ;       .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02497  6F47  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02497  6F48  AA 
+02497  6F49  AA 
+02497  6F4A  AA 
+02497  6F4B  AA 
+02497  6F4C  AA 
+02497  6F4D  AA 
+02497  6F4E  AA 
+02498  6F4F  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02498  6F50  AA 
+02498  6F51  AA 
+02498  6F52  AA 
+02498  6F53  AA 
+02498  6F54  AA 
+02498  6F55  AA 
+02498  6F56  AA 
+02499  6F57  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02499  6F58  AA 
+02499  6F59  AA 
+02499  6F5A  AA 
+02499  6F5B  AA 
+02499  6F5C  AA 
+02499  6F5D  AA 
+02499  6F5E  AA 
+02500  6F5F  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02500  6F60  AA 
+02500  6F61  AA 
+02500  6F62  AA 
+02500  6F63  AA 
+02500  6F64  AA 
+02500  6F65  AA 
+02500  6F66  AA 
+02501  6F67  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02501  6F68  AA 
+
+
+
+
+
+
+MONITOR$6000......PAGE 0048
+
+LINE# LOC   CODE        LINE
+
+
+02501  6F69  AA 
+02501  6F6A  AA 
+02501  6F6B  AA 
+02501  6F6C  AA 
+02501  6F6D  AA 
+02501  6F6E  AA 
+02502  6F6F  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02502  6F70  AA 
+02502  6F71  AA 
+02502  6F72  AA 
+02502  6F73  AA 
+02502  6F74  AA 
+02502  6F75  AA 
+02502  6F76  AA 
+02503  6F77  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02503  6F78  AA 
+02503  6F79  AA 
+02503  6F7A  AA 
+02503  6F7B  AA 
+02503  6F7C  AA 
+02503  6F7D  AA 
+02503  6F7E  AA 
+02504  6F7F  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02504  6F80  AA 
+02504  6F81  AA 
+02504  6F82  AA 
+02504  6F83  AA 
+02504  6F84  AA 
+02504  6F85  AA 
+02504  6F86  AA 
+02505  6F87  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02505  6F88  AA 
+02505  6F89  AA 
+02505  6F8A  AA 
+02505  6F8B  AA 
+02505  6F8C  AA 
+02505  6F8D  AA 
+02505  6F8E  AA 
+02506  6F8F  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02506  6F90  AA 
+02506  6F91  AA 
+02506  6F92  AA 
+02506  6F93  AA 
+02506  6F94  AA 
+02506  6F95  AA 
+02506  6F96  AA 
+02507  6F97  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02507  6F98  AA 
+02507  6F99  AA 
+02507  6F9A  AA 
+02507  6F9B  AA 
+02507  6F9C  AA 
+02507  6F9D  AA 
+02507  6F9E  AA 
+02508  6F9F  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+
+
+
+
+
+
+MONITOR$6000......PAGE 0049
+
+LINE# LOC   CODE        LINE
+
+
+02508  6FA0  AA 
+02508  6FA1  AA 
+02508  6FA2  AA 
+02508  6FA3  AA 
+02508  6FA4  AA 
+02508  6FA5  AA 
+02508  6FA6  AA 
+02509  6FA7  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02509  6FA8  AA 
+02509  6FA9  AA 
+02509  6FAA  AA 
+02509  6FAB  AA 
+02509  6FAC  AA 
+02509  6FAD  AA 
+02509  6FAE  AA 
+02510  6FAF  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02510  6FB0  AA 
+02510  6FB1  AA 
+02510  6FB2  AA 
+02510  6FB3  AA 
+02510  6FB4  AA 
+02510  6FB5  AA 
+02510  6FB6  AA 
+02511  6FB7  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02511  6FB8  AA 
+02511  6FB9  AA 
+02511  6FBA  AA 
+02511  6FBB  AA 
+02511  6FBC  AA 
+02511  6FBD  AA 
+02511  6FBE  AA 
+02512  6FBF  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02512  6FC0  AA 
+02512  6FC1  AA 
+02512  6FC2  AA 
+02512  6FC3  AA 
+02512  6FC4  AA 
+02512  6FC5  AA 
+02512  6FC6  AA 
+02513  6FC7  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02513  6FC8  AA 
+02513  6FC9  AA 
+02513  6FCA  AA 
+02513  6FCB  AA 
+02513  6FCC  AA 
+02513  6FCD  AA 
+02513  6FCE  AA 
+02514  6FCF  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02514  6FD0  AA 
+02514  6FD1  AA 
+02514  6FD2  AA 
+02514  6FD3  AA 
+02514  6FD4  AA 
+02514  6FD5  AA 
+02514  6FD6  AA 
+
+
+
+
+
+
+MONITOR$6000......PAGE 0050
+
+LINE# LOC   CODE        LINE
+
+
+02515  6FD7  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02515  6FD8  AA 
+02515  6FD9  AA 
+02515  6FDA  AA 
+02515  6FDB  AA 
+02515  6FDC  AA 
+02515  6FDD  AA 
+02515  6FDE  AA 
+02516  6FDF  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02516  6FE0  AA 
+02516  6FE1  AA 
+02516  6FE2  AA 
+02516  6FE3  AA 
+02516  6FE4  AA 
+02516  6FE5  AA 
+02516  6FE6  AA 
+02517  6FE7  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02517  6FE8  AA 
+02517  6FE9  AA 
+02517  6FEA  AA 
+02517  6FEB  AA 
+02517  6FEC  AA 
+02517  6FED  AA 
+02517  6FEE  AA 
+02518  6FEF  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02518  6FF0  AA 
+02518  6FF1  AA 
+02518  6FF2  AA 
+02518  6FF3  AA 
+02518  6FF4  AA 
+02518  6FF5  AA 
+02518  6FF6  AA 
+02519  6FF7  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02519  6FF8  AA 
+02519  6FF9  AA 
+02519  6FFA  AA 
+02519  6FFB  AA 
+02519  6FFC  AA 
+02519  6FFD  AA 
+02519  6FFE  AA 
+02520  6FFF              ;********************************
+02521  6FFF              ;
+02522  6FFF              ;********************************
+02523  6FFF  AA          ZZCFFF .BYTE $AA
+02524  7000              ;********************************
+02525  7000              .END
+
+
+ERRORS = 00000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SYMBOL TABLE
+
+SYMBOL VALUE
+ ADRAY1   0003    ADRAY2   0005    BLNON    00CF    CAS1     00C0
+ CBINV    0316    CHANNL   0013    CHARAC   0007    CHRIN    FFCF
+ CHROUT   FFD2    CINV     0314    CLRCHN   FFCC    CMPO     00B0
+ D6510    0000    DIMFLG   000C    ENDCHR   0008    ENTRY    6000
+ FRETOP   0033    GARBFL   000F    GDBLN    00CE    GETIN    FFE4
+ INDEX    0022    INPFLG   0011    INTFLG   000E    KEYD     0277
+ LINNUM   0014    LOAD     FFD5    MCHRIN   6006    MCHROT   6009
+ MEMSIZ   0283    MEMUSS   00C3    NDX      00C6    NMINV    0318
+ PNT      00D1    PNTR     00D3    PRTXA    6864    PXC00C   6EF8
+ RESHO    0026    ROBUF    00F9    SAL      00AC    SAVE     FFD8
+ SETMSG   FF90    SOUT     6EFA    STACK    0100    STAL     00C1
+ STREND   0031    SUBFLG   0010    SVEC18   6D29    TANSGN   0012
+ TBLX     00D6    TEMPST   0019    TXTTAB   002B    UNUSED   0002
+ VALTYP   000D    VARTAB   002D    VICSCN   0400    XOUT     6F05
+ XTITLE   6F08    XXC003   6003    XXC00C   600C    XXC03F   603F
+ XXC084   6084    XXC087   6087    XXC08A   608A    XXC08F   608F
+ XXC097   6097    XXC09C   609C    XXC0AC   60AC    XXC0B9   60B9
+ XXC0D0   60D0    XXC0D5   60D5    XXC0D9   60D9    XXC0DB   60DB
+ XXC0E5   60E5    XXC0E7   60E7    XXC0EA   60EA    XXC0F3   60F3
+ XXC0FA   60FA    XXC0FC   60FC    XXC10A   610A    XXC111   6111
+ XXC115   6115    XXC127   6127    XXC137   6137    XXC13F   613F
+ XXC148   6148    XXC151   6151    XXC163   6163    XXC177   6177
+ XXC188   6188    XXC18C   618C    XXC197   6197    XXC198   6198
+ XXC1AB   61AB    XXC1BE   61BE    XXC1C1   61C1    XXC1D9   61D9
+ XXC1E9   61E9    XXC1F0   61F0    XXC203   6203    XXC208   6208
+ XXC212   6212    XXC22C   622C    XXC232   6232    XXC23E   623E
+ XXC244   6244    XXC256   6256    XXC25B   625B    XXC25E   625E
+ XXC273   6273    XXC27B   627B    XXC28A   628A    XXC29C   629C
+ XXC2A0   62A0    XXC2A8   62A8    XXC2AD   62AD    XXC2B5   62B5
+ XXC2B7   62B7    XXC2BF   62BF    XXC2C0   62C0    XXC2C6   62C6
+ XXC2CB   62CB    XXC2CC   62CC    XXC2E2   62E2    XXC2EA   62EA
+ XXC2F5   62F5    XXC304   6304    XXC30F   630F    XXC313   6313
+ XXC317   6317    XXC32C   632C    XXC330   6330    XXC337   6337
+ XXC33B   633B    XXC343   6343    XXC352   6352    XXC35D   635D
+ XXC361   6361    XXC374   6374    XXC385   6385    XXC388   6388
+ XXC391   6391    XXC3A0   63A0    XXC3B3   63B3    XXC3B6   63B6
+ XXC3BB   63BB    XXC3BE   63BE    XXC3C1   63C1    XXC3D7   63D7
+ XXC3E2   63E2    XXC3F3   63F3    XXC409   6409    XXC40E   640E
+ XXC411   6411    XXC438   6438    XXC449   6449    XXC453   6453
+ XXC457   6457    XXC465   6465    XXC46F   646F    XXC479   6479
+ XXC47B   647B    XXC49D   649D    XXC4A2   64A2    XXC4A8   64A8
+ XXC4C4   64C4    XXC4CC   64CC    XXC4DA   64DA    XXC4EC   64EC
+ XXC4F1   64F1    XXC4F7   64F7    XXC500   6500    XXC51B   651B
+ XXC522   6522    XXC529   6529    XXC52C   652C    XXC532   6532
+ XXC547   6547    XXC56C   656C    XXC56F   656F    XXC579   6579
+ XXC580   6580    XXC583   6583    XXC589   6589    XXC590   6590
+ XXC592   6592    XXC597   6597    XXC599   6599    XXC59C   659C
+ XXC5AB   65AB    XXC5C8   65C8    XXC5D6   65D6    XXC607   6607
+ XXC632   6632    XXC634   6634    XXC650   6650    XXC659   6659
+ XXC667   6667    XXC67C   667C    XXC688   6688    XXC692   6692
+ XXC694   6694    XXC696   6696    XXC6AC   66AC    XXC6C6   66C6
+ XXC6D6   66D6    XXC6D9   66D9    XXC702   6702    XXC714   6714
+ XXC718   6718    XXC72F   672F    XXC733   6733    XXC765   6765
+ XXC767   6767    XXC7B2   67B2    XXC7B5   67B5    XXC7D1   67D1
+ XXC7D4   67D4    XXC7DC   67DC    XXC7DE   67DE    XXC815   6815
+
+
+
+
+
+
+
+
+SYMBOL TABLE
+
+SYMBOL VALUE
+ XXC81D   681D    XXC82E   682E    XXC831   6831    XXC836   6836
+ XXC83B   683B    XXC840   6840    XXC843   6843    XXC84E   684E
+ XXC855   6855    XXC86D   686D    XXC874   6874    XXC877   6877
+ XXC879   6879    XXC887   6887    XXC88B   688B    XXC897   6897
+ XXC89A   689A    XXC89F   689F    XXC8A6   68A6    XXC8A9   68A9
+ XXC8B0   68B0    XXC8BD   68BD    XXC8C9   68C9    XXC8D0   68D0
+ XXC8DA   68DA    XXC8DB   68DB    XXC8E5   68E5    XXC8F2   68F2
+ XXC8F3   68F3    XXC8FC   68FC    XXC90C   690C    XXC90D   690D
+ XXC925   6925    XXC92A   692A    XXC92E   692E    XXC93F   693F
+ XXC950   6950    XXC956   6956    XXC963   6963    XXC96D   696D
+ XXC96E   696E    XXC974   6974    XXC979   6979    XXC97C   697C
+ XXC9A8   69A8    XXC9AA   69AA    XXC9D1   69D1    XXC9E2   69E2
+ XXC9FB   69FB    XXCA13   6A13    XXCA20   6A20    XXCA22   6A22
+ XXCA34   6A34    XXCA38   6A38    XXCA3C   6A3C    XXCA4A   6A4A
+ XXCA4F   6A4F    XXCA58   6A58    XXCA5F   6A5F    XXCA70   6A70
+ XXCA7A   6A7A    XXCA83   6A83    XXCA8C   6A8C    XXCAA7   6AA7
+ XXCAAF   6AAF    XXCAB5   6AB5    XXCABF   6ABF    XXCAD1   6AD1
+ XXCAF3   6AF3    XXCB0F   6B0F    XXCB15   6B15    XXCB20   6B20
+ XXCB35   6B35    XXCB44   6B44    XXCB55   6B55    XXCB5C   6B5C
+ XXCB63   6B63    XXCB6F   6B6F    XXCB91   6B91    XXCB98   6B98
+ XXCB9B   6B9B    XXCBB3   6BB3    XXCBB9   6BB9    XXCBC7   6BC7
+ XXCBCA   6BCA    XXCBD8   6BD8    XXCBE7   6BE7    XXCBF4   6BF4
+ XXCC05   6C05    XXCC1B   6C1B    XXCC23   6C23    XXCC41   6C41
+ XXCC64   6C64    XXCC6A   6C6A    XXCC6F   6C6F    XXCC75   6C75
+ XXCC9C   6C9C    XXCC9E   6C9E    XXCCB3   6CB3    XXCCBE   6CBE
+ XXCCD6   6CD6    XXCCE9   6CE9    XXCCF6   6CF6    XXCCF9   6CF9
+ XXCD04   6D04    XXCD13   6D13    XXCD19   6D19    XXCD39   6D39
+ XXCD3A   6D3A    XXCD45   6D45    XXCD49   6D49    XXCD4B   6D4B
+ XXCD53   6D53    XXCD57   6D57    XXCD59   6D59    XXCD63   6D63
+ XXCD75   6D75    XXCD7C   6D7C    XXCDA3   6DA3    XXCDAB   6DAB
+ XXCDB9   6DB9    XXCDFD   6DFD    XXCE0A   6E0A    XXCE0B   6E0B
+ XXCE0C   6E0C    XXCE0D   6E0D    XXCE0E   6E0E    XXCE0F   6E0F
+ XXCE10   6E10    XXCE17   6E17    XXCE57   6E57    XXCE97   6E97
+ XXCEAD   6EAD    XXCEC2   6EC2    XXCEC3   6EC3    XXCEEE   6EEE
+ XXCEEF   6EEF    XXCEF0   6EF0    XXCEF1   6EF1    XXCEF2   6EF2
+ XXCEF3   6EF3    XXCEF4   6EF4    XXCEF5   6EF5    XXCEF6   6EF6
+ XXCEF7   6EF7    ZZC121   6121    ZZC125   6125    ZZC19B   619B
+ ZZC1C4   61C4    ZZC241   6241    ZZC396   6396    ZZC399   6399
+ ZZC420   6420    ZZC44C   644C    ZZC6A2   66A2    ZZC6A6   66A6
+ ZZC6AA   66AA    ZZC76A   676A    ZZC78D   678D    ZZC981   6981
+ ZZC9D7   69D7    ZZC9EE   69EE    ZZC9FE   69FE    ZZCCBF   6CBF
+ ZZCFFF   6FFF   
+
+END OF ASSEMBLY
+

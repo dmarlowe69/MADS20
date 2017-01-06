@@ -1,0 +1,3460 @@
+BASMON20.ASM......PAGE 0001
+
+LINE# LOC   CODE        LINE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MONITOR$080F......PAGE 0002
+
+LINE# LOC   CODE        LINE
+
+
+00003  0000              ;*********************************
+00004  0000              *=$1201                ;START OF BASIC WITH 32K R
+AM EX
+00005  1201              ;*********************************
+00006  1201              ; SET BSTUB TO ONE TO ALLOW FOR
+00007  1201              ; INSERTION OF BASIC STUB CODE
+00008  1201              ;*********************************
+00009  1201              BSTUB  = 1
+00010  1201              ;********************************
+00011  1201              ;
+00012  1201              ;        MONITOR1201
+00013  1201              ;   MONITOR1201.V20 V072882
+00014  1201              ;   MACHINE LANGUAGE MONITOR
+00015  1201              ; (C) 1982 BY COMMODORE MACHINES
+00016  1201              ;
+00017  1201              ;  DOCUMENTED BY DENTON MARLOWE
+00018  1201              ;  
+00019  1201              ;
+00020  1201              ; BASIC FORMAT PROGRAM
+00021  1201              ;
+00022  1201              ; 10 SYS(4623)
+00023  1201              ;
+00024  1201              ;*********************************
+00026  1201  0D 12              .WORD BASIC     ;LINE LINK POINTER
+00027  1203  0A                 .BYTE $0A,$00   ;LINE NUMBER (10)
+00027  1204  00 
+00028  1205  9E                 .BYTE 158       ;SYS COMMAND TOKEN
+00029  1206  28 34              .BYTE '(4623)'  ;CALL TO $080F
+00030  120C  00                 .BYTE $00       ;END OF LINE
+00031  120D              BASIC
+00032  120D  00                 .BYTE $00,$00   ;END OF BASIC
+00032  120E  00 
+00034  120F              >
+00035  120F              ;********************************
+00036  120F              ; RELOCATED MONITOR$C000
+00037  120F              ;*********************************
+00038  120F              ;*=$120F        ;BASMON20 ORGIN
+00039  120F              ;*********************************
+00040  120F              ; MAIN CODE
+00041  120F              ;********************************
+00042  120F              .FIL   MON.ASM
+00043  120F              ;********************************
+00044  120F              ;
+00045  120F              ;        MONITOR$X000
+00046  120F              ;   MONITOR$X000.C64 V072882
+00047  120F              ;   MACHINE LANGUAGE MONITOR
+00048  120F              ; (C) 1982 BY COMMODORE MACHINES
+00049  120F              ;
+00050  120F              ;     BASED ON MONITOR$C000
+00051  120F              ;
+00052  120F              ;  DOCUMENTED BY DENTON MARLOWE
+00053  120F              ;
+00054  120F              ;********************************
+00055  120F              ; PAGE $0000 EQUATES
+00056  120F              ;********************************
+00057  120F              D6510=$0000
+
+
+
+
+
+
+MONITOR$080F......PAGE 0003
+
+LINE# LOC   CODE        LINE
+
+
+00058  120F              UNUSED=$0002
+00059  120F              ADRAY1=$0003
+00060  120F              ADRAY2=$0005
+00061  120F              CHARAC=$0007
+00062  120F              ENDCHR=$0008
+00063  120F              DIMFLG=$000C
+00064  120F              VALTYP=$000D
+00065  120F              INTFLG=$000E
+00066  120F              GARBFL=$000F
+00067  120F              SUBFLG=$0010
+00068  120F              INPFLG=$0011
+00069  120F              TANSGN=$0012
+00070  120F              CHANNL=$0013
+00071  120F              LINNUM=$0014
+00072  120F              TEMPST=$0019
+00073  120F              INDEX=$0022
+00074  120F              RESHO=$0026
+00075  120F              TXTTAB=$002B
+00076  120F              VARTAB=$002D
+00077  120F              STREND=$0031
+00078  120F              FRETOP=$0033
+00079  120F              SAL=$00AC
+00080  120F              CMPO=$00B0
+00081  120F              CAS1=$00C0
+00082  120F              STAL=$00C1
+00083  120F              MEMUSS=$00C3
+00084  120F              NDX=$00C6
+00085  120F              GDBLN=$00CE
+00086  120F              BLNON=$00CF
+00087  120F              PNT=$00D1
+00088  120F              PNTR=$00D3
+00089  120F              TBLX=$00D6
+00090  120F              ROBUF=$00F9
+00091  120F              ;********************************
+00092  120F              ; PAGE $0100 EQUATES
+00093  120F              ;********************************
+00094  120F              STACK=$0100
+00095  120F              ;********************************
+00096  120F              ; PAGE $0200 EQUATES
+00097  120F              ;********************************
+00098  120F              KEYD=$0277
+00099  120F              MEMSIZ=$0283
+00100  120F              ;********************************
+00101  120F              ; PAGE $0300 EQUATES
+00102  120F              ;********************************
+00103  120F              CINV=$0314
+00104  120F              CBINV=$0316
+00105  120F              NMINV=$0318            ;NMI VECTOR
+00106  120F              ;********************************
+00107  120F              ; PAGE $0400 EQUATES
+00108  120F              ;********************************
+00109  120F              VICSCN=$0400
+00110  120F              ;********************************
+00111  120F              ; EXTERNAL ADDRESS EQUATES
+00112  120F              ;********************************
+
+
+
+
+
+
+MONITOR$080F......PAGE 0004
+
+LINE# LOC   CODE        LINE
+
+
+00113  120F              SETMSG=$FF90
+00114  120F              CLRCHN=$FFCC
+00115  120F              CHRIN=$FFCF
+00116  120F              CHROUT=$FFD2
+00117  120F              LOAD=$FFD5
+00118  120F              SAVE=$FFD8
+00119  120F              GETIN=$FFE4
+00120  120F              ;********************************
+00121  120F              ; ENTRY POINT
+00122  120F              ; 
+00123  120F              ; ?
+00124  120F              ;********************************
+00125  120F              ;ENTRY  JMP XXC00C
+00126  120F  4C 07 21    ENTRY  JMP PXC00C
+00127  1212              ;********************************
+00128  1212  4C 4E 12    XXC003 JMP XXC03F
+00129  1215              ;********************************
+00130  1215  4C CF FF    MCHRIN JMP CHRIN
+00131  1218              ;********************************
+00132  1218  4C D2 FF    MCHROT JMP CHROUT
+00133  121B              ;********************************
+00134  121B  78          XXC00C SEI 
+00135  121C  AD 18 03           LDA NMINV
+00136  121F  85 11              STA INPFLG
+00137  1221  AD 19 03           LDA NMINV+1
+00138  1224  85 12              STA TANSGN
+00139  1226  AD 01 21           LDA XXCEF2
+00140  1229  AE 02 21           LDX XXCEF3
+00141  122C  8D 16 03           STA CBINV
+00142  122F  8E 17 03           STX CBINV+1
+00143  1232  20 28 1F           JSR XXCD19
+00144  1235  A9 00              LDA #$00
+00145  1237  85 F9              STA ROBUF
+00146  1239  85 FA              STA ROBUF+1
+00147  123B  A9 80              LDA #$80
+00148  123D  20 90 FF           JSR SETMSG
+00149  1240  A9 FF              LDA #$FF
+00150  1242  85 1A              STA TEMPST+1
+00151  1244  A9 00              LDA #$00
+00152  1246  85 13              STA CHANNL
+00153  1248  85 10              STA SUBFLG
+00154  124A  85 31              STA STREND
+00155  124C  58                 CLI 
+00156  124D  00                 BRK 
+00157  124E              ;********************************
+00158  124E              ; NMI SERVICE ROUTINE
+00159  124E              ;********************************
+00160  124E  20 08 1F    XXC03F JSR XXCCF9
+00161  1251  68                 PLA 
+00162  1252  85 07              STA CHARAC
+00163  1254  68                 PLA 
+00164  1255  85 06              STA ADRAY2+1
+00165  1257  68                 PLA 
+00166  1258  85 05              STA ADRAY2
+00167  125A  68                 PLA 
+
+
+
+
+
+
+MONITOR$080F......PAGE 0005
+
+LINE# LOC   CODE        LINE
+
+
+00168  125B  85 04              STA ADRAY1+1
+00169  125D  68                 PLA 
+00170  125E  85 03              STA ADRAY1
+00171  1260  68                 PLA 
+00172  1261  85 02              STA UNUSED
+00173  1263  BA                 TSX 
+00174  1264  86 08              STX ENDCHR
+00175  1266  38                 SEC 
+00176  1267  A5 03              LDA ADRAY1
+00177  1269  E9 02              SBC #$02
+00178  126B  85 03              STA ADRAY1
+00179  126D  A5 02              LDA UNUSED
+00180  126F  E9 00              SBC #$00
+00181  1271  85 02              STA UNUSED
+00182  1273  20 28 1F           JSR XXCD19
+00183  1276  A5 1A              LDA TEMPST+1
+00184  1278  C9 FF              CMP #$FF
+00185  127A  F0 1D              BEQ XXC08A
+00186  127C  A6 14              LDX LINNUM
+00187  127E  86 C1              STX STAL
+00188  1280  A6 15              LDX LINNUM+1
+00189  1282  86 C2              STX STAL+1
+00190  1284  A0 00              LDY #$00
+00191  1286  20 BA 1F           JSR XXCDAB
+00192  1289  A5 2D              LDA VARTAB
+00193  128B  D0 06              BNE XXC084
+00194  128D  A5 2E              LDA VARTAB+1
+00195  128F  D0 05              BNE XXC087
+00196  1291  F0 06              BEQ XXC08A
+00197  1293  4C A3 18    XXC084 JMP XXC694
+00198  1296              ;********************************
+00199  1296  4C A1 18    XXC087 JMP XXC692
+00200  1299              ;********************************
+00201  1299  20 8B 1B    XXC08A JSR XXC97C
+00202  129C  A2 42              LDX #$42        ;'B'
+00203  129E  A9 2A       XXC08F LDA #$2A        ;'*'
+00204  12A0  20 73 1A           JSR PRTXA
+00205  12A3  4C B7 1B           JMP XXC9A8
+00206  12A6              ;********************************
+00207  12A6  A9 3F       XXC097 LDA #$3F        ;'?'
+00208  12A8  20 18 12           JSR MCHROT
+00209  12AB  20 8B 1B    XXC09C JSR XXC97C
+00210  12AE  A9 2E              LDA #$2E        ;'.'
+00211  12B0  20 18 12           JSR MCHROT
+00212  12B3  A9 00              LDA #$00
+00213  12B5  85 0F              STA GARBFL
+00214  12B7  85 29              STA RESHO+3
+00215  12B9  85 31              STA STREND
+00216  12BB  20 EA 1A    XXC0AC JSR XXC8DB
+00217  12BE  C9 2E              CMP #$2E        ;'.'
+00218  12C0  F0 F9              BEQ XXC0AC
+00219  12C2  C9 20              CMP #$20        ;' '
+00220  12C4  F0 F5              BEQ XXC0AC
+00221  12C6  A2 14              LDX #$14
+00222  12C8  DD BC 20    XXC0B9 CMP XXCEAD,X
+
+
+
+
+
+
+MONITOR$080F......PAGE 0006
+
+LINE# LOC   CODE        LINE
+
+
+00223  12CB  D0 12              BNE XXC0D0
+00224  12CD  85 1E              STA $1E
+00225  12CF  8A                 TXA 
+00226  12D0  0A                 ASL A
+00227  12D1  AA                 TAX 
+00228  12D2  BD D1 20           LDA XXCEC2,X
+00229  12D5  85 C1              STA STAL
+00230  12D7  BD D2 20           LDA XXCEC3,X
+00231  12DA  85 C2              STA STAL+1
+00232  12DC  6C C1 00           JMP ($00C1)
+00233  12DF              ;********************************
+00234  12DF  CA          XXC0D0 DEX 
+00235  12E0  10 E6              BPL XXC0B9
+00236  12E2  30 C2              BMI XXC097
+00237  12E4  A2 02       XXC0D5 LDX #$02
+00238  12E6  D0 02              BNE XXC0DB
+00239  12E8  A2 00       XXC0D9 LDX #$00
+00240  12EA  B4 C1       XXC0DB LDY STAL,X
+00241  12EC  D0 08              BNE XXC0E7
+00242  12EE  B4 C2              LDY STAL+1,X
+00243  12F0  D0 02              BNE XXC0E5
+00244  12F2  E6 29              INC RESHO+3
+00245  12F4  D6 C2       XXC0E5 DEC STAL+1,X
+00246  12F6  D6 C1       XXC0E7 DEC STAL,X
+00247  12F8  60                 RTS 
+00248  12F9              ;********************************
+00249  12F9  A9 00       XXC0EA LDA #$00
+00250  12FB  85 23              STA INDEX+1
+00251  12FD  20 6A 14           JSR XXC25B
+00252  1300  A2 02              LDX #$02
+00253  1302  20 88 1B    XXC0F3 JSR XXC979
+00254  1305  CA                 DEX 
+00255  1306  D0 FA              BNE XXC0F3
+00256  1308  60                 RTS 
+00257  1309              ;********************************
+00258  1309  A2 02       XXC0FA LDX #$02
+00259  130B  B5 C0       XXC0FC LDA CAS1,X
+00260  130D  48                 PHA 
+00261  130E  B5 26              LDA RESHO,X
+00262  1310  95 C0              STA CAS1,X
+00263  1312  68                 PLA 
+00264  1313  95 26              STA RESHO,X
+00265  1315  CA                 DEX 
+00266  1316  D0 F3              BNE XXC0FC
+00267  1318  60                 RTS 
+00268  1319              ;********************************
+00269  1319  A5 27       XXC10A LDA RESHO+1
+00270  131B  A4 28              LDY RESHO+2
+00271  131D  4C 24 13           JMP XXC115
+00272  1320              ;********************************
+00273  1320  A5 C3       XXC111 LDA MEMUSS
+00274  1322  A4 C4              LDY MEMUSS+1
+00275  1324  38          XXC115 SEC 
+00276  1325  E5 C1              SBC STAL
+00277  1327  85 26              STA RESHO
+
+
+
+
+
+
+MONITOR$080F......PAGE 0007
+
+LINE# LOC   CODE        LINE
+
+
+00278  1329  98                 TYA 
+00279  132A  E5 C2              SBC STAL+1
+00280  132C  A8                 TAY 
+00281  132D  05 26              ORA RESHO
+00282  132F  60                 RTS 
+00283  1330              ;********************************
+00284  1330              ; C
+00285  1330              ;********************************
+00286  1330  A9 00       ZZC121 LDA #$00
+00287  1332  F0 02              BEQ XXC127
+00288  1334              ;********************************
+00289  1334              ; T
+00290  1334              ;********************************
+00291  1334  A9 01       ZZC125 LDA #$01
+00292  1336  85 2A       XXC127 STA RESHO+4
+00293  1338  20 2C 1A           JSR XXC81D
+00294  133B  20 8B 1B           JSR XXC97C
+00295  133E  20 20 13           JSR XXC111
+00296  1341  20 86 1A           JSR XXC877
+00297  1344  90 1A              BCC XXC151
+00298  1346  20 19 13    XXC137 JSR XXC10A
+00299  1349  B0 03              BCS XXC13F
+00300  134B  4C D0 13           JMP XXC1C1
+00301  134E              ;********************************
+00302  134E  20 86 13    XXC13F JSR XXC177
+00303  1351  E6 C3              INC MEMUSS
+00304  1353  D0 02              BNE XXC148
+00305  1355  E6 C4              INC MEMUSS+1
+00306  1357  20 72 1B    XXC148 JSR XXC963
+00307  135A  A4 29              LDY RESHO+3
+00308  135C  D0 49              BNE XXC198
+00309  135E  F0 E6              BEQ XXC137
+00310  1360  20 19 13    XXC151 JSR XXC10A
+00311  1363  18                 CLC 
+00312  1364  A5 26              LDA RESHO
+00313  1366  65 C3              ADC MEMUSS
+00314  1368  85 C3              STA MEMUSS
+00315  136A  98                 TYA 
+00316  136B  65 C4              ADC MEMUSS+1
+00317  136D  85 C4              STA MEMUSS+1
+00318  136F  20 09 13           JSR XXC0FA
+00319  1372  20 86 13    XXC163 JSR XXC177
+00320  1375  20 19 13           JSR XXC10A
+00321  1378  B0 56              BCS XXC1C1
+00322  137A  20 E4 12           JSR XXC0D5
+00323  137D  20 E8 12           JSR XXC0D9
+00324  1380  A4 29              LDY RESHO+3
+00325  1382  D0 23              BNE XXC198
+00326  1384  F0 EC              BEQ XXC163
+00327  1386  A2 00       XXC177 LDX #$00
+00328  1388  20 58 1F           JSR XXCD49
+00329  138B  48                 PHA 
+00330  138C  20 54 1F           JSR XXCD45
+00331  138F  68                 PLA 
+00332  1390  A4 2A              LDY RESHO+4
+
+
+
+
+
+
+MONITOR$080F......PAGE 0008
+
+LINE# LOC   CODE        LINE
+
+
+00333  1392  F0 03              BEQ XXC188
+00334  1394  20 62 1F           JSR XXCD53
+00335  1397  C1 0D       XXC188 CMP (VALTYP,X)
+00336  1399  F0 0B              BEQ XXC197
+00337  139B  20 5D 1A    XXC18C JSR XXC84E
+00338  139E  20 88 1B           JSR XXC979
+00339  13A1  20 F4 1A           JSR XXC8E5
+00340  13A4  F0 01              BEQ XXC198
+00341  13A6  60          XXC197 RTS 
+00342  13A7              ;********************************
+00343  13A7  4C AB 12    XXC198 JMP XXC09C
+00344  13AA              ;********************************
+00345  13AA              ; F
+00346  13AA              ;********************************
+00347  13AA  20 45 1A    ZZC19B JSR XXC836
+00348  13AD  20 4F 1A           JSR XXC840
+00349  13B0  20 EA 1A           JSR XXC8DB
+00350  13B3  20 B8 1A           JSR XXC8A9
+00351  13B6  90 15              BCC XXC1BE
+00352  13B8  85 20              STA TEMPST+7
+00353  13BA  A6 29       XXC1AB LDX RESHO+3
+00354  13BC  D0 12              BNE XXC1C1
+00355  13BE  20 20 13           JSR XXC111
+00356  13C1  90 0D              BCC XXC1C1
+00357  13C3  A5 20              LDA TEMPST+7
+00358  13C5  20 66 1F           JSR XXCD57
+00359  13C8  20 72 1B           JSR XXC963
+00360  13CB  D0 ED              BNE XXC1AB
+00361  13CD  4C A6 12    XXC1BE JMP XXC097
+00362  13D0              ;********************************
+00363  13D0  4C AB 12    XXC1C1 JMP XXC09C
+00364  13D3              ;********************************
+00365  13D3              ; H
+00366  13D3              ;********************************
+00367  13D3  20 45 1A    ZZC1C4 JSR XXC836
+00368  13D6  20 4F 1A           JSR XXC840
+00369  13D9  20 EA 1A           JSR XXC8DB
+00370  13DC  A2 00              LDX #$00
+00371  13DE  20 EA 1A           JSR XXC8DB
+00372  13E1  C9 27              CMP #$27        ;'''
+00373  13E3  D0 13              BNE XXC1E9
+00374  13E5  20 EA 1A           JSR XXC8DB
+00375  13E8  95 33       XXC1D9 STA FRETOP,X
+00376  13EA  E8                 INX 
+00377  13EB  20 15 12           JSR MCHRIN
+00378  13EE  C9 0D              CMP #$0D
+00379  13F0  F0 20              BEQ XXC203
+00380  13F2  E0 20              CPX #$20        ;' '
+00381  13F4  D0 F2              BNE XXC1D9
+00382  13F6  F0 1A              BEQ XXC203
+00383  13F8  86 2C       XXC1E9 STX TXTTAB+1
+00384  13FA  20 BF 1A           JSR XXC8B0
+00385  13FD  90 CE              BCC XXC1BE
+00386  13FF  95 33       XXC1F0 STA FRETOP,X
+00387  1401  E8                 INX 
+
+
+
+
+
+
+MONITOR$080F......PAGE 0009
+
+LINE# LOC   CODE        LINE
+
+
+00388  1402  20 15 12           JSR MCHRIN
+00389  1405  C9 0D              CMP #$0D
+00390  1407  F0 09              BEQ XXC203
+00391  1409  20 B8 1A           JSR XXC8A9
+00392  140C  90 BF              BCC XXC1BE
+00393  140E  E0 20              CPX #$20        ;' '
+00394  1410  D0 ED              BNE XXC1F0
+00395  1412  86 1F       XXC203 STX $1F
+00396  1414  20 8B 1B           JSR XXC97C
+00397  1417  A2 00       XXC208 LDX #$00
+00398  1419  A0 00              LDY #$00
+00399  141B  A5 C1              LDA STAL
+00400  141D  48                 PHA 
+00401  141E  A5 C2              LDA STAL+1
+00402  1420  48                 PHA 
+00403  1421  20 8B 1F    XXC212 JSR XXCD7C
+00404  1424  D5 33              CMP FRETOP,X
+00405  1426  D0 13              BNE XXC22C
+00406  1428  20 72 1B           JSR XXC963
+00407  142B  E8                 INX 
+00408  142C  E4 1F              CPX $1F
+00409  142E  D0 F1              BNE XXC212
+00410  1430  68                 PLA 
+00411  1431  85 C2              STA STAL+1
+00412  1433  68                 PLA 
+00413  1434  85 C1              STA STAL
+00414  1436  20 9B 13           JSR XXC18C
+00415  1439  D0 06              BNE XXC232
+00416  143B  68          XXC22C PLA 
+00417  143C  85 C2              STA STAL+1
+00418  143E  68                 PLA 
+00419  143F  85 C1              STA STAL
+00420  1441  20 72 1B    XXC232 JSR XXC963
+00421  1444  A4 29              LDY RESHO+3
+00422  1446  D0 05              BNE XXC23E
+00423  1448  20 20 13           JSR XXC111
+00424  144B  B0 CA              BCS XXC208
+00425  144D  4C AB 12    XXC23E JMP XXC09C
+00426  1450              ;********************************
+00427  1450              ; D
+00428  1450              ;********************************
+00429  1450  20 47 16    ZZC241 JSR XXC438
+00430  1453  20 20 13    XXC244 JSR XXC111
+00431  1456  90 0D              BCC XXC256
+00432  1458  A0 2C              LDY #$2C        ;','
+00433  145A  20 F9 12           JSR XXC0EA
+00434  145D  20 C4 14           JSR XXC2B5
+00435  1460  20 F4 1A           JSR XXC8E5
+00436  1463  D0 EE              BNE XXC244
+00437  1465  20 A6 17    XXC256 JSR XXC597
+00438  1468  D0 E3              BNE XXC23E
+00439  146A  20 7D 1B    XXC25B JSR XXC96E
+00440  146D  20 5D 1A    XXC25E JSR XXC84E
+00441  1470  20 88 1B           JSR XXC979
+00442  1473  20 2A 1E           JSR XXCC1B
+
+
+
+
+
+
+MONITOR$080F......PAGE 0010
+
+LINE# LOC   CODE        LINE
+
+
+00443  1476  48                 PHA 
+00444  1477  20 DB 14           JSR XXC2CC
+00445  147A  68                 PLA 
+00446  147B  A2 03              LDX #$03
+00447  147D  20 61 15           JSR XXC352
+00448  1480  A2 06              LDX #$06
+00449  1482  E0 03       XXC273 CPX #$03
+00450  1484  D0 13              BNE XXC28A
+00451  1486  A4 22              LDY INDEX
+00452  1488  F0 0F              BEQ XXC28A
+00453  148A  A5 2B       XXC27B LDA TXTTAB
+00454  148C  C9 E8              CMP #$E8
+00455  148E  20 8B 1F           JSR XXCD7C
+00456  1491  B0 1C              BCS XXC2A0
+00457  1493  20 BC 14           JSR XXC2AD
+00458  1496  88                 DEY 
+00459  1497  D0 F1              BNE XXC27B
+00460  1499  06 2B       XXC28A ASL TXTTAB
+00461  149B  90 0E              BCC XXC29C
+00462  149D  BD 19 20           LDA XXCE0A,X
+00463  14A0  20 A1 17           JSR XXC592
+00464  14A3  BD 1F 20           LDA XXCE10,X
+00465  14A6  F0 03              BEQ XXC29C
+00466  14A8  20 A1 17           JSR XXC592
+00467  14AB  CA          XXC29C DEX 
+00468  14AC  D0 D4              BNE XXC273
+00469  14AE  60                 RTS 
+00470  14AF              ;********************************
+00471  14AF  20 CF 14    XXC2A0 JSR XXC2C0
+00472  14B2  AA                 TAX 
+00473  14B3  E8                 INX 
+00474  14B4  D0 01              BNE XXC2A8
+00475  14B6  C8                 INY 
+00476  14B7  98          XXC2A8 TYA 
+00477  14B8  20 BC 14           JSR XXC2AD
+00478  14BB  8A                 TXA 
+00479  14BC  86 1F       XXC2AD STX $1F
+00480  14BE  20 64 1A           JSR XXC855
+00481  14C1  A6 1F              LDX $1F
+00482  14C3  60                 RTS 
+00483  14C4              ;********************************
+00484  14C4  A5 22       XXC2B5 LDA INDEX
+00485  14C6  20 CE 14    XXC2B7 JSR XXC2BF
+00486  14C9  85 C1              STA STAL
+00487  14CB  84 C2              STY STAL+1
+00488  14CD  60                 RTS 
+00489  14CE              ;********************************
+00490  14CE  38          XXC2BF SEC 
+00491  14CF  A4 C2       XXC2C0 LDY STAL+1
+00492  14D1  AA                 TAX 
+00493  14D2  10 01              BPL XXC2C6
+00494  14D4  88                 DEY 
+00495  14D5  65 C1       XXC2C6 ADC STAL
+00496  14D7  90 01              BCC XXC2CB
+00497  14D9  C8                 INY 
+
+
+
+
+
+
+MONITOR$080F......PAGE 0011
+
+LINE# LOC   CODE        LINE
+
+
+00498  14DA  60          XXC2CB RTS 
+00499  14DB              ;********************************
+00500  14DB  A4 22       XXC2CC LDY INDEX
+00501  14DD  C8                 INY 
+00502  14DE  98                 TYA 
+00503  14DF  48                 PHA 
+00504  14E0  20 39 1B           JSR XXC92A
+00505  14E3  68                 PLA 
+00506  14E4  85 21              STA $21
+00507  14E6  38                 SEC 
+00508  14E7  A5 C1              LDA STAL
+00509  14E9  E5 21              SBC $21
+00510  14EB  85 C1              STA STAL
+00511  14ED  B0 02              BCS XXC2E2
+00512  14EF  C6 C2              DEC STAL+1
+00513  14F1  A5 22       XXC2E2 LDA INDEX
+00514  14F3  18                 CLC 
+00515  14F4  65 22              ADC INDEX
+00516  14F6  65 22              ADC INDEX
+00517  14F8  A8                 TAY 
+00518  14F9  A9 20       XXC2EA LDA #$20        ;' '
+00519  14FB  20 18 12           JSR MCHROT
+00520  14FE  C8                 INY 
+00521  14FF  C0 07              CPY #$07
+00522  1501  D0 F6              BNE XXC2EA
+00523  1503  60                 RTS 
+00524  1504              ;********************************
+00525  1504  A8          XXC2F5 TAY 
+00526  1505  4A                 LSR A
+00527  1506  90 0B              BCC XXC304
+00528  1508  4A                 LSR A
+00529  1509  B0 17              BCS XXC313
+00530  150B  C9 22              CMP #$22        ;'"'
+00531  150D  F0 13              BEQ XXC313
+00532  150F  29 07              AND #$07
+00533  1511  09 80              ORA #$80
+00534  1513  4A          XXC304 LSR A
+00535  1514  AA                 TAX 
+00536  1515  BD C8 1F           LDA XXCDB9,X
+00537  1518  B0 04              BCS XXC30F
+00538  151A  4A                 LSR A
+00539  151B  4A                 LSR A
+00540  151C  4A                 LSR A
+00541  151D  4A                 LSR A
+00542  151E  29 0F       XXC30F AND #$0F
+00543  1520  D0 04              BNE XXC317
+00544  1522  A0 80       XXC313 LDY #$80
+00545  1524  A9 00              LDA #$00
+00546  1526  AA          XXC317 TAX 
+00547  1527  BD 0C 20           LDA XXCDFD,X
+00548  152A  85 2B              STA TXTTAB
+00549  152C  29 03              AND #$03
+00550  152E  85 22              STA INDEX
+00551  1530  98                 TYA 
+00552  1531  29 8F              AND #$8F
+
+
+
+
+
+
+MONITOR$080F......PAGE 0012
+
+LINE# LOC   CODE        LINE
+
+
+00553  1533  AA                 TAX 
+00554  1534  98                 TYA 
+00555  1535  A0 03              LDY #$03
+00556  1537  E0 8A              CPX #$8A
+00557  1539  F0 0B              BEQ XXC337
+00558  153B  4A          XXC32C LSR A
+00559  153C  90 08              BCC XXC337
+00560  153E  4A                 LSR A
+00561  153F  4A          XXC330 LSR A
+00562  1540  09 20              ORA #$20        ;' '
+00563  1542  88                 DEY 
+00564  1543  D0 FA              BNE XXC330
+00565  1545  C8                 INY 
+00566  1546  88          XXC337 DEY 
+00567  1547  D0 F2              BNE XXC32C
+00568  1549  60                 RTS 
+00569  154A              ;********************************
+00570  154A  20 8B 1F    XXC33B JSR XXCD7C
+00571  154D  20 BC 14           JSR XXC2AD
+00572  1550  A2 01              LDX #$01
+00573  1552  20 02 13    XXC343 JSR XXC0F3
+00574  1555  C4 22              CPY INDEX
+00575  1557  C8                 INY 
+00576  1558  90 F0              BCC XXC33B
+00577  155A  A2 03              LDX #$03
+00578  155C  C0 03              CPY #$03
+00579  155E  90 F2              BCC XXC343
+00580  1560  60                 RTS 
+00581  1561              ;********************************
+00582  1561  A8          XXC352 TAY 
+00583  1562  B9 26 20           LDA XXCE17,Y
+00584  1565  85 27              STA RESHO+1
+00585  1567  B9 66 20           LDA XXCE57,Y
+00586  156A  85 28              STA RESHO+2
+00587  156C  A9 00       XXC35D LDA #$00
+00588  156E  A0 05              LDY #$05
+00589  1570  06 28       XXC361 ASL RESHO+2
+00590  1572  26 27              ROL RESHO+1
+00591  1574  2A                 ROL A
+00592  1575  88                 DEY 
+00593  1576  D0 F8              BNE XXC361
+00594  1578  69 3F              ADC #$3F        ;'?'
+00595  157A  20 18 12           JSR MCHROT
+00596  157D  CA                 DEX 
+00597  157E  D0 EC              BNE XXC35D
+00598  1580  4C 88 1B           JMP XXC979
+00599  1583              ;********************************
+00600  1583  AD 04 21    XXC374 LDA XXCEF5
+00601  1586  48                 PHA 
+00602  1587  AD 03 21           LDA XXCEF4
+00603  158A  48                 PHA 
+00604  158B  A9 00              LDA #$00
+00605  158D  48                 PHA 
+00606  158E  48                 PHA 
+00607  158F  48                 PHA 
+
+
+
+
+
+
+MONITOR$080F......PAGE 0013
+
+LINE# LOC   CODE        LINE
+
+
+00608  1590  48                 PHA 
+00609  1591  6C 18 00           JMP ($0018)
+00610  1594              ;********************************
+00611  1594  85 20       XXC385 STA TEMPST+7
+00612  1596  48                 PHA 
+00613  1597  20 EA 1A    XXC388 JSR XXC8DB
+00614  159A  20 4E 1B           JSR XXC93F
+00615  159D  D0 F8              BNE XXC388
+00616  159F  68                 PLA 
+00617  15A0  49 FF       XXC391 EOR #$FF
+00618  15A2  4C C6 14           JMP XXC2B7
+00619  15A5              ;********************************
+00620  15A5              ; I
+00621  15A5              ;********************************
+00622  15A5  A9 40       ZZC396 LDA #$40        ;'@'
+00623  15A7              ;ERR-ASSEMBLER MAKES THIS ZERO PAGE.   
+00624  15A7                                     ;BIT $00A9
+00625  15A7  2C                 .BYTE $2C
+00626  15A8              ;********************************
+00627  15A8              ; M
+00628  15A8              ;********************************
+00629  15A8  A9          ZZC399 .BYTE $A9,$00
+00629  15A9  00 
+00630  15AA              ;ZZC399 LDA #$00
+00631  15AA  85 20              STA TEMPST+7
+00632  15AC  20 47 16           JSR XXC438
+00633  15AF  A6 29       XXC3A0 LDX RESHO+3
+00634  15B1  D0 17              BNE XXC3BB
+00635  15B3  20 20 13           JSR XXC111
+00636  15B6  90 12              BCC XXC3BB
+00637  15B8  24 20              BIT TEMPST+7
+00638  15BA  50 06              BVC XXC3B3
+00639  15BC  20 CD 15           JSR XXC3BE
+00640  15BF  4C C5 15           JMP XXC3B6
+00641  15C2              ;********************************
+00642  15C2              ;       JSR XXC40E
+00643  15C2  20 1D 16    XXC3B3 JSR XXC40E
+00644  15C5  20 F4 1A    XXC3B6 JSR XXC8E5
+00645  15C8  D0 E5              BNE XXC3A0
+00646  15CA  4C 65 14    XXC3BB JMP XXC256
+00647  15CD              ;********************************
+00648  15CD  20 8B 1B    XXC3BE JSR XXC97C
+00649  15D0  A2 2E       XXC3C1 LDX #$2E        ;'.'
+00650  15D2  A9 27              LDA #$27        ;'''
+00651  15D4  20 73 1A           JSR PRTXA
+00652  15D7  20 88 1B           JSR XXC979
+00653  15DA  20 5D 1A           JSR XXC84E
+00654  15DD  A9 12              LDA #$12
+00655  15DF  20 18 12           JSR MCHROT
+00656  15E2  A0 08              LDY #$08
+00657  15E4  A2 00              LDX #$00
+00658  15E6  20 58 1F    XXC3D7 JSR XXCD49
+00659  15E9  29 7F              AND #$7F
+00660  15EB  C9 20              CMP #$20        ;' '
+00661  15ED  B0 02              BCS XXC3E2
+
+
+
+
+
+
+MONITOR$080F......PAGE 0014
+
+LINE# LOC   CODE        LINE
+
+
+00662  15EF  A9 2E              LDA #$2E        ;'.'
+00663  15F1  20 18 12    XXC3E2 JSR MCHROT
+00664  15F4  C9 22              CMP #$22        ;'"'
+00665  15F6  D0 0A              BNE XXC3F3
+00666  15F8  A9 14              LDA #$14
+00667  15FA  20 18 12           JSR MCHROT
+00668  15FD  A9 22              LDA #$22        ;'"'
+00669  15FF  20 18 12           JSR MCHROT
+00670  1602  20 72 1B    XXC3F3 JSR XXC963
+00671  1605  88                 DEY 
+00672  1606  D0 DE              BNE XXC3D7
+00673  1608  A9 92              LDA #$92
+00674  160A  20 18 12           JSR MCHROT
+00675  160D  A5 C1              LDA STAL
+00676  160F  38                 SEC 
+00677  1610  E9 08              SBC #$08
+00678  1612  85 C1              STA STAL
+00679  1614  B0 02              BCS XXC409
+00680  1616  C6 C2              DEC STAL+1
+00681  1618  A9 08       XXC409 LDA #$08
+00682  161A  4C 39 1B           JMP XXC92A
+00683  161D              ;********************************
+00684  161D  20 8B 1B    XXC40E JSR XXC97C
+00685  1620  A2 2E       XXC411 LDX #$2E        ;'.'
+00686  1622  A9 3A              LDA #$3A        ;':'
+00687  1624  20 73 1A           JSR PRTXA
+00688  1627  20 5D 1A           JSR XXC84E
+00689  162A  A9 08              LDA #$08
+00690  162C  4C 39 1B           JMP XXC92A
+00691  162F              ;********************************
+00692  162F              ; :
+00693  162F              ;********************************
+00694  162F  20 45 1A    ZZC420 JSR XXC836
+00695  1632  A9 08              LDA #$08
+00696  1634  20 94 15           JSR XXC385
+00697  1637  20 A6 17           JSR XXC597
+00698  163A  20 1D 16           JSR XXC40E
+00699  163D  A9 3A              LDA #$3A        ;':'
+00700  163F  8D 77 02           STA KEYD
+00701  1642  A9 00              LDA #$00
+00702  1644  4C 56 17           JMP XXC547
+00703  1647              ;********************************
+00704  1647  20 45 1A    XXC438 JSR XXC836
+00705  164A  85 C3              STA MEMUSS
+00706  164C  86 C4              STX MEMUSS+1
+00707  164E  20 15 12           JSR MCHRIN
+00708  1651  C9 0D              CMP #$0D
+00709  1653  F0 03              BEQ XXC449
+00710  1655  20 4A 1A           JSR XXC83B
+00711  1658  4C 8B 1B    XXC449 JMP XXC97C
+00712  165B              ;********************************
+00713  165B              ; A AND ,
+00714  165B              ;********************************
+00715  165B  20 96 1A    ZZC44C JSR XXC887
+00716  165E  85 C3              STA MEMUSS
+
+
+
+
+
+
+MONITOR$080F......PAGE 0015
+
+LINE# LOC   CODE        LINE
+
+
+00717  1660  86 C4              STX MEMUSS+1
+00718  1662  A2 00       XXC453 LDX #$00
+00719  1664  86 34              STX FRETOP+1
+00720  1666  20 EA 1A    XXC457 JSR XXC8DB
+00721  1669  C9 20              CMP #$20        ;' '
+00722  166B  F0 F5              BEQ XXC453
+00723  166D  95 24              STA $24,X
+00724  166F  E8                 INX 
+00725  1670  E0 03              CPX #$03
+00726  1672  D0 F2              BNE XXC457
+00727  1674  CA          XXC465 DEX 
+00728  1675  30 11              BMI XXC479
+00729  1677  B5 24              LDA $24,X
+00730  1679  38                 SEC 
+00731  167A  E9 3F              SBC #$3F        ;'?'
+00732  167C  A0 05              LDY #$05
+00733  167E  4A          XXC46F LSR A
+00734  167F  66 34              ROR FRETOP+1
+00735  1681  66 33              ROR FRETOP
+00736  1683  88                 DEY 
+00737  1684  D0 F8              BNE XXC46F
+00738  1686  F0 EC              BEQ XXC465
+00739  1688  A2 02       XXC479 LDX #$02
+00740  168A  20 15 12    XXC47B JSR MCHRIN
+00741  168D  C9 0D              CMP #$0D
+00742  168F  F0 20              BEQ XXC4A2
+00743  1691  C9 3A              CMP #$3A        ;':'
+00744  1693  F0 1C              BEQ XXC4A2
+00745  1695  C9 20              CMP #$20        ;' '
+00746  1697  F0 F1              BEQ XXC47B
+00747  1699  20 98 17           JSR XXC589
+00748  169C  B0 0E              BCS XXC49D
+00749  169E  20 CC 1A           JSR XXC8BD
+00750  16A1  A4 C1              LDY STAL
+00751  16A3  84 C2              STY STAL+1
+00752  16A5  85 C1              STA STAL
+00753  16A7  A9 30              LDA #$30        ;'0'
+00754  16A9  95 33              STA FRETOP,X
+00755  16AB  E8                 INX 
+00756  16AC  95 33       XXC49D STA FRETOP,X
+00757  16AE  E8                 INX 
+00758  16AF  D0 D9              BNE XXC47B
+00759  16B1  86 27       XXC4A2 STX RESHO+1
+00760  16B3  A2 00              LDX #$00
+00761  16B5  86 29              STX RESHO+3
+00762  16B7  A2 00       XXC4A8 LDX #$00
+00763  16B9  86 20              STX TEMPST+7
+00764  16BB  A5 29              LDA RESHO+3
+00765  16BD  20 04 15           JSR XXC2F5
+00766  16C0  A6 2B              LDX TXTTAB
+00767  16C2  86 28              STX RESHO+2
+00768  16C4  AA                 TAX 
+00769  16C5  BD 66 20           LDA XXCE57,X
+00770  16C8  20 7E 17           JSR XXC56F
+00771  16CB  BD 26 20           LDA XXCE17,X
+
+
+
+
+
+
+MONITOR$080F......PAGE 0016
+
+LINE# LOC   CODE        LINE
+
+
+00772  16CE  20 7E 17           JSR XXC56F
+00773  16D1  A2 06              LDX #$06
+00774  16D3  E0 03       XXC4C4 CPX #$03
+00775  16D5  D0 12              BNE XXC4DA
+00776  16D7  A4 22              LDY INDEX
+00777  16D9  F0 0E              BEQ XXC4DA
+00778  16DB  A5 2B       XXC4CC LDA TXTTAB
+00779  16DD  C9 E8              CMP #$E8
+00780  16DF  A9 30              LDA #$30        ;'0'
+00781  16E1  B0 1D              BCS XXC4F1
+00782  16E3  20 7B 17           JSR XXC56C
+00783  16E6  88                 DEY 
+00784  16E7  D0 F2              BNE XXC4CC
+00785  16E9  06 2B       XXC4DA ASL TXTTAB
+00786  16EB  90 0E              BCC XXC4EC
+00787  16ED  BD 19 20           LDA XXCE0A,X
+00788  16F0  20 7E 17           JSR XXC56F
+00789  16F3  BD 1F 20           LDA XXCE10,X
+00790  16F6  F0 03              BEQ XXC4EC
+00791  16F8  20 7E 17           JSR XXC56F
+00792  16FB  CA          XXC4EC DEX 
+00793  16FC  D0 D5              BNE XXC4C4
+00794  16FE  F0 06              BEQ XXC4F7
+00795  1700  20 7B 17    XXC4F1 JSR XXC56C
+00796  1703  20 7B 17           JSR XXC56C
+00797  1706  A5 27       XXC4F7 LDA RESHO+1
+00798  1708  C5 20              CMP TEMPST+7
+00799  170A  F0 03              BEQ XXC500
+00800  170C  4C 88 17           JMP XXC579
+00801  170F              ;********************************
+00802  170F  20 86 1A    XXC500 JSR XXC877
+00803  1712  A4 22              LDY INDEX
+00804  1714  F0 2B              BEQ XXC532
+00805  1716  A5 28              LDA RESHO+2
+00806  1718  C9 9D              CMP #$9D
+00807  171A  D0 1C              BNE XXC529
+00808  171C  20 20 13           JSR XXC111
+00809  171F  90 09              BCC XXC51B
+00810  1721  98                 TYA 
+00811  1722  D0 6B              BNE XXC580
+00812  1724  A6 26              LDX RESHO
+00813  1726  30 67              BMI XXC580
+00814  1728  10 07              BPL XXC522
+00815  172A  C8          XXC51B INY 
+00816  172B  D0 62              BNE XXC580
+00817  172D  A6 26              LDX RESHO
+00818  172F  10 5E              BPL XXC580
+00819  1731  CA          XXC522 DEX 
+00820  1732  CA                 DEX 
+00821  1733  8A                 TXA 
+00822  1734  A4 22              LDY INDEX
+00823  1736  D0 03              BNE XXC52C
+00824  1738  B9 C2 00    XXC529 LDA $00C2,Y
+00825  173B  20 BA 1F    XXC52C JSR XXCDAB
+00826  173E  88                 DEY 
+
+
+
+
+
+
+MONITOR$080F......PAGE 0017
+
+LINE# LOC   CODE        LINE
+
+
+00827  173F  D0 F7              BNE XXC529
+00828  1741  A5 29       XXC532 LDA RESHO+3
+00829  1743  20 BA 1F           JSR XXCDAB
+00830  1746  A0 41              LDY #$41        ;'A'
+00831  1748  8C 77 02           STY KEYD
+00832  174B  20 A6 17           JSR XXC597
+00833  174E  20 F9 12           JSR XXC0EA
+00834  1751  20 C4 14           JSR XXC2B5
+00835  1754  A9 20              LDA #$20        ;' '
+00836  1756  8D 78 02    XXC547 STA KEYD+1
+00837  1759  A5 C2              LDA STAL+1
+00838  175B  20 AB 17           JSR XXC59C
+00839  175E  8E 79 02           STX KEYD+2
+00840  1761  8D 7A 02           STA KEYD+3
+00841  1764  A5 C1              LDA STAL
+00842  1766  20 AB 17           JSR XXC59C
+00843  1769  8E 7B 02           STX KEYD+4
+00844  176C  8D 7C 02           STA KEYD+5
+00845  176F  A9 20              LDA #$20        ;' '
+00846  1771  8D 7D 02           STA KEYD+6
+00847  1774  A9 07              LDA #$07
+00848  1776  85 C6              STA NDX
+00849  1778  4C AB 12           JMP XXC09C
+00850  177B              ;********************************
+00851  177B  20 7E 17    XXC56C JSR XXC56F
+00852  177E  86 1F       XXC56F STX $1F
+00853  1780  A6 20              LDX TEMPST+7
+00854  1782  D5 33              CMP FRETOP,X
+00855  1784  F0 0C              BEQ XXC583
+00856  1786  68                 PLA 
+00857  1787  68                 PLA 
+00858  1788  E6 29       XXC579 INC RESHO+3
+00859  178A  F0 03              BEQ XXC580
+00860  178C  4C B7 16           JMP XXC4A8
+00861  178F              ;********************************
+00862  178F  4C A6 12    XXC580 JMP XXC097
+00863  1792              ;********************************
+00864  1792  E8          XXC583 INX 
+00865  1793  86 20              STX TEMPST+7
+00866  1795  A6 1F              LDX $1F
+00867  1797  60                 RTS 
+00868  1798              ;********************************
+00869  1798  C9 30       XXC589 CMP #$30        ;'0'
+00870  179A  90 03              BCC XXC590
+00871  179C  C9 47              CMP #$47        ;'G'
+00872  179E  60                 RTS 
+00873  179F              ;********************************
+00874  179F  38          XXC590 SEC 
+00875  17A0  60                 RTS 
+00876  17A1              ;********************************
+00877  17A1  C5 23       XXC592 CMP INDEX+1
+00878  17A3  D0 03              BNE XXC599
+00879  17A5  60                 RTS 
+00880  17A6              ;********************************
+00881  17A6  A9 91       XXC597 LDA #$91
+
+
+
+
+
+
+MONITOR$080F......PAGE 0018
+
+LINE# LOC   CODE        LINE
+
+
+00882  17A8  4C 18 12    XXC599 JMP MCHROT
+00883  17AB              ;********************************
+00884  17AB              ;
+00885  17AB              ;********************************
+00886  17AB  48          XXC59C PHA 
+00887  17AC  4A                 LSR A
+00888  17AD  4A                 LSR A
+00889  17AE  4A                 LSR A
+00890  17AF  4A                 LSR A
+00891  17B0  20 7C 1A           JSR XXC86D
+00892  17B3  AA                 TAX 
+00893  17B4  68                 PLA 
+00894  17B5  29 0F              AND #$0F
+00895  17B7  4C 7C 1A           JMP XXC86D
+00896  17BA              ;********************************
+00897  17BA              ;
+00898  17BA              ;********************************
+00899  17BA  85 05       XXC5AB STA ADRAY2
+00900  17BC  08                 PHP 
+00901  17BD  68                 PLA 
+00902  17BE  29 EF              AND #$EF
+00903  17C0  85 04              STA ADRAY1+1
+00904  17C2  86 06              STX ADRAY2+1
+00905  17C4  84 07              STY CHARAC
+00906  17C6  68                 PLA 
+00907  17C7  18                 CLC 
+00908  17C8  69 01              ADC #$01
+00909  17CA  85 03              STA ADRAY1
+00910  17CC  68                 PLA 
+00911  17CD  69 00              ADC #$00
+00912  17CF  85 02              STA UNUSED
+00913  17D1  A9 80              LDA #$80
+00914  17D3  85 10              STA SUBFLG
+00915  17D5  D0 3F              BNE XXC607
+00916  17D7  48          XXC5C8 PHA 
+00917  17D8  8A                 TXA 
+00918  17D9  48                 PHA 
+00919  17DA  98                 TYA 
+00920  17DB  48                 PHA 
+00921  17DC  BA                 TSX 
+00922  17DD  BD 04 01           LDA STACK+4,X
+00923  17E0  29 04              AND #$04
+00924  17E2  D0 01              BNE XXC5D6
+00925  17E4  58                 CLI 
+00926  17E5  A0 32       XXC5D6 LDY #$32        ;'2'
+00927  17E7  B1 F9              LDA (ROBUF),Y
+00928  17E9  8D AA AA           STA $AAAA
+00929  17EC  EA                 NOP 
+00930  17ED  78                 SEI 
+00931  17EE  20 08 1F           JSR XXCCF9
+00932  17F1  68                 PLA 
+00933  17F2  85 07              STA CHARAC
+00934  17F4  68                 PLA 
+00935  17F5  85 06              STA ADRAY2+1
+00936  17F7  68                 PLA 
+
+
+
+
+
+
+MONITOR$080F......PAGE 0019
+
+LINE# LOC   CODE        LINE
+
+
+00937  17F8  85 05              STA ADRAY2
+00938  17FA  D8                 CLD 
+00939  17FB  68                 PLA 
+00940  17FC  85 04              STA ADRAY1+1
+00941  17FE  68                 PLA 
+00942  17FF  85 03              STA ADRAY1
+00943  1801  68                 PLA 
+00944  1802  85 02              STA UNUSED
+00945  1804              ;********************************
+00946  1804              ;.END
+00947  1804              ;*=$C5F5
+00948  1804              ;********************************
+00949  1804  A5 11              LDA INPFLG
+00950  1806  8D 18 03           STA NMINV
+00951  1809  A5 12              LDA TANSGN
+00952  180B  8D 19 03           STA NMINV+1
+00953  180E  20 28 1F           JSR XXCD19
+00954  1811  A9 20              LDA #$20        ;' '
+00955  1813  8D AA AA           STA $AAAA
+00956  1816  BA          XXC607 TSX 
+00957  1817  86 08              STX ENDCHR
+00958  1819  AD AA AA           LDA $AAAA
+00959  181C  8D AA AA           STA $AAAA
+00960  181F  58                 CLI 
+00961  1820  24 13              BIT CHANNL
+00962  1822  10 1F              BPL XXC634
+00963  1824  A5 14              LDA LINNUM
+00964  1826  85 C1              STA STAL
+00965  1828  A5 15              LDA LINNUM+1
+00966  182A  85 C2              STA STAL+1
+00967  182C  A0 00              LDY #$00
+00968  182E  20 8B 1F           JSR XXCD7C
+00969  1831  85 1A              STA TEMPST+1
+00970  1833  A9 00              LDA #$00
+00971  1835  20 BA 1F           JSR XXCDAB
+00972  1838  24 13              BIT CHANNL
+00973  183A  50 05              BVC XXC632
+00974  183C  85 13              STA CHANNL
+00975  183E  4C E8 18           JMP XXC6D9
+00976  1841              ;********************************
+00977  1841  85 13       XXC632 STA CHANNL
+00978  1843  24 10       XXC634 BIT SUBFLG
+00979  1845  50 18              BVC XXC650
+00980  1847  A5 02              LDA UNUSED
+00981  1849  C5 15              CMP LINNUM+1
+00982  184B  D0 58              BNE XXC696
+00983  184D  A5 03              LDA ADRAY1
+00984  184F  C5 14              CMP LINNUM
+00985  1851  D0 52              BNE XXC696
+00986  1853  A5 2D              LDA VARTAB
+00987  1855  D0 4C              BNE XXC694
+00988  1857  A5 2E              LDA VARTAB+1
+00989  1859  D0 46              BNE XXC692
+00990  185B  A9 80              LDA #$80
+00991  185D  85 10              STA SUBFLG
+
+
+
+
+
+
+MONITOR$080F......PAGE 0020
+
+LINE# LOC   CODE        LINE
+
+
+00992  185F                                     ;BMI XXC667
+00993  185F  30 15       XXC650 BMI XXC667
+00994  1861  46 10              LSR SUBFLG
+00995  1863  B0 03              BCS XXC659
+00996  1865  4C 99 12           JMP XXC08A
+00997  1868              ;********************************
+00998  1868  A6 08       XXC659 LDX ENDCHR
+00999  186A  9A                 TXS 
+01000  186B  AD 06 21           LDA XXCEF7
+01001  186E  48                 PHA 
+01002  186F  AD 05 21           LDA XXCEF6
+01003  1872  48                 PHA 
+01004  1873  4C 42 19           JMP XXC733
+01005  1876              ;********************************
+01006  1876  20 8B 1B    XXC667 JSR XXC97C
+01007  1879  A5 03              LDA ADRAY1
+01008  187B  A6 02              LDX UNUSED
+01009  187D  85 C1              STA STAL
+01010  187F  86 C2              STX STAL+1
+01011  1881  20 88 1B           JSR XXC979
+01012  1884  A9 24              LDA #$24        ;'$'
+01013  1886  85 23              STA INDEX+1
+01014  1888  20 6D 14           JSR XXC25E
+01015  188B  20 E4 FF    XXC67C JSR GETIN
+01016  188E  F0 FB              BEQ XXC67C
+01017  1890  C9 03              CMP #$03
+01018  1892  D0 03              BNE XXC688
+01019  1894  4C AB 12           JMP XXC09C
+01020  1897              ;********************************
+01021  1897  C9 4A       XXC688 CMP #$4A        ;'J'
+01022  1899  D0 4D              BNE XXC6D9
+01023  189B  A9 01              LDA #$01
+01024  189D  85 10              STA SUBFLG
+01025  189F  D0 47              BNE XXC6D9
+01026  18A1  C6 2E       XXC692 DEC VARTAB+1
+01027  18A3  C6 2D       XXC694 DEC VARTAB
+01028  18A5  AD 00 DC    XXC696 LDA $DC00
+01029  18A8  C9 FA              CMP #$FA
+01030  18AA  D0 3C              BNE XXC6D9
+01031  18AC  A2 53              LDX #$53        ;'S'
+01032  18AE  4C 9E 12           JMP XXC08F
+01033  18B1              ;********************************
+01034  18B1              ; G
+01035  18B1              ;********************************
+01036  18B1  A9 00       ZZC6A2 LDA #$00
+01037  18B3  F0 06              BEQ XXC6AC
+01038  18B5              ;********************************
+01039  18B5              ; Q
+01040  18B5              ;********************************
+01041  18B5  A9 40       ZZC6A6 LDA #$40        ;'@'
+01042  18B7  D0 02              BNE XXC6AC
+01043  18B9              ;********************************
+01044  18B9              ; W
+01045  18B9              ;********************************
+01046  18B9  A9 80       ZZC6AA LDA #$80
+
+
+
+
+
+
+MONITOR$080F......PAGE 0021
+
+LINE# LOC   CODE        LINE
+
+
+01047  18BB  85 10       XXC6AC STA SUBFLG
+01048  18BD  85 31              STA STREND
+01049  18BF  A4 16              LDY $16
+01050  18C1  84 2D              STY VARTAB
+01051  18C3  A4 17              LDY $17
+01052  18C5  84 2E              STY VARTAB+1
+01053  18C7  20 15 12           JSR MCHRIN
+01054  18CA  C9 0D              CMP #$0D
+01055  18CC  F0 17              BEQ XXC6D6
+01056  18CE  C9 20              CMP #$20        ;' '
+01057  18D0  F0 03              BEQ XXC6C6
+01058  18D2  4C 76 19           JMP XXC767
+01059  18D5              ;********************************
+01060  18D5  20 A9 1A    XXC6C6 JSR XXC89A
+01061  18D8  20 34 1B           JSR XXC925
+01062  18DB  20 15 12           JSR MCHRIN
+01063  18DE  C9 0D              CMP #$0D
+01064  18E0  F0 03              BEQ XXC6D6
+01065  18E2  4C 76 19           JMP XXC767
+01066  18E5              ;********************************
+01067  18E5  20 8B 1B    XXC6D6 JSR XXC97C
+01068  18E8  A5 1A       XXC6D9 LDA TEMPST+1
+01069  18EA  C9 FF              CMP #$FF
+01070  18EC  F0 35              BEQ XXC714
+01071  18EE  A6 14              LDX LINNUM
+01072  18F0  E4 03              CPX ADRAY1
+01073  18F2  D0 1D              BNE XXC702
+01074  18F4  A4 15              LDY LINNUM+1
+01075  18F6  C4 02              CPY UNUSED
+01076  18F8  D0 17              BNE XXC702
+01077  18FA  84 C2              STY STAL+1
+01078  18FC  86 C1              STX STAL
+01079  18FE  A6 10              LDX SUBFLG
+01080  1900  D0 25              BNE XXC718
+01081  1902  A0 00              LDY #$00
+01082  1904  20 BA 1F           JSR XXCDAB
+01083  1907  A9 80              LDA #$80
+01084  1909  85 13              STA CHANNL
+01085  190B  A9 C0              LDA #$C0
+01086  190D  85 13              STA CHANNL
+01087  190F  D0 16              BNE XXC718
+01088  1911  A5 10       XXC702 LDA SUBFLG
+01089  1913  D0 12              BNE XXC718
+01090  1915  86 C1              STX STAL
+01091  1917  A4 0F              LDY GARBFL
+01092  1919  84 C2              STY STAL+1
+01093  191B  A0 00              LDY #$00
+01094  191D  A9 00              LDA #$00
+01095  191F  A8                 TAY 
+01096  1920  20 BA 1F           JSR XXCDAB
+01097  1923  A5 10       XXC714 LDA SUBFLG
+01098  1925  F0 17              BEQ XXC72F
+01099  1927  78          XXC718 SEI 
+01100  1928  A9 A0              LDA #$A0
+01101  192A  8D AA AA           STA $AAAA
+
+
+
+
+
+
+MONITOR$080F......PAGE 0022
+
+LINE# LOC   CODE        LINE
+
+
+01102  192D  A9 00              LDA #$00
+01103  192F  8D AA AA           STA $AAAA
+01104  1932  AD 00 21           LDA XXCEF1
+01105  1935  8D 19 03           STA NMINV+1
+01106  1938  AD FF 20           LDA XXCEF0
+01107  193B  8D 18 03           STA NMINV
+01108  193E  78          XXC72F SEI 
+01109  193F  A6 08              LDX ENDCHR
+01110  1941  9A                 TXS 
+01111  1942  A5 02       XXC733 LDA UNUSED
+01112  1944  48                 PHA 
+01113  1945  A5 03              LDA ADRAY1
+01114  1947  48                 PHA 
+01115  1948  A5 04              LDA ADRAY1+1
+01116  194A  48                 PHA 
+01117  194B  A5 05              LDA ADRAY2
+01118  194D  48                 PHA 
+01119  194E  A6 06              LDX ADRAY2+1
+01120  1950  A4 07              LDY CHARAC
+01121  1952  A5 10              LDA SUBFLG
+01122  1954  05 13              ORA CHANNL
+01123  1956  08                 PHP 
+01124  1957  AD AA AA           LDA $AAAA
+01125  195A  85 32              STA $32
+01126  195C  20 49 1F           JSR XXCD3A
+01127  195F  20 08 1F           JSR XXCCF9
+01128  1962  28                 PLP 
+01129  1963  F0 0F              BEQ XXC765
+01130  1965  A9 7F              LDA #$7F
+01131  1967  8D AA AA           STA $AAAA
+01132  196A  A9 09              LDA #$09
+01133  196C  8D 06 DD           STA $DD06
+01134  196F  A9 00              LDA #$00
+01135  1971  8D 07 DD           STA $DD07
+01136  1974  68          XXC765 PLA 
+01137  1975  40                 RTI 
+01138  1976              ;********************************
+01139  1976  4C A6 12    XXC767 JMP XXC097
+01140  1979              ;********************************
+01141  1979              ; B
+01142  1979              ;********************************
+01143  1979  20 96 1A    ZZC76A JSR XXC887
+01144  197C  85 C1              STA STAL
+01145  197E  86 C2              STX STAL+1
+01146  1980  85 14              STA LINNUM
+01147  1982  86 15              STX LINNUM+1
+01148  1984  A0 00              LDY #$00
+01149  1986  20 8B 1F           JSR XXCD7C
+01150  1989  85 1A              STA TEMPST+1
+01151  198B  98                 TYA 
+01152  198C  A9 00              LDA #$00
+01153  198E  85 16              STA $16
+01154  1990  85 17              STA $17
+01155  1992  20 A6 1A           JSR XXC897
+01156  1995  85 16              STA $16
+
+
+
+
+
+
+MONITOR$080F......PAGE 0023
+
+LINE# LOC   CODE        LINE
+
+
+01157  1997  86 17              STX $17
+01158  1999  4C AB 12           JMP XXC09C
+01159  199C              ;********************************
+01160  199C              ; N
+01161  199C              ;********************************
+01162  199C  20 2C 1A    ZZC78D JSR XXC81D
+01163  199F  85 2F              STA $2F
+01164  19A1  86 30              STX $30
+01165  19A3  20 A6 1A           JSR XXC897
+01166  19A6  85 24              STA $24
+01167  19A8  86 25              STX $25
+01168  19AA  20 A6 1A           JSR XXC897
+01169  19AD  85 AE              STA SAL+2
+01170  19AF  86 AF              STX SAL+3
+01171  19B1  20 15 12           JSR MCHRIN
+01172  19B4  C9 0D              CMP #$0D
+01173  19B6  F0 09              BEQ XXC7B2
+01174  19B8  20 15 12           JSR MCHRIN
+01175  19BB  C9 57              CMP #$57        ;'W'
+01176  19BD  D0 02              BNE XXC7B2
+01177  19BF  E6 23              INC INDEX+1
+01178  19C1  20 86 1A    XXC7B2 JSR XXC877
+01179  19C4  A6 29       XXC7B5 LDX RESHO+3
+01180  19C6  D0 18              BNE XXC7D1
+01181  19C8  20 19 13           JSR XXC10A
+01182  19CB  90 13              BCC XXC7D1
+01183  19CD  A4 23              LDY INDEX+1
+01184  19CF  D0 1A              BNE XXC7DC
+01185  19D1  20 8B 1F           JSR XXCD7C
+01186  19D4  20 04 15           JSR XXC2F5
+01187  19D7  AA                 TAX 
+01188  19D8  BD 26 20           LDA XXCE17,X
+01189  19DB  D0 06              BNE XXC7D4
+01190  19DD  20 F9 12           JSR XXC0EA
+01191  19E0  4C AB 12    XXC7D1 JMP XXC09C
+01192  19E3              ;********************************
+01193  19E3  A4 22       XXC7D4 LDY INDEX
+01194  19E5  C0 02              CPY #$02
+01195  19E7  D0 3B              BNE XXC815
+01196  19E9  F0 02              BEQ XXC7DE
+01197  19EB  84 22       XXC7DC STY INDEX
+01198  19ED  88          XXC7DE DEY 
+01199  19EE  38                 SEC 
+01200  19EF  20 8B 1F           JSR XXCD7C
+01201  19F2  AA                 TAX 
+01202  19F3  E5 24              SBC $24
+01203  19F5  C8                 INY 
+01204  19F6  20 8B 1F           JSR XXCD7C
+01205  19F9  E5 25              SBC $25
+01206  19FB  90 27              BCC XXC815
+01207  19FD  88                 DEY 
+01208  19FE  20 8B 1F           JSR XXCD7C
+01209  1A01  85 0B              STA $0B
+01210  1A03  A5 AE              LDA SAL+2
+01211  1A05  E5 0B              SBC $0B
+
+
+
+
+
+
+MONITOR$080F......PAGE 0024
+
+LINE# LOC   CODE        LINE
+
+
+01212  1A07  C8                 INY 
+01213  1A08  20 8B 1F           JSR XXCD7C
+01214  1A0B  85 0B              STA $0B
+01215  1A0D  A5 AF              LDA SAL+3
+01216  1A0F  E5 0B              SBC $0B
+01217  1A11  90 11              BCC XXC815
+01218  1A13  88                 DEY 
+01219  1A14  18                 CLC 
+01220  1A15  8A                 TXA 
+01221  1A16  65 2F              ADC $2F
+01222  1A18  20 BA 1F           JSR XXCDAB
+01223  1A1B  C8                 INY 
+01224  1A1C  20 8B 1F           JSR XXCD7C
+01225  1A1F  65 30              ADC $30
+01226  1A21  20 BA 1F           JSR XXCDAB
+01227  1A24  20 72 1B    XXC815 JSR XXC963
+01228  1A27  88                 DEY 
+01229  1A28  10 FA              BPL XXC815
+01230  1A2A  30 98              BMI XXC7B5
+01231  1A2C  20 96 1A    XXC81D JSR XXC887
+01232  1A2F  85 C3              STA MEMUSS
+01233  1A31  86 C4              STX MEMUSS+1
+01234  1A33  20 A6 1A           JSR XXC897
+01235  1A36  85 27              STA RESHO+1
+01236  1A38  86 28              STX RESHO+2
+01237  1A3A  20 EA 1A           JSR XXC8DB
+01238  1A3D  20 A9 1A    XXC82E JSR XXC89A
+01239  1A40  85 C1       XXC831 STA STAL
+01240  1A42  86 C2              STX STAL+1
+01241  1A44  60                 RTS 
+01242  1A45              ;********************************
+01243  1A45  20 96 1A    XXC836 JSR XXC887
+01244  1A48  B0 F6              BCS XXC831
+01245  1A4A  20 A9 1A    XXC83B JSR XXC89A
+01246  1A4D  B0 03              BCS XXC843
+01247  1A4F  20 A6 1A    XXC840 JSR XXC897
+01248  1A52  85 C3       XXC843 STA MEMUSS
+01249  1A54  86 C4              STX MEMUSS+1
+01250  1A56  60                 RTS 
+01251  1A57              ;********************************
+01252  1A57  20 09 13           JSR XXC0FA
+01253  1A5A  4C A6 1A           JMP XXC897
+01254  1A5D              ;********************************
+01255  1A5D  A5 C2       XXC84E LDA STAL+1
+01256  1A5F  20 64 1A           JSR XXC855
+01257  1A62  A5 C1              LDA STAL
+01258  1A64  48          XXC855 PHA 
+01259  1A65  4A                 LSR A
+01260  1A66  4A                 LSR A
+01261  1A67  4A                 LSR A
+01262  1A68  4A                 LSR A
+01263  1A69  20 7C 1A           JSR XXC86D
+01264  1A6C  AA                 TAX 
+01265  1A6D  68                 PLA 
+01266  1A6E  29 0F              AND #$0F
+
+
+
+
+
+
+MONITOR$080F......PAGE 0025
+
+LINE# LOC   CODE        LINE
+
+
+01267  1A70  20 7C 1A           JSR XXC86D
+01268  1A73              ;********************************
+01269  1A73              ; PRINT CHARACTERS IN X AND A
+01270  1A73              ;********************************
+01271  1A73  48          PRTXA  PHA 
+01272  1A74  8A                 TXA 
+01273  1A75  20 18 12           JSR MCHROT
+01274  1A78  68                 PLA 
+01275  1A79  4C 18 12           JMP MCHROT
+01276  1A7C              ;********************************
+01277  1A7C  18          XXC86D CLC 
+01278  1A7D  69 F6              ADC #$F6
+01279  1A7F  90 02              BCC XXC874
+01280  1A81  69 06              ADC #$06
+01281  1A83  69 3A       XXC874 ADC #$3A        ;':'
+01282  1A85  60                 RTS 
+01283  1A86              ;********************************
+01284  1A86  A2 02       XXC877 LDX #$02
+01285  1A88  B5 C0       XXC879 LDA CAS1,X
+01286  1A8A  48                 PHA 
+01287  1A8B  B5 C2              LDA STAL+1,X
+01288  1A8D  95 C0              STA CAS1,X
+01289  1A8F  68                 PLA 
+01290  1A90  95 C2              STA STAL+1,X
+01291  1A92  CA                 DEX 
+01292  1A93  D0 F3              BNE XXC879
+01293  1A95  60                 RTS 
+01294  1A96              ;********************************
+01295  1A96  A9 00       XXC887 LDA #$00
+01296  1A98  85 2C              STA TXTTAB+1
+01297  1A9A  20 EA 1A    XXC88B JSR XXC8DB
+01298  1A9D  C9 20              CMP #$20        ;' '
+01299  1A9F  F0 F9              BEQ XXC88B
+01300  1AA1  20 CC 1A           JSR XXC8BD
+01301  1AA4  B0 08              BCS XXC89F
+01302  1AA6  20 EA 1A    XXC897 JSR XXC8DB
+01303  1AA9  20 B8 1A    XXC89A JSR XXC8A9
+01304  1AAC  90 07              BCC XXC8A6
+01305  1AAE  AA          XXC89F TAX 
+01306  1AAF  20 B8 1A           JSR XXC8A9
+01307  1AB2  90 01              BCC XXC8A6
+01308  1AB4  60                 RTS 
+01309  1AB5              ;********************************
+01310  1AB5  4C A6 12    XXC8A6 JMP XXC097
+01311  1AB8              ;********************************
+01312  1AB8  A9 00       XXC8A9 LDA #$00
+01313  1ABA  85 2C              STA TXTTAB+1
+01314  1ABC  20 EA 1A           JSR XXC8DB
+01315  1ABF  C9 20       XXC8B0 CMP #$20        ;' '
+01316  1AC1  D0 09              BNE XXC8BD
+01317  1AC3  20 EA 1A           JSR XXC8DB
+01318  1AC6  C9 20              CMP #$20        ;' '
+01319  1AC8  D0 0E              BNE XXC8C9
+01320  1ACA  18                 CLC 
+01321  1ACB  60                 RTS 
+
+
+
+
+
+
+MONITOR$080F......PAGE 0026
+
+LINE# LOC   CODE        LINE
+
+
+01322  1ACC              ;********************************
+01323  1ACC  20 DF 1A    XXC8BD JSR XXC8D0
+01324  1ACF  0A                 ASL A
+01325  1AD0  0A                 ASL A
+01326  1AD1  0A                 ASL A
+01327  1AD2  0A                 ASL A
+01328  1AD3  85 2C              STA TXTTAB+1
+01329  1AD5  20 EA 1A           JSR XXC8DB
+01330  1AD8  20 DF 1A    XXC8C9 JSR XXC8D0
+01331  1ADB  05 2C              ORA TXTTAB+1
+01332  1ADD  38                 SEC 
+01333  1ADE  60                 RTS 
+01334  1ADF              ;********************************
+01335  1ADF  C9 3A       XXC8D0 CMP #$3A        ;':'
+01336  1AE1  08                 PHP 
+01337  1AE2  29 0F              AND #$0F
+01338  1AE4  28                 PLP 
+01339  1AE5  90 02              BCC XXC8DA
+01340  1AE7  69 08              ADC #$08
+01341  1AE9  60          XXC8DA RTS 
+01342  1AEA              ;********************************
+01343  1AEA  20 15 12    XXC8DB JSR MCHRIN
+01344  1AED  C9 0D              CMP #$0D
+01345  1AEF  D0 F8              BNE XXC8DA
+01346  1AF1  4C AB 12           JMP XXC09C
+01347  1AF4              ;********************************
+01348  1AF4  A5 91       XXC8E5 LDA $91
+01349  1AF6  C9 FE              CMP #$FE
+01350  1AF8  D0 07              BNE XXC8F2
+01351  1AFA  08                 PHP 
+01352  1AFB  20 CC FF           JSR CLRCHN
+01353  1AFE  85 C6              STA NDX
+01354  1B00  28                 PLP 
+01355  1B01  60          XXC8F2 RTS 
+01356  1B02              ;********************************
+01357  1B02  20 0B 1B    XXC8F3 JSR XXC8FC
+01358  1B05  2C AA AA           BIT $AAAA
+01359  1B08  30 F8              BMI XXC8F3
+01360  1B0A  60                 RTS 
+01361  1B0B              ;********************************
+01362  1B0B  20 F4 1A    XXC8FC JSR XXC8E5
+01363  1B0E  D0 0B              BNE XXC90C
+01364  1B10  20 1C 1B           JSR XXC90D
+01365  1B13  A9 03              LDA #$03
+01366  1B15  85 9A              STA $9A
+01367  1B17  A9 00              LDA #$00
+01368  1B19  85 99              STA $99
+01369  1B1B  60          XXC90C RTS 
+01370  1B1C              ;********************************
+01371  1B1C  08          XXC90D PHP 
+01372  1B1D  78                 SEI 
+01373  1B1E  AD AA AA           LDA $AAAA
+01374  1B21  09 02              ORA #$02
+01375  1B23  8D AA AA           STA $AAAA
+01376  1B26  AD FD 20           LDA XXCEEE
+
+
+
+
+
+
+MONITOR$080F......PAGE 0027
+
+LINE# LOC   CODE        LINE
+
+
+01377  1B29  8D 14 03           STA CINV
+01378  1B2C  AD FE 20           LDA XXCEEF
+01379  1B2F  8D 15 03           STA CINV+1
+01380  1B32  28                 PLP 
+01381  1B33  60                 RTS 
+01382  1B34              ;********************************
+01383  1B34  85 03       XXC925 STA ADRAY1
+01384  1B36  86 02              STX UNUSED
+01385  1B38  60                 RTS 
+01386  1B39              ;********************************
+01387  1B39  85 21       XXC92A STA $21
+01388  1B3B  A0 00              LDY #$00
+01389  1B3D  20 88 1B    XXC92E JSR XXC979
+01390  1B40  20 8B 1F           JSR XXCD7C
+01391  1B43  20 64 1A           JSR XXC855
+01392  1B46  20 72 1B           JSR XXC963
+01393  1B49  C6 21              DEC $21
+01394  1B4B  D0 F0              BNE XXC92E
+01395  1B4D  60                 RTS 
+01396  1B4E              ;********************************
+01397  1B4E  20 B8 1A    XXC93F JSR XXC8A9
+01398  1B51  90 0C              BCC XXC950
+01399  1B53  A2 00              LDX #$00
+01400  1B55  20 66 1F           JSR XXCD57
+01401  1B58  C1 0D              CMP (VALTYP,X)
+01402  1B5A  F0 03              BEQ XXC950
+01403  1B5C  4C A6 12           JMP XXC097
+01404  1B5F              ;********************************
+01405  1B5F  20 72 1B    XXC950 JSR XXC963
+01406  1B62  C6 20              DEC TEMPST+7
+01407  1B64  60                 RTS 
+01408  1B65              ;********************************
+01409  1B65  A9 04       XXC956 LDA #$04
+01410  1B67  85 C1              STA STAL
+01411  1B69  A9 00              LDA #$00
+01412  1B6B  85 C2              STA STAL+1
+01413  1B6D  A9 05              LDA #$05
+01414  1B6F  E6 0F              INC GARBFL
+01415  1B71  60                 RTS 
+01416  1B72              ;********************************
+01417  1B72  E6 C1       XXC963 INC STAL
+01418  1B74  D0 06              BNE XXC96D
+01419  1B76  E6 C2              INC STAL+1
+01420  1B78  D0 02              BNE XXC96D
+01421  1B7A  E6 29              INC RESHO+3
+01422  1B7C  60          XXC96D RTS 
+01423  1B7D              ;********************************
+01424  1B7D  98          XXC96E TYA 
+01425  1B7E  48                 PHA 
+01426  1B7F  20 8B 1B           JSR XXC97C
+01427  1B82  68                 PLA 
+01428  1B83  A2 2E       XXC974 LDX #$2E        ;'.'
+01429  1B85  20 73 1A           JSR PRTXA
+01430  1B88  A9 20       XXC979 LDA #$20        ;' '
+01431  1B8A              ;********************************
+
+
+
+
+
+
+MONITOR$080F......PAGE 0028
+
+LINE# LOC   CODE        LINE
+
+
+01432  1B8A  2C                 .BYTE $2C
+01433  1B8B              ;********************************
+01434  1B8B  A9 0D       XXC97C LDA #$0D
+01435  1B8D  4C 18 12           JMP MCHROT
+01436  1B90              ;********************************
+01437  1B90              ; R
+01438  1B90              ;********************************
+01439  1B90  A5 C8       ZZC981 LDA $C8
+01440  1B92  C9 02              CMP #$02
+01441  1B94  90 21              BCC XXC9A8
+01442  1B96  20 15 12           JSR MCHRIN
+01443  1B99  C9 42              CMP #$42        ;'B'
+01444  1B9B  D0 1A              BNE XXC9A8
+01445  1B9D  A5 1A              LDA TEMPST+1
+01446  1B9F  C9 FF              CMP #$FF
+01447  1BA1  F0 14              BEQ XXC9A8
+01448  1BA3  A6 14              LDX LINNUM
+01449  1BA5  A4 15              LDY LINNUM+1
+01450  1BA7  86 C1              STX STAL
+01451  1BA9  84 C2              STY STAL+1
+01452  1BAB  A0 00              LDY #$00
+01453  1BAD  20 BA 1F           JSR XXCDAB
+01454  1BB0  A9 FF              LDA #$FF
+01455  1BB2  85 1A              STA TEMPST+1
+01456  1BB4  4C AB 12           JMP XXC09C
+01457  1BB7              ;********************************
+01458  1BB7  A2 00       XXC9A8 LDX #$00
+01459  1BB9  BD A6 20    XXC9AA LDA XXCE97,X
+01460  1BBC  20 18 12           JSR MCHROT
+01461  1BBF  E8                 INX 
+01462  1BC0  E0 16              CPX #$16
+01463  1BC2  D0 F5              BNE XXC9AA
+01464  1BC4  20 8B 1B           JSR XXC97C
+01465  1BC7  A2 2E              LDX #$2E        ;'.'
+01466  1BC9  A9 3B              LDA #$3B        ;';'
+01467  1BCB  20 73 1A           JSR PRTXA
+01468  1BCE  A5 02              LDA UNUSED
+01469  1BD0  20 64 1A           JSR XXC855
+01470  1BD3  A5 03              LDA ADRAY1
+01471  1BD5  20 64 1A           JSR XXC855
+01472  1BD8  20 65 1B           JSR XXC956
+01473  1BDB  20 39 1B           JSR XXC92A
+01474  1BDE  C6 0F              DEC GARBFL
+01475  1BE0  4C AB 12    XXC9D1 JMP XXC09C
+01476  1BE3              ;********************************
+01477  1BE3  4C A6 12           JMP XXC097
+01478  1BE6              ;********************************
+01479  1BE6              ; ;
+01480  1BE6              ;********************************
+01481  1BE6  20 96 1A    ZZC9D7 JSR XXC887
+01482  1BE9  20 34 1B           JSR XXC925
+01483  1BEC  20 65 1B           JSR XXC956
+01484  1BEF  85 20              STA TEMPST+7
+01485  1BF1  20 EA 1A    XXC9E2 JSR XXC8DB
+01486  1BF4  20 4E 1B           JSR XXC93F
+
+
+
+
+
+
+MONITOR$080F......PAGE 0029
+
+LINE# LOC   CODE        LINE
+
+
+01487  1BF7  D0 F8              BNE XXC9E2
+01488  1BF9  C6 0F              DEC GARBFL
+01489  1BFB  F0 E3              BEQ XXC9D1
+01490  1BFD              ;********************************
+01491  1BFD              ; X
+01492  1BFD              ;********************************
+01493  1BFD  78          ZZC9EE SEI 
+01494  1BFE  20 49 1F           JSR XXCD3A
+01495  1C01  A6 08              LDX ENDCHR
+01496  1C03  9A                 TXS 
+01497  1C04  20 08 1F           JSR XXCCF9
+01498  1C07                                     ;JMP ($A002);BASIC WARM ST
+ART
+01499  1C07  6C FC FF           JMP ($FFFC)     ; KERNAL RESET VECTOR
+01500  1C0A              ;********************************
+01501  1C0A  4C A6 12    XXC9FB JMP XXC097
+01502  1C0D              ;********************************
+01503  1C0D              ; L AND S
+01504  1C0D              ;********************************
+01505  1C0D  A0 01       ZZC9FE LDY #$01
+01506  1C0F  84 BA              STY $BA
+01507  1C11  84 B9              STY $B9
+01508  1C13  88                 DEY 
+01509  1C14  84 B7              STY $B7
+01510  1C16  84 90              STY $90
+01511  1C18  84 93              STY $93
+01512  1C1A  A9 00              LDA #$00
+01513  1C1C  85 BC              STA $BC
+01514  1C1E  A9 33              LDA #$33        ;'3'
+01515  1C20  85 BB              STA $BB
+01516  1C22  20 15 12    XXCA13 JSR MCHRIN
+01517  1C25  C9 20              CMP #$20        ;' '
+01518  1C27  F0 F9              BEQ XXCA13
+01519  1C29  C9 0D              CMP #$0D
+01520  1C2B  F0 1A              BEQ XXCA38
+01521  1C2D  C9 22              CMP #$22        ;'"'
+01522  1C2F  D0 D9       XXCA20 BNE XXC9FB
+01523  1C31  20 15 12    XXCA22 JSR MCHRIN
+01524  1C34  C9 22              CMP #$22        ;'"'
+01525  1C36  F0 26              BEQ XXCA4F
+01526  1C38  C9 0D              CMP #$0D
+01527  1C3A  F0 0B              BEQ XXCA38
+01528  1C3C  91 BB              STA ($BB),Y
+01529  1C3E  E6 B7              INC $B7
+01530  1C40  C8                 INY 
+01531  1C41  C0 10              CPY #$10
+01532  1C43  F0 C5       XXCA34 BEQ XXC9FB
+01533  1C45  D0 EA              BNE XXCA22
+01534  1C47  A5 1E       XXCA38 LDA $1E
+01535  1C49  C9 4C              CMP #$4C        ;'L'
+01536  1C4B  D0 E2       XXCA3C BNE XXCA20
+01537  1C4D  A9 00              LDA #$00
+01538  1C4F  20 D5 FF           JSR LOAD
+01539  1C52  20 02 1B           JSR XXC8F3
+01540  1C55  A5 90              LDA $90
+01541  1C57  29 10              AND #$10
+
+
+
+
+
+
+MONITOR$080F......PAGE 0030
+
+LINE# LOC   CODE        LINE
+
+
+01542  1C59  D0 F0       XXCA4A BNE XXCA3C
+01543  1C5B  4C AB 12           JMP XXC09C
+01544  1C5E              ;********************************
+01545  1C5E  20 15 12    XXCA4F JSR MCHRIN
+01546  1C61  C9 0D              CMP #$0D
+01547  1C63  F0 E2              BEQ XXCA38
+01548  1C65  C9 2C              CMP #$2C        ;','
+01549  1C67  D0 F0       XXCA58 BNE XXCA4A
+01550  1C69  20 B8 1A           JSR XXC8A9
+01551  1C6C  29 0F              AND #$0F
+01552  1C6E  F0 D3       XXCA5F BEQ XXCA34
+01553  1C70  C9 03              CMP #$03
+01554  1C72  F0 FA              BEQ XXCA5F
+01555  1C74  85 BA              STA $BA
+01556  1C76  20 15 12           JSR MCHRIN
+01557  1C79  C9 0D              CMP #$0D
+01558  1C7B  F0 CA              BEQ XXCA38
+01559  1C7D  C9 2C              CMP #$2C        ;','
+01560  1C7F  D0 E6       XXCA70 BNE XXCA58
+01561  1C81  20 3D 1A           JSR XXC82E
+01562  1C84  20 15 12           JSR MCHRIN
+01563  1C87  C9 2C              CMP #$2C        ;','
+01564  1C89  D0 F4       XXCA7A BNE XXCA70
+01565  1C8B  20 A9 1A           JSR XXC89A
+01566  1C8E  85 AE              STA SAL+2
+01567  1C90  86 AF              STX SAL+3
+01568  1C92  20 15 12    XXCA83 JSR MCHRIN
+01569  1C95  C9 20              CMP #$20        ;' '
+01570  1C97  F0 F9              BEQ XXCA83
+01571  1C99  C9 0D              CMP #$0D
+01572  1C9B  D0 EC       XXCA8C BNE XXCA7A
+01573  1C9D  A5 1E              LDA $1E
+01574  1C9F  C9 53              CMP #$53        ;'S'
+01575  1CA1  D0 F8              BNE XXCA8C
+01576  1CA3  20 8B 1B           JSR XXC97C
+01577  1CA6  A9 00              LDA #$00
+01578  1CA8  85 B9              STA $B9
+01579  1CAA  A6 AE              LDX SAL+2
+01580  1CAC  A4 AF              LDY SAL+3
+01581  1CAE  A9 C1              LDA #$C1
+01582  1CB0  20 D8 FF           JSR SAVE
+01583  1CB3  4C AB 12           JMP XXC09C
+01584  1CB6              ;********************************
+01585  1CB6              ;
+01586  1CB6              ;********************************
+01587  1CB6  A5 31       XXCAA7 LDA STREND
+01588  1CB8  D0 04              BNE XXCAAF
+01589  1CBA  A5 C6              LDA NDX
+01590  1CBC  D0 06              BNE XXCAB5
+01591  1CBE  68          XXCAAF PLA 
+01592  1CBF  A8                 TAY 
+01593  1CC0  68                 PLA 
+01594  1CC1  AA                 TAX 
+01595  1CC2  68                 PLA 
+01596  1CC3  40                 RTI 
+
+
+
+
+
+
+MONITOR$080F......PAGE 0031
+
+LINE# LOC   CODE        LINE
+
+
+01597  1CC4              ;********************************
+01598  1CC4  AD 77 02    XXCAB5 LDA KEYD
+01599  1CC7  C9 11              CMP #$11
+01600  1CC9  F0 03              BEQ XXCABF
+01601  1CCB  4C 64 1D           JMP XXCB55
+01602  1CCE              ;********************************
+01603  1CCE  A5 D6       XXCABF LDA TBLX
+01604  1CD0  C9 18              CMP #$18
+01605  1CD2  D0 EA              BNE XXCAAF
+01606  1CD4  A5 D1              LDA PNT
+01607  1CD6  85 C3              STA MEMUSS
+01608  1CD8  A5 D2              LDA PNT+1
+01609  1CDA  85 C4              STA MEMUSS+1
+01610  1CDC  A9 19              LDA #$19
+01611  1CDE  85 2D              STA VARTAB
+01612  1CE0  A0 01       XXCAD1 LDY #$01
+01613  1CE2  20 C2 1E           JSR XXCCB3
+01614  1CE5  C9 3A              CMP #$3A        ;':'
+01615  1CE7  F0 19              BEQ XXCAF3
+01616  1CE9  C9 2C              CMP #$2C        ;','
+01617  1CEB  F0 15              BEQ XXCAF3
+01618  1CED  C9 27              CMP #$27        ;'''
+01619  1CEF  F0 11              BEQ XXCAF3
+01620  1CF1  C6 2D              DEC VARTAB
+01621  1CF3  F0 C9              BEQ XXCAAF
+01622  1CF5  38                 SEC 
+01623  1CF6  A5 C3              LDA MEMUSS
+01624  1CF8  E9 28              SBC #$28        ;'('
+01625  1CFA  85 C3              STA MEMUSS
+01626  1CFC  B0 E2              BCS XXCAD1
+01627  1CFE  C6 C4              DEC MEMUSS+1
+01628  1D00  D0 DE              BNE XXCAD1
+01629  1D02  85 1E       XXCAF3 STA $1E
+01630  1D04  20 7E 1E           JSR XXCC6F
+01631  1D07  B0 B5              BCS XXCAAF
+01632  1D09  A5 1E              LDA $1E
+01633  1D0B  C9 3A              CMP #$3A        ;':'
+01634  1D0D  F0 15              BEQ XXCB15
+01635  1D0F  C9 27              CMP #$27        ;'''
+01636  1D11  D0 31              BNE XXCB35
+01637  1D13  18                 CLC 
+01638  1D14  A9 08              LDA #$08
+01639  1D16  65 C1              ADC STAL
+01640  1D18  85 C1              STA STAL
+01641  1D1A  90 02              BCC XXCB0F
+01642  1D1C  E6 C2              INC STAL+1
+01643  1D1E  20 CD 15    XXCB0F JSR XXC3BE
+01644  1D21  4C 53 1D           JMP XXCB44
+01645  1D24              ;********************************
+01646  1D24  18          XXCB15 CLC 
+01647  1D25  A5 C1              LDA STAL
+01648  1D27  69 08              ADC #$08
+01649  1D29  85 C1              STA STAL
+01650  1D2B  90 02              BCC XXCB20
+01651  1D2D  E6 C2              INC STAL+1
+
+
+
+
+
+
+MONITOR$080F......PAGE 0032
+
+LINE# LOC   CODE        LINE
+
+
+01652  1D2F  20 8B 1B    XXCB20 JSR XXC97C
+01653  1D32  A2 2E              LDX #$2E        ;'.'
+01654  1D34  A9 3A              LDA #$3A        ;':'
+01655  1D36  20 73 1A           JSR PRTXA
+01656  1D39  20 5D 1A           JSR XXC84E
+01657  1D3C  A9 08              LDA #$08
+01658  1D3E  20 39 1B           JSR XXC92A
+01659  1D41  4C 53 1D           JMP XXCB44
+01660  1D44              ;********************************
+01661  1D44  20 2A 1E    XXCB35 JSR XXCC1B
+01662  1D47  20 C4 14           JSR XXC2B5
+01663  1D4A  A9 00              LDA #$00
+01664  1D4C  85 23              STA INDEX+1
+01665  1D4E  A0 2C              LDY #$2C        ;','
+01666  1D50  20 6A 14           JSR XXC25B
+01667  1D53  A9 00       XXCB44 LDA #$00
+01668  1D55  85 C6              STA NDX
+01669  1D57  85 31              STA STREND
+01670  1D59  85 29              STA RESHO+3
+01671  1D5B  20 A6 17           JSR XXC597
+01672  1D5E  20 8B 1B           JSR XXC97C
+01673  1D61  4C BE 1C           JMP XXCAAF
+01674  1D64              ;********************************
+01675  1D64  C9 91       XXCB55 CMP #$91
+01676  1D66  F0 03              BEQ XXCB5C
+01677  1D68  4C BE 1C           JMP XXCAAF
+01678  1D6B              ;********************************
+01679  1D6B  A5 D6       XXCB5C LDA TBLX
+01680  1D6D  F0 03              BEQ XXCB63
+01681  1D6F  4C BE 1C           JMP XXCAAF
+01682  1D72              ;********************************
+01683  1D72  A5 D1       XXCB63 LDA PNT
+01684  1D74  85 C3              STA MEMUSS
+01685  1D76  A5 D2              LDA PNT+1
+01686  1D78  85 C4              STA MEMUSS+1
+01687  1D7A  A9 19              LDA #$19
+01688  1D7C  85 2D              STA VARTAB
+01689  1D7E  A0 01       XXCB6F LDY #$01
+01690  1D80  20 C2 1E           JSR XXCCB3
+01691  1D83  C9 3A              CMP #$3A        ;':'
+01692  1D85  F0 19              BEQ XXCB91
+01693  1D87  C9 2C              CMP #$2C        ;','
+01694  1D89  F0 15              BEQ XXCB91
+01695  1D8B  C9 27              CMP #$27        ;'''
+01696  1D8D  F0 11              BEQ XXCB91
+01697  1D8F  C6 2D              DEC VARTAB
+01698  1D91  F0 14              BEQ XXCB98
+01699  1D93  18                 CLC 
+01700  1D94  A5 C3              LDA MEMUSS
+01701  1D96  69 28              ADC #$28        ;'('
+01702  1D98  85 C3              STA MEMUSS
+01703  1D9A  90 E2              BCC XXCB6F
+01704  1D9C  E6 C4              INC MEMUSS+1
+01705  1D9E  D0 DE              BNE XXCB6F
+01706  1DA0  85 1E       XXCB91 STA $1E
+
+
+
+
+
+
+MONITOR$080F......PAGE 0033
+
+LINE# LOC   CODE        LINE
+
+
+01707  1DA2  20 7E 1E           JSR XXCC6F
+01708  1DA5  90 03              BCC XXCB9B
+01709  1DA7  4C BE 1C    XXCB98 JMP XXCAAF
+01710  1DAA              ;********************************
+01711  1DAA  A5 1E       XXCB9B LDA $1E
+01712  1DAC  C9 3A              CMP #$3A        ;':'
+01713  1DAE  F0 18              BEQ XXCBB9
+01714  1DB0  C9 27              CMP #$27        ;'''
+01715  1DB2  D0 33              BNE XXCBD8
+01716  1DB4  20 32 1E           JSR XXCC23
+01717  1DB7  38                 SEC 
+01718  1DB8  A5 C1              LDA STAL
+01719  1DBA  E9 08              SBC #$08
+01720  1DBC  85 C1              STA STAL
+01721  1DBE  B0 02              BCS XXCBB3
+01722  1DC0  C6 C2              DEC STAL+1
+01723  1DC2  20 D0 15    XXCBB3 JSR XXC3C1
+01724  1DC5  4C D9 1D           JMP XXCBCA
+01725  1DC8              ;********************************
+01726  1DC8  20 32 1E    XXCBB9 JSR XXCC23
+01727  1DCB  38                 SEC 
+01728  1DCC  A5 C1              LDA STAL
+01729  1DCE  E9 08              SBC #$08
+01730  1DD0  85 C1              STA STAL
+01731  1DD2  B0 02              BCS XXCBC7
+01732  1DD4  C6 C2              DEC STAL+1
+01733  1DD6  20 20 16    XXCBC7 JSR XXC411
+01734  1DD9  A9 00       XXCBCA LDA #$00
+01735  1DDB  85 C6              STA NDX
+01736  1DDD  85 31              STA STREND
+01737  1DDF  85 29              STA RESHO+3
+01738  1DE1  20 79 1E           JSR XXCC6A
+01739  1DE4  4C BE 1C           JMP XXCAAF
+01740  1DE7              ;********************************
+01741  1DE7  20 32 1E    XXCBD8 JSR XXCC23
+01742  1DEA  A5 C1              LDA STAL
+01743  1DEC  A6 C2              LDX STAL+1
+01744  1DEE  85 C3              STA MEMUSS
+01745  1DF0  86 C4              STX MEMUSS+1
+01746  1DF2  A9 10              LDA #$10
+01747  1DF4  85 2D              STA VARTAB
+01748  1DF6  38          XXCBE7 SEC 
+01749  1DF7  A5 C3              LDA MEMUSS
+01750  1DF9  E5 2D              SBC VARTAB
+01751  1DFB  85 C1              STA STAL
+01752  1DFD  A5 C4              LDA MEMUSS+1
+01753  1DFF  E9 00              SBC #$00
+01754  1E01  85 C2              STA STAL+1
+01755  1E03  20 2A 1E    XXCBF4 JSR XXCC1B
+01756  1E06  20 C4 14           JSR XXC2B5
+01757  1E09  20 20 13           JSR XXC111
+01758  1E0C  F0 06              BEQ XXCC05
+01759  1E0E  B0 F3              BCS XXCBF4
+01760  1E10  C6 2D              DEC VARTAB
+01761  1E12  D0 E2              BNE XXCBE7
+
+
+
+
+
+
+MONITOR$080F......PAGE 0034
+
+LINE# LOC   CODE        LINE
+
+
+01762  1E14  E6 22       XXCC05 INC INDEX
+01763  1E16  A5 22              LDA INDEX
+01764  1E18  20 A0 15           JSR XXC391
+01765  1E1B  A2 00              LDX #$00
+01766  1E1D  86 23              STX INDEX+1
+01767  1E1F  A9 2C              LDA #$2C        ;','
+01768  1E21  20 83 1B           JSR XXC974
+01769  1E24  20 6D 14           JSR XXC25E
+01770  1E27  4C D9 1D           JMP XXCBCA
+01771  1E2A              ;********************************
+01772  1E2A  A2 00       XXCC1B LDX #$00
+01773  1E2C  20 58 1F           JSR XXCD49
+01774  1E2F  4C 04 15           JMP XXC2F5
+01775  1E32              ;********************************
+01776  1E32              ;********************************
+01777  1E32              ;.END
+01778  1E32              ;*=$CC23
+01779  1E32              ;********************************
+01780  1E32  A9 00       XXCC23 LDA #$00
+01781  1E34  85 AE              STA SAL+2
+01782  1E36  A9 DB              LDA #$DB
+01783  1E38  85 AF              STA SAL+3
+01784  1E3A  85 B1              STA CMPO+1
+01785  1E3C  A9 07              LDA #$07
+01786  1E3E  85 AD              STA SAL+1
+01787  1E40  85 C4              STA MEMUSS+1
+01788  1E42  A9 00              LDA #$00
+01789  1E44  85 AC              STA SAL
+01790  1E46  A9 28              LDA #$28        ;'('
+01791  1E48  85 C3              STA MEMUSS
+01792  1E4A  85 B0              STA CMPO
+01793  1E4C  A0 BF              LDY #$BF
+01794  1E4E  A2 04              LDX #$04
+01795  1E50  B1 AC       XXCC41 LDA (SAL),Y
+01796  1E52  91 C3              STA (MEMUSS),Y
+01797  1E54  B1 AE              LDA (SAL+2),Y
+01798  1E56  91 B0              STA (CMPO),Y
+01799  1E58  88                 DEY 
+01800  1E59  D0 F5              BNE XXCC41
+01801  1E5B  B1 AC              LDA (SAL),Y
+01802  1E5D  91 C3              STA (MEMUSS),Y
+01803  1E5F  B1 AE              LDA (SAL+2),Y
+01804  1E61  91 B0              STA (CMPO),Y
+01805  1E63  88                 DEY 
+01806  1E64  C6 AD              DEC SAL+1
+01807  1E66  C6 C4              DEC MEMUSS+1
+01808  1E68  C6 AF              DEC SAL+3
+01809  1E6A  C6 B1              DEC CMPO+1
+01810  1E6C  CA                 DEX 
+01811  1E6D  D0 E1              BNE XXCC41
+01812  1E6F  A2 27              LDX #$27        ;'''
+01813  1E71  A9 20              LDA #$20        ;' '
+01814  1E73  9D 00 04    XXCC64 STA VICSCN,X
+01815  1E76  CA                 DEX 
+01816  1E77  10 FA              BPL XXCC64
+
+
+
+
+
+
+MONITOR$080F......PAGE 0035
+
+LINE# LOC   CODE        LINE
+
+
+01817  1E79  A9 13       XXCC6A LDA #$13
+01818  1E7B  4C 18 12           JMP MCHROT
+01819  1E7E              ;********************************
+01820  1E7E  C0 28       XXCC6F CPY #$28        ;'('
+01821  1E80  D0 02              BNE XXCC75
+01822  1E82  38                 SEC 
+01823  1E83  60                 RTS 
+01824  1E84              ;********************************
+01825  1E84  20 C2 1E    XXCC75 JSR XXCCB3
+01826  1E87  C9 20              CMP #$20        ;' '
+01827  1E89  F0 F3              BEQ XXCC6F
+01828  1E8B  88                 DEY 
+01829  1E8C  20 AD 1E           JSR XXCC9E
+01830  1E8F  AA                 TAX 
+01831  1E90  20 AD 1E           JSR XXCC9E
+01832  1E93  85 C1              STA STAL
+01833  1E95  86 C2              STX STAL+1
+01834  1E97  A9 FF              LDA #$FF
+01835  1E99  85 31              STA STREND
+01836  1E9B  85 CC              STA $CC
+01837  1E9D  A5 CF              LDA BLNON
+01838  1E9F  F0 0A              BEQ XXCC9C
+01839  1EA1  A5 CE              LDA GDBLN
+01840  1EA3  A4 D3              LDY PNTR
+01841  1EA5  91 D1              STA (PNT),Y
+01842  1EA7  A9 00              LDA #$00
+01843  1EA9  85 CF              STA BLNON
+01844  1EAB  18          XXCC9C CLC 
+01845  1EAC  60                 RTS 
+01846  1EAD              ;********************************
+01847  1EAD  20 C2 1E    XXCC9E JSR XXCCB3
+01848  1EB0  20 DF 1A           JSR XXC8D0
+01849  1EB3  0A                 ASL A
+01850  1EB4  0A                 ASL A
+01851  1EB5  0A                 ASL A
+01852  1EB6  0A                 ASL A
+01853  1EB7  85 2C              STA TXTTAB+1
+01854  1EB9  20 C2 1E           JSR XXCCB3
+01855  1EBC  20 DF 1A           JSR XXC8D0
+01856  1EBF  05 2C              ORA TXTTAB+1
+01857  1EC1  60                 RTS 
+01858  1EC2              ;********************************
+01859  1EC2  B1 C3       XXCCB3 LDA (MEMUSS),Y
+01860  1EC4  C8                 INY 
+01861  1EC5  29 7F              AND #$7F
+01862  1EC7  C9 20              CMP #$20        ;' '
+01863  1EC9  B0 02              BCS XXCCBE
+01864  1ECB  09 40              ORA #$40        ;'@'
+01865  1ECD  60          XXCCBE RTS 
+01866  1ECE              ;********************************
+01867  1ECE              ; E
+01868  1ECE              ;********************************
+01869  1ECE  20 96 1A    ZZCCBF JSR XXC887
+01870  1ED1  E0 04              CPX #$04
+01871  1ED3  90 23              BCC XXCCE9
+
+
+
+
+
+
+MONITOR$080F......PAGE 0036
+
+LINE# LOC   CODE        LINE
+
+
+01872  1ED5  85 F9              STA ROBUF
+01873  1ED7  86 FA              STX ROBUF+1
+01874  1ED9  8D 83 02           STA MEMSIZ
+01875  1EDC  8E 84 02           STX MEMSIZ+1
+01876  1EDF  85 C3              STA MEMUSS
+01877  1EE1  86 C4              STX MEMUSS+1
+01878  1EE3  A0 00              LDY #$00
+01879  1EE5  A9 55       XXCCD6 LDA #$55        ;'U'
+01880  1EE7  91 C3              STA (MEMUSS),Y
+01881  1EE9  D1 C3              CMP (MEMUSS),Y
+01882  1EEB  D0 0B              BNE XXCCE9
+01883  1EED  B9 00 00           LDA D6510,Y
+01884  1EF0  91 C3              STA (MEMUSS),Y
+01885  1EF2  C8                 INY 
+01886  1EF3  D0 F0              BNE XXCCD6
+01887  1EF5  4C AB 12           JMP XXC09C
+01888  1EF8              ;********************************
+01889  1EF8  86 C3       XXCCE9 STX MEMUSS
+01890  1EFA  05 C3              ORA MEMUSS
+01891  1EFC  D0 07              BNE XXCCF6
+01892  1EFE  85 F9              STA ROBUF
+01893  1F00  86 FA              STX ROBUF+1
+01894  1F02  4C AB 12           JMP XXC09C
+01895  1F05              ;********************************
+01896  1F05  4C A6 12    XXCCF6 JMP XXC097
+01897  1F08              ;********************************
+01898  1F08  48          XXCCF9 PHA 
+01899  1F09  8A                 TXA 
+01900  1F0A  48                 PHA 
+01901  1F0B  98                 TYA 
+01902  1F0C  48                 PHA 
+01903  1F0D  A5 FA              LDA ROBUF+1
+01904  1F0F  F0 11              BEQ XXCD13
+01905  1F11  A0 00              LDY #$00
+01906  1F13  B9 00 00    XXCD04 LDA D6510,Y
+01907  1F16  AA                 TAX 
+01908  1F17  B1 F9              LDA (ROBUF),Y
+01909  1F19  99 00 00           STA D6510,Y
+01910  1F1C  8A                 TXA 
+01911  1F1D  91 F9              STA (ROBUF),Y
+01912  1F1F  C8                 INY 
+01913  1F20  D0 F1              BNE XXCD04
+01914  1F22  68          XXCD13 PLA 
+01915  1F23  A8                 TAY 
+01916  1F24  68                 PLA 
+01917  1F25  AA                 TAX 
+01918  1F26  68                 PLA 
+01919  1F27  60                 RTS 
+01920  1F28              ;********************************
+01921  1F28  AD 14 03    XXCD19 LDA CINV
+01922  1F2B  AE 15 03           LDX CINV+1
+01923  1F2E  CD FD 20           CMP XXCEEE
+01924  1F31  D0 05              BNE SVEC18
+01925  1F33  EC FE 20           CPX XXCEEF
+01926  1F36  F0 10              BEQ XXCD39
+
+
+
+
+
+
+MONITOR$080F......PAGE 0037
+
+LINE# LOC   CODE        LINE
+
+
+01927  1F38              ;********************************
+01928  1F38              ; STORE A AND X IN $0018 VECTOR
+01929  1F38              ;********************************
+01930  1F38  85 18       SVEC18 STA $18
+01931  1F3A  86 19              STX $19
+01932  1F3C  AD FD 20           LDA XXCEEE
+01933  1F3F  AE FE 20           LDX XXCEEF
+01934  1F42  8D 14 03           STA CINV
+01935  1F45  8E 15 03           STX CINV+1
+01936  1F48  60          XXCD39 RTS 
+01937  1F49              ;********************************
+01938  1F49  A5 18       XXCD3A LDA $18
+01939  1F4B  8D 14 03           STA CINV
+01940  1F4E  A5 19              LDA $19
+01941  1F50  8D 15 03           STA CINV+1
+01942  1F53  60                 RTS 
+01943  1F54              ;********************************
+01944  1F54  A2 02       XXCD45 LDX #$02
+01945  1F56  D0 02              BNE XXCD4B
+01946  1F58  A2 00       XXCD49 LDX #$00
+01947  1F5A  20 72 1F    XXCD4B JSR XXCD63
+01948  1F5D  A2 00              LDX #$00
+01949  1F5F  A1 0D              LDA (VALTYP,X)
+01950  1F61  60                 RTS 
+01951  1F62              ;********************************
+01952  1F62  A2 02       XXCD53 LDX #$02
+01953  1F64  D0 02              BNE XXCD59
+01954  1F66  A2 00       XXCD57 LDX #$00
+01955  1F68  48          XXCD59 PHA 
+01956  1F69  20 72 1F           JSR XXCD63
+01957  1F6C  68                 PLA 
+01958  1F6D  A2 00              LDX #$00
+01959  1F6F  81 0D              STA (VALTYP,X)
+01960  1F71  60                 RTS 
+01961  1F72              ;********************************
+01962  1F72  B5 C2       XXCD63 LDA STAL+1,X
+01963  1F74  D0 0E              BNE XXCD75
+01964  1F76  18                 CLC 
+01965  1F77  A5 F9              LDA ROBUF
+01966  1F79  75 C1              ADC STAL,X
+01967  1F7B  85 0D              STA VALTYP
+01968  1F7D  A5 FA              LDA ROBUF+1
+01969  1F7F  75 C2              ADC STAL+1,X
+01970  1F81  85 0E              STA INTFLG
+01971  1F83  60                 RTS 
+01972  1F84              ;********************************
+01973  1F84  85 0E       XXCD75 STA INTFLG
+01974  1F86  B5 C1              LDA STAL,X
+01975  1F88  85 0D              STA VALTYP
+01976  1F8A  60                 RTS 
+01977  1F8B              ;********************************
+01978  1F8B  08          XXCD7C PHP 
+01979  1F8C  68                 PLA 
+01980  1F8D  29 EF              AND #$EF
+01981  1F8F  48                 PHA 
+
+
+
+
+
+
+MONITOR$080F......PAGE 0038
+
+LINE# LOC   CODE        LINE
+
+
+01982  1F90  84 0C              STY DIMFLG
+01983  1F92  98                 TYA 
+01984  1F93  18                 CLC 
+01985  1F94  65 C1              ADC STAL
+01986  1F96  85 0D              STA VALTYP
+01987  1F98  A9 00              LDA #$00
+01988  1F9A  65 C2              ADC STAL+1
+01989  1F9C  85 0E              STA INTFLG
+01990  1F9E  C9 01              CMP #$01
+01991  1FA0  B0 10              BCS XXCDA3
+01992  1FA2  A5 0F              LDA GARBFL
+01993  1FA4  D0 0C              BNE XXCDA3
+01994  1FA6  A5 0D              LDA VALTYP
+01995  1FA8  65 F9              ADC ROBUF
+01996  1FAA  85 0D              STA VALTYP
+01997  1FAC  A5 0E              LDA INTFLG
+01998  1FAE  65 FA              ADC ROBUF+1
+01999  1FB0  85 0E              STA INTFLG
+02000  1FB2  A0 00       XXCDA3 LDY #$00
+02001  1FB4  B1 0D              LDA (VALTYP),Y
+02002  1FB6  A4 0C              LDY DIMFLG
+02003  1FB8  28                 PLP 
+02004  1FB9  60                 RTS 
+02005  1FBA              ;********************************
+02006  1FBA  48          XXCDAB PHA 
+02007  1FBB  20 8B 1F           JSR XXCD7C
+02008  1FBE  84 0C              STY DIMFLG
+02009  1FC0  A0 00              LDY #$00
+02010  1FC2  68                 PLA 
+02011  1FC3  91 0D              STA (VALTYP),Y
+02012  1FC5  A4 0C              LDY DIMFLG
+02013  1FC7  60                 RTS 
+02014  1FC8              ;********************************
+02015  1FC8              ; MODE TABLE... NYBBLE ORGANIZED
+02016  1FC8              ;
+02017  1FC8              ; 0= ERR  4= IMPLIED  8= ZER,X   C= ZER,Y
+02018  1FC8              ; 1= IMM  5= ACC      9= ABS,X   D= REL
+02019  1FC8              ; 2= ZER  6= (IND,X)  A= ABS,Y
+02020  1FC8              ; 3= ABS  7= (IND),Y  B= (IND)
+02021  1FC8              ;
+02022  1FC8              ;********************************
+02023  1FC8              ; SUPERMON
+02024  1FC8              ;********************************
+02025  1FC8              ; MODE TABLE... NYBBLE ORGANIZED
+02026  1FC8              ; 0= ERR  4= IMPLIED  8= ZER,X   C= ZER,Y
+02027  1FC8              ; 1= IMM  5= ACC      9= ABS,X   D= REL
+02028  1FC8              ; 2= ZER  6= (IND,X)  A= ABS,Y
+02029  1FC8              ; 3= ABS  7= (IND),Y  B= (IND)
+02030  1FC8              ;MODE
+02031  1FC8              ;.BYTE $40,$02,$45,$03
+02032  1FC8              ;.BYTE $D0,$08,$40,$09
+02033  1FC8              ;.BYTE $30,$22,$45,$33
+02034  1FC8              ;.BYTE $D0,$08,$40,$09
+02035  1FC8              ;.BYTE $40,$02,$45,$33
+02036  1FC8              ;.BYTE $D0,$08,$40,$09
+
+
+
+
+
+
+MONITOR$080F......PAGE 0039
+
+LINE# LOC   CODE        LINE
+
+
+02037  1FC8              ;.BYTE $40,$02,$45,$B3
+02038  1FC8              ;.BYTE $D0,$08,$40,$09
+02039  1FC8              ;.BYTE $00,$22,$44,$33
+02040  1FC8              ;.BYTE $D0,$8C,$44,$00
+02041  1FC8              ;.BYTE $11,$22,$44,$33
+02042  1FC8              ;.BYTE $D0,$8C,$44,$9A
+02043  1FC8              ;.BYTE $10,$22,$44,$33
+02044  1FC8              ;.BYTE $D0,$08,$40,$09
+02045  1FC8              ;.BYTE $10,$22,$44,$33
+02046  1FC8              ;.BYTE $D0,$08,$40,$09
+02047  1FC8              ;.BYTE $62,$13,$78,$A9
+02048  1FC8              ;********************************
+02049  1FC8              ;XXCDB9 RTI 
+02050  1FC8  40          XXCDB9 .BYTE $40
+02051  1FC9  02                 .BYTE $02
+02052  1FCA  45                 .BYTE $45       ;'E'
+02053  1FCB  03                 .BYTE $03
+02054  1FCC  D0                 .BYTE $D0
+02055  1FCD  08                 .BYTE $08
+02056  1FCE  40                 .BYTE $40       ;'@'
+02057  1FCF  09                 .BYTE $09
+02058  1FD0  30                 .BYTE $30       ;'0'
+02059  1FD1  22                 .BYTE $22       ;'"'
+02060  1FD2  45                 .BYTE $45       ;'E'
+02061  1FD3  33                 .BYTE $33       ;'3'
+02062  1FD4  D0                 .BYTE $D0
+02063  1FD5  08                 .BYTE $08
+02064  1FD6  40                 .BYTE $40       ;'@'
+02065  1FD7  09                 .BYTE $09
+02066  1FD8  40                 .BYTE $40 '@'
+02067  1FD9  02                 .BYTE $02
+02068  1FDA  45                 .BYTE $45       ;'E'
+02069  1FDB  33                 .BYTE $33       ;'3'
+02070  1FDC  D0                 .BYTE $D0
+02071  1FDD  08                 .BYTE $08
+02072  1FDE  40                 .BYTE $40       ;'@'
+02073  1FDF  09                 .BYTE $09
+02074  1FE0  40                 .BYTE $40       ;'@'
+02075  1FE1  02                 .BYTE $02
+02076  1FE2  45                 .BYTE $45       ;'E'
+02077  1FE3  B3                 .BYTE $B3
+02078  1FE4  D0                 .BYTE $D0
+02079  1FE5  08                 .BYTE $08
+02080  1FE6  40                 .BYTE $40       ;'@'
+02081  1FE7  09                 .BYTE $09
+02082  1FE8  00                 .BYTE $00
+02083  1FE9  22                 .BYTE $22       ;'"'
+02084  1FEA  44                 .BYTE $44       ;'D'
+02085  1FEB  33                 .BYTE $33       ;'3'
+02086  1FEC  D0                 .BYTE $D0
+02087  1FED  8C                 .BYTE $8C
+02088  1FEE  44                 .BYTE $44       ;'D'
+02089  1FEF  00                 .BYTE $00
+02090  1FF0  11                 .BYTE $11
+02091  1FF1  22                 .BYTE $22       ;'"'
+
+
+
+
+
+
+MONITOR$080F......PAGE 0040
+
+LINE# LOC   CODE        LINE
+
+
+02092  1FF2  44                 .BYTE $44       ;'D'
+02093  1FF3  33                 .BYTE $33       ;'3'
+02094  1FF4  D0                 .BYTE $D0
+02095  1FF5  8C                 .BYTE $8C
+02096  1FF6  44                 .BYTE $44       ;'D'
+02097  1FF7  9A                 .BYTE $9A
+02098  1FF8  10                 .BYTE $10
+02099  1FF9  22                 .BYTE $22       ;'"'
+02100  1FFA  44                 .BYTE $44       ;'D'
+02101  1FFB  33                 .BYTE $33       ;'3'
+02102  1FFC  D0                 .BYTE $D0
+02103  1FFD  08                 .BYTE $08
+02104  1FFE  40                 .BYTE $40       ;'@'
+02105  1FFF  09                 .BYTE $09
+02106  2000  10                 .BYTE $10
+02107  2001  22                 .BYTE $22       ;'"'
+02108  2002  44                 .BYTE $44       ;'D'
+02109  2003  33                 .BYTE $33       ;'3'
+02110  2004  D0                 .BYTE $D0
+02111  2005  08                 .BYTE $08
+02112  2006  40                 .BYTE $40       ;'@'
+02113  2007  09                 .BYTE $09
+02114  2008  62                 .BYTE $62
+02115  2009  13                 .BYTE $13
+02116  200A  78                 .BYTE $78
+02117  200B  A9                 .BYTE $A9
+02118  200C              ;********************************
+02119  200C              ; MASTER MODES
+02120  200C              ; SIX HI-ORDER BITS MODE OPTIONS
+02121  200C              ; TWO LO-ORDER BIT OPERAND LENGHT
+02122  200C              ;
+02123  200C              ;********************************
+02124  200C              ; SUPERMON
+02125  200C              ;********************************
+02126  200C              ;MASTER MODES
+02127  200C              ;SIX HI-ORDER BITS  MODE OPTIONS
+02128  200C              ;TWO LO-ORDER BITS  OPERAND LENGTHREADY.
+02129  200C              ;MODE2
+02130  200C              ;.BYTE $00,$21,$81,$82
+02131  200C              ;.BYTE $00,$00,$59,$4D
+02132  200C              ;.BYTE $91,$92,$86,$4A,$85,$9D
+02133  200C              ;CHAR1
+02134  200C              ;.BYTE $2C,$29,$2C,$23,$28,$24
+02135  200C              ;CHAR2
+02136  200C              ;.BYTE $59,$00,$58,$24,$24,$00
+02137  200C              ;********************************
+02138  200C  00          XXCDFD .BYTE $00
+02139  200D  21                 .BYTE $21       ;'!'
+02140  200E  81                 .BYTE $81
+02141  200F  82                 .BYTE $82
+02142  2010  00                 .BYTE $00
+02143  2011  00                 .BYTE $00
+02144  2012  59                 .BYTE $59       ;'Y'
+02145  2013  4D                 .BYTE $4D       ;'M'
+02146  2014  91                 .BYTE $91
+
+
+
+
+
+
+MONITOR$080F......PAGE 0041
+
+LINE# LOC   CODE        LINE
+
+
+02147  2015  92                 .BYTE $92
+02148  2016  86                 .BYTE $86
+02149  2017  4A                 .BYTE $4A       ;'J'
+02150  2018  85                 .BYTE $85
+02151  2019  9D          XXCE0A .BYTE $9D
+02152  201A  2C          XXCE0B .BYTE $2C       ;','
+02153  201B  29          XXCE0C .BYTE $29       ;')'
+02154  201C  2C          XXCE0D .BYTE $2C       ;','
+02155  201D  23          XXCE0E .BYTE $23       ;'#'
+02156  201E  28          XXCE0F .BYTE $28       ;'('
+02157  201F  24          XXCE10 .BYTE $24       ;'$'
+02158  2020  59                 .BYTE $59       ;'Y'
+02159  2021  00                 .BYTE $00
+02160  2022  58                 .BYTE $58       ;'X'
+02161  2023  24                 .BYTE $24       ;'$'
+02162  2024  24                 .BYTE $24       ;'$'
+02163  2025  00                 .BYTE $00
+02164  2026              ;********************************
+02165  2026              ; PACKED MNEMONICS
+02166  2026              ;********************************
+02167  2026              ; SUPERMON
+02168  2026              ;********************************
+02169  2026              ;MNEML
+02170  2026              ;.BYTE $1C,$8A,$1C,$23
+02171  2026              ;.BYTE $5D,$8B,$1B,$A1
+02172  2026              ;.BYTE $9D,$8A,$1D,$23
+02173  2026              ;.BYTE $9D,$8B,$1D,$A1
+02174  2026              ;.BYTE $00,$29,$19,$AE
+02175  2026              ;.BYTE $69,$A8,$19,$23
+02176  2026              ;.BYTE $24,$53,$1B,$23
+02177  2026              ;.BYTE $24,$53,$19,$A1
+02178  2026              ;.BYTE $00,$1A,$5B,$5B
+02179  2026              ;.BYTE $A5,$69,$24,$24
+02180  2026              ;.BYTE $AE,$AE,$A8,$AD
+02181  2026              ;.BYTE $29,$00,$7C,$00
+02182  2026              ;.BYTE $15,$9C,$6D,$9C
+02183  2026              ;.BYTE $A5,$69,$29,$53
+02184  2026              ;.BYTE $84,$13,$34,$11
+02185  2026              ;.BYTE $A5,$69,$23,$A0
+02186  2026              ;********************************
+02187  2026  1C          XXCE17 .BYTE $1C
+02188  2027  8A                 .BYTE $8A
+02189  2028  1C                 .BYTE $1C
+02190  2029  23                 .BYTE $23       ;'#'
+02191  202A  5D                 .BYTE $5D       ;']'
+02192  202B  8B                 .BYTE $8B
+02193  202C  1B                 .BYTE $1B
+02194  202D  A1                 .BYTE $A1
+02195  202E  9D                 .BYTE $9D
+02196  202F  8A                 .BYTE $8A
+02197  2030  1D                 .BYTE $1D
+02198  2031  23                 .BYTE $23       ;'#'
+02199  2032  9D                 .BYTE $9D
+02200  2033  8B                 .BYTE $8B
+02201  2034  1D                 .BYTE $1D
+
+
+
+
+
+
+MONITOR$080F......PAGE 0042
+
+LINE# LOC   CODE        LINE
+
+
+02202  2035  A1                 .BYTE $A1
+02203  2036  00                 .BYTE $00
+02204  2037  29                 .BYTE $29       ;')'
+02205  2038  19                 .BYTE $19
+02206  2039  AE                 .BYTE $AE
+02207  203A  69                 .BYTE $69
+02208  203B  A8                 .BYTE $A8
+02209  203C  19                 .BYTE $19
+02210  203D  23                 .BYTE $23       ;'#'
+02211  203E  24                 .BYTE $24       ;'$'
+02212  203F  53                 .BYTE $53       ;'S'
+02213  2040  1B                 .BYTE $1B
+02214  2041  23                 .BYTE $23       ;'#'
+02215  2042  24                 .BYTE $24       ;'$'
+02216  2043  53                 .BYTE $53       ;'S'
+02217  2044  19                 .BYTE $19
+02218  2045  A1                 .BYTE $A1
+02219  2046  00                 .BYTE $00
+02220  2047  1A                 .BYTE $1A
+02221  2048  5B                 .BYTE $5B       ;'['
+02222  2049  5B                 .BYTE $5B       ;'['
+02223  204A  A5                 .BYTE $A5
+02224  204B  69                 .BYTE $69
+02225  204C  24                 .BYTE $24       ;'$'
+02226  204D  24                 .BYTE $24       ;'$'
+02227  204E  AE                 .BYTE $AE
+02228  204F  AE                 .BYTE $AE
+02229  2050  A8                 .BYTE $A8
+02230  2051  AD                 .BYTE $AD
+02231  2052  29                 .BYTE $29       ;')'
+02232  2053  00                 .BYTE $00
+02233  2054  7C                 .BYTE $7C
+02234  2055  00                 .BYTE $00
+02235  2056  15                 .BYTE $15
+02236  2057  9C                 .BYTE $9C
+02237  2058  6D                 .BYTE $6D
+02238  2059  9C                 .BYTE $9C
+02239  205A  A5                 .BYTE $A5
+02240  205B  69                 .BYTE $69
+02241  205C  29                 .BYTE $29       ;')'
+02242  205D  53                 .BYTE $53       ;'S'
+02243  205E  84                 .BYTE $84
+02244  205F  13                 .BYTE $13
+02245  2060  34                 .BYTE $34       ;'4'
+02246  2061  11                 .BYTE $11
+02247  2062  A5                 .BYTE $A5
+02248  2063  69                 .BYTE $69
+02249  2064  23                 .BYTE $23       ;'#'
+02250  2065  A0                 .BYTE $A0
+02251  2066              ;********************************
+02252  2066              ; PACKED MNEMONICS
+02253  2066              ;********************************
+02254  2066              ; SUPERMON
+02255  2066              ;********************************
+02256  2066              ;MNEMR
+
+
+
+
+
+
+MONITOR$080F......PAGE 0043
+
+LINE# LOC   CODE        LINE
+
+
+02257  2066              ;.BYTE $D8,$62,$5A,$48
+02258  2066              ;.BYTE $26,$62,$94,$88
+02259  2066              ;.BYTE $54,$44,$C8,$54
+02260  2066              ;.BYTE $68,$44,$E8,$94
+02261  2066              ;.BYTE $00,$B4,$08,$84
+02262  2066              ;.BYTE $74,$B4,$28,$6E
+02263  2066              ;.BYTE $74,$F4,$CC,$4A
+02264  2066              ;.BYTE $72,$F2,$A4,$8A
+02265  2066              ;.BYTE $00,$AA,$A2,$A2
+02266  2066              ;.BYTE $74,$74,$74,$72
+02267  2066              ;.BYTE $44,$68,$B2,$32
+02268  2066              ;.BYTE $B2,$00,$22,$00
+02269  2066              ;.BYTE $1A,$1A,$26,$26
+02270  2066              ;.BYTE $72,$72,$88,$C8
+02271  2066              ;.BYTE $C4,$CA,$26,$48
+02272  2066              ;.BYTE $44,$44,$A2,$C8
+02273  2066              ;********************************
+02274  2066  D8          XXCE57 .BYTE $D8
+02275  2067  62                 .BYTE $62
+02276  2068  5A                 .BYTE $5A       ;'Z'
+02277  2069  48                 .BYTE $48       ;'H'
+02278  206A  26                 .BYTE $26       ;'&'
+02279  206B  62                 .BYTE $62
+02280  206C  94                 .BYTE $94
+02281  206D  88                 .BYTE $88
+02282  206E  54                 .BYTE $54       ;'T'
+02283  206F  44                 .BYTE $44       ;'D'
+02284  2070  C8                 .BYTE $C8
+02285  2071  54                 .BYTE $54       ;'T'
+02286  2072  68                 .BYTE $68
+02287  2073  44                 .BYTE $44       ;'D'
+02288  2074  E8                 .BYTE $E8
+02289  2075  94                 .BYTE $94
+02290  2076  00                 .BYTE $00
+02291  2077  B4                 .BYTE $B4
+02292  2078  08                 .BYTE $08
+02293  2079  84                 .BYTE $84
+02294  207A  74                 .BYTE $74
+02295  207B  B4                 .BYTE $B4
+02296  207C  28                 .BYTE $28       ;'('
+02297  207D  6E                 .BYTE $6E
+02298  207E  74                 .BYTE $74
+02299  207F  F4                 .BYTE $F4
+02300  2080  CC                 .BYTE $CC
+02301  2081  4A                 .BYTE $4A       ;'J'
+02302  2082  72                 .BYTE $72
+02303  2083  F2                 .BYTE $F2
+02304  2084  A4                 .BYTE $A4
+02305  2085  8A                 .BYTE $8A
+02306  2086  00                 .BYTE $00
+02307  2087  AA                 .BYTE $AA
+02308  2088  A2                 .BYTE $A2
+02309  2089  A2                 .BYTE $A2
+02310  208A  74                 .BYTE $74
+02311  208B  74                 .BYTE $74
+
+
+
+
+
+
+MONITOR$080F......PAGE 0044
+
+LINE# LOC   CODE        LINE
+
+
+02312  208C  74                 .BYTE $74
+02313  208D  72                 .BYTE $72
+02314  208E  44                 .BYTE $44       ;'D'
+02315  208F  68                 .BYTE $68
+02316  2090  B2                 .BYTE $B2
+02317  2091  32                 .BYTE $32       ;'2'
+02318  2092  B2                 .BYTE $B2
+02319  2093  00                 .BYTE $00
+02320  2094  22                 .BYTE $22       ;'"'
+02321  2095  00                 .BYTE $00
+02322  2096  1A                 .BYTE $1A
+02323  2097  1A                 .BYTE $1A
+02324  2098  26                 .BYTE $26       ;'&'
+02325  2099  26                 .BYTE $26       ;'&'
+02326  209A  72                 .BYTE $72
+02327  209B  72                 .BYTE $72
+02328  209C  88                 .BYTE $88
+02329  209D  C8                 .BYTE $C8
+02330  209E  C4                 .BYTE $C4
+02331  209F  CA                 .BYTE $CA
+02332  20A0  26                 .BYTE $26       ;'&'
+02333  20A1  48                 .BYTE $48       ;'H'
+02334  20A2  44                 .BYTE $44       ;'D'
+02335  20A3  44                 .BYTE $44       ;'D'
+02336  20A4  A2                 .BYTE $A2
+02337  20A5  C8                 .BYTE $C8
+02338  20A6              ;*****************************
+02339  20A6              ; REGISTER HEADING
+02340  20A6              ;*****************************
+02341  20A6  0D          XXCE97 .BYTE $0D
+02342  20A7  20 20              .BYTE '   PC  SR AC XR YR SP'
+02343  20BC              ;*****************************
+02344  20BC              ; COMMANDS
+02345  20BC              ;
+02346  20BC              ;MONITOR COMMAND SUMMARY
+02347  20BC              ;
+02348  20BC              ;ASSEMBLE     A  A....... . .... .. ....... ....
+02349  20BC              ;             B
+02350  20BC              ;COMPARE      C  C...... ... ........ .. ...... .
+.. ...... ...........
+02351  20BC              ;DISASSEMBLE  D  D.......... . .... .. 6502 ....
+02352  20BC              ;FILL         F  F... ...... .... ... ......... .
+...
+02353  20BC              ;GO           G  S.... ......... .. ... .........
+ .......
+02354  20BC              ;HUNT         H  H... ....... ...... ... ... ....
+....... .. ....... .....
+02355  20BC              ;INTERROGATE  I  S... ASCII ...... .. ...... ....
+.....
+02356  20BC              ;LOAD         L  L... . .... .... .... .. ....
+02357  20BC              ;MEMORY       M  D...... ... ........... ...... .
+. ...... .........
+02358  20BC              ;NEW LOCATOR  N  A..... ....... ........ ....... 
+..... ...... ..
+02359  20BC              ;             Q
+02360  20BC              ;REGISTERS    R  D...... ... CPU .........
+02361  20BC              ;SAVE         S  S... .. .... .. ....
+02362  20BC              ;TRANSFER     T  T....... .... .... ... ....... .
+. ...... .. .......
+02363  20BC              ;             W
+02364  20BC              ;EXIT         X  E... 64MON (BASIC .... .... .. .
+. .....)
+02365  20BC              ;             , SAME AS A
+02366  20BC              ;             :
+
+
+
+
+
+
+MONITOR$080F......PAGE 0045
+
+LINE# LOC   CODE        LINE
+
+
+02367  20BC              ;             ;
+02368  20BC              ;             E
+02369  20BC              ;             UNDEFINED JMP TO START ADDRESS
+02370  20BC              ;
+02371  20BC              ;*****************************
+02372  20BC  41 42       XXCEAD .BYTE 'ABCDFGHILMNQRSTWX,:'
+02373  20CF  3B 45              .BYTE ';E'
+02374  20D1              ;*****************************
+02375  20D1              ; COMMAND VECTOR TABLE
+02376  20D1              ;*****************************
+02377  20D1              ;A
+02378  20D1  5B          XXCEC2 .BYTE <ZZC44C   ;'$4C ;L'
+02379  20D2  16          XXCEC3 .BYTE >ZZC44C   ;$C4
+02380  20D3              ;B
+02381  20D3  79                 .BYTE <ZZC76A   ;$6A
+02382  20D4  19                 .BYTE >ZZC76A   ;$C7
+02383  20D5              ;C
+02384  20D5  30                 .BYTE <ZZC121   ;$21 ;'!'
+02385  20D6  13                 .BYTE >ZZC121   ;$C1
+02386  20D7              ;D
+02387  20D7  50                 .BYTE <ZZC241   ;$41 ;'A'
+02388  20D8  14                 .BYTE >ZZC241   ;$C2
+02389  20D9              ;F
+02390  20D9  AA                 .BYTE <ZZC19B   ;$9B
+02391  20DA  13                 .BYTE >ZZC19B   ;$C1
+02392  20DB              ;G
+02393  20DB  B1                 .BYTE <ZZC6A2   ;$A2
+02394  20DC  18                 .BYTE >ZZC6A2 $C6
+02395  20DD              ;H
+02396  20DD  D3                 .BYTE <ZZC1C4   ;$C4
+02397  20DE  13                 .BYTE >ZZC1C4   ;$C1
+02398  20DF              ;I
+02399  20DF  A5                 .BYTE <ZZC396   ;$96
+02400  20E0  15                 .BYTE >ZZC396   ;$C3
+02401  20E1              ;L
+02402  20E1  0D                 .BYTE <ZZC9FE   ;$FE
+02403  20E2  1C                 .BYTE >ZZC9FE   ;$C9
+02404  20E3              ;M
+02405  20E3  A8                 .BYTE <ZZC399   ;$99
+02406  20E4  15                 .BYTE >ZZC399 $C3
+02407  20E5              ;N
+02408  20E5  9C                 .BYTE <ZZC78D   ;$8D
+02409  20E6  19                 .BYTE >ZZC78D   ;$C7
+02410  20E7              ;Q
+02411  20E7  B5                 .BYTE <ZZC6A6   ;$A6
+02412  20E8  18                 .BYTE >ZZC6A6   ;$C6
+02413  20E9              ;R
+02414  20E9  90                 .BYTE <ZZC981   ;$81
+02415  20EA  1B                 .BYTE >ZZC981   ;$C9
+02416  20EB              ;S
+02417  20EB  0D                 .BYTE <ZZC9FE   ;$FE
+02418  20EC  1C                 .BYTE >ZZC9FE   ;$C9
+02419  20ED              ;T
+02420  20ED  34                 .BYTE <ZZC125   ;$25 ;'%'
+02421  20EE  13                 .BYTE >ZZC125   ;$C1
+
+
+
+
+
+
+MONITOR$080F......PAGE 0046
+
+LINE# LOC   CODE        LINE
+
+
+02422  20EF              ;W
+02423  20EF  B9                 .BYTE <ZZC6AA   ;$AA
+02424  20F0  18                 .BYTE >ZZC6AA   ;$C6
+02425  20F1              ;X
+02426  20F1  FD                 .BYTE <ZZC9EE   ;$EE
+02427  20F2  1B                 .BYTE >ZZC9EE   ;$C9
+02428  20F3              ;,
+02429  20F3  5B                 .BYTE <ZZC44C   ;$4C ;'L'
+02430  20F4  16                 .BYTE >ZZC44C   ;$C4
+02431  20F5              ;:
+02432  20F5  2F                 .BYTE <ZZC420   ;$20 ;' '
+02433  20F6  16                 .BYTE >ZZC420   ;$C4
+02434  20F7              ;;
+02435  20F7  E6                 .BYTE <ZZC9D7   ;$D7
+02436  20F8  1B                 .BYTE >ZZC9D7   ;$C9
+02437  20F9              ;E
+02438  20F9  CE                 .BYTE <ZZCCBF   ;$BF
+02439  20FA  1E                 .BYTE >ZZCCBF   ;$CC
+02440  20FB              ;?
+02441  20FB  0F                 .BYTE <ENTRY    ;$00
+02442  20FC  12                 .BYTE >ENTRY    ;$C0
+02443  20FD              ;*****************************
+02444  20FD              ;
+02445  20FD              ;*****************************
+02446  20FD              ;XXCEEE .BYTE $74
+02447  20FD              ;XXCEEF .BYTE $C3
+02448  20FD  83          XXCEEE .BYTE <XXC374
+02449  20FE  15          XXCEEF .BYTE >XXC374
+02450  20FF              ;XXCEEE .WORD XXC374
+02451  20FF              ;*****************************
+02452  20FF              ;
+02453  20FF              ;*****************************
+02454  20FF              ;XXCEF0 .BYTE $C8
+02455  20FF              ;XXCEF1 .BYTE $C5
+02456  20FF  D7          XXCEF0 .BYTE <XXC5C8
+02457  2100  17          XXCEF1 .BYTE >XXC5C8
+02458  2101              ;XXCEF0 .WORD XXC5C8
+02459  2101              ;*****************************
+02460  2101              ; NMI VECTOR
+02461  2101              ;*****************************
+02462  2101              ;XXCEF2 .BYTE $3F ;'?'
+02463  2101              ;XXCEF3 .BYTE $C0
+02464  2101  4E          XXCEF2 .BYTE <XXC03F
+02465  2102  12          XXCEF3 .BYTE >XXC03F
+02466  2103              ;XXCEF2 .WORD XXC03F
+02467  2103              ;*****************************
+02468  2103              ;
+02469  2103              ;*****************************
+02470  2103              ;XXCEF4 .BYTE $A7
+02471  2103              ;XXCEF5 .BYTE $CA
+02472  2103  B6          XXCEF4 .BYTE <XXCAA7
+02473  2104  1C          XXCEF5 .BYTE >XXCAA7
+02474  2105              ;XXCEF4 .WORD XXCAA7
+02475  2105              ;*****************************
+02476  2105              ;
+
+
+
+
+
+
+MONITOR$080F......PAGE 0047
+
+LINE# LOC   CODE        LINE
+
+
+02477  2105              ;*****************************
+02478  2105              ;XXCEF6 .BYTE $AA
+02479  2105              ;XXCEF7 .BYTE $C5
+02480  2105  B9          XXCEF6 .BYTE <XXC5AB-1
+02481  2106  17          XXCEF7 .BYTE >XXC5AB
+02482  2107              ;XXCEF6 .WORD XXC5AB-1
+02483  2107              ;*****************************
+02484  2107              ; PATCH AREA
+02485  2107              ;*****************************
+02486  2107              PXC00C =*
+02487  2107              ;*********************************
+02488  2107              ; STRING OUTPUT ROUTINE
+02489  2107              ;*********************************
+02490  2107  A0 00              LDY #$00
+02491  2109  B9 17 21    SOUT   LDA XTITLE,Y
+02492  210C  F0 06              BEQ XOUT
+02493  210E  20 18 12           JSR MCHROT
+02494  2111  C8                 INY 
+02495  2112  D0 F5              BNE SOUT
+02496  2114  4C 1B 12    XOUT   JMP XXC00C
+02497  2117              ;*********************************
+02498  2117              ;
+02499  2117              ;*********************************
+02500  2117  0D          XTITLE .BYTE $0D
+02501  2118  4D 4F              .BYTE 'MONITOR.C64 V072882',$0D
+02501  212B  0D 
+02502  212C  0D                 .BYTE $0D
+02503  212D  28 43              .BYTE '(C) 1982 BY COMMODORE BUSINESS '
+02504  214C  4D 41              .BYTE 'MACHINES'
+02505  2154  0D                 .BYTE $0D
+02506  2155  00                 .BYTE $00
+02507  2156              ;*****************************
+02508  2156              ; PATCH AREA
+02509  2156              ;*****************************
+02510  2156              ;       .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02511  2156              ;       .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02512  2156              ;       .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02513  2156              ;       .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02514  2156              ;       .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02515  2156              ;       .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02516  2156              ;       .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02517  2156              ;       .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02518  2156              ;       .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02519  2156              ;       .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02520  2156  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02520  2157  AA 
+02520  2158  AA 
+02520  2159  AA 
+02520  215A  AA 
+02520  215B  AA 
+02520  215C  AA 
+02520  215D  AA 
+02521  215E  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02521  215F  AA 
+02521  2160  AA 
+
+
+
+
+
+
+MONITOR$080F......PAGE 0048
+
+LINE# LOC   CODE        LINE
+
+
+02521  2161  AA 
+02521  2162  AA 
+02521  2163  AA 
+02521  2164  AA 
+02521  2165  AA 
+02522  2166  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02522  2167  AA 
+02522  2168  AA 
+02522  2169  AA 
+02522  216A  AA 
+02522  216B  AA 
+02522  216C  AA 
+02522  216D  AA 
+02523  216E  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02523  216F  AA 
+02523  2170  AA 
+02523  2171  AA 
+02523  2172  AA 
+02523  2173  AA 
+02523  2174  AA 
+02523  2175  AA 
+02524  2176  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02524  2177  AA 
+02524  2178  AA 
+02524  2179  AA 
+02524  217A  AA 
+02524  217B  AA 
+02524  217C  AA 
+02524  217D  AA 
+02525  217E  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02525  217F  AA 
+02525  2180  AA 
+02525  2181  AA 
+02525  2182  AA 
+02525  2183  AA 
+02525  2184  AA 
+02525  2185  AA 
+02526  2186  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02526  2187  AA 
+02526  2188  AA 
+02526  2189  AA 
+02526  218A  AA 
+02526  218B  AA 
+02526  218C  AA 
+02526  218D  AA 
+02527  218E  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02527  218F  AA 
+02527  2190  AA 
+02527  2191  AA 
+02527  2192  AA 
+02527  2193  AA 
+02527  2194  AA 
+02527  2195  AA 
+02528  2196  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02528  2197  AA 
+
+
+
+
+
+
+MONITOR$080F......PAGE 0049
+
+LINE# LOC   CODE        LINE
+
+
+02528  2198  AA 
+02528  2199  AA 
+02528  219A  AA 
+02528  219B  AA 
+02528  219C  AA 
+02528  219D  AA 
+02529  219E  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02529  219F  AA 
+02529  21A0  AA 
+02529  21A1  AA 
+02529  21A2  AA 
+02529  21A3  AA 
+02529  21A4  AA 
+02529  21A5  AA 
+02530  21A6  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02530  21A7  AA 
+02530  21A8  AA 
+02530  21A9  AA 
+02530  21AA  AA 
+02530  21AB  AA 
+02530  21AC  AA 
+02530  21AD  AA 
+02531  21AE  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02531  21AF  AA 
+02531  21B0  AA 
+02531  21B1  AA 
+02531  21B2  AA 
+02531  21B3  AA 
+02531  21B4  AA 
+02531  21B5  AA 
+02532  21B6  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02532  21B7  AA 
+02532  21B8  AA 
+02532  21B9  AA 
+02532  21BA  AA 
+02532  21BB  AA 
+02532  21BC  AA 
+02532  21BD  AA 
+02533  21BE  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02533  21BF  AA 
+02533  21C0  AA 
+02533  21C1  AA 
+02533  21C2  AA 
+02533  21C3  AA 
+02533  21C4  AA 
+02533  21C5  AA 
+02534  21C6  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02534  21C7  AA 
+02534  21C8  AA 
+02534  21C9  AA 
+02534  21CA  AA 
+02534  21CB  AA 
+02534  21CC  AA 
+02534  21CD  AA 
+02535  21CE  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+
+
+
+
+
+
+MONITOR$080F......PAGE 0050
+
+LINE# LOC   CODE        LINE
+
+
+02535  21CF  AA 
+02535  21D0  AA 
+02535  21D1  AA 
+02535  21D2  AA 
+02535  21D3  AA 
+02535  21D4  AA 
+02535  21D5  AA 
+02536  21D6  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02536  21D7  AA 
+02536  21D8  AA 
+02536  21D9  AA 
+02536  21DA  AA 
+02536  21DB  AA 
+02536  21DC  AA 
+02536  21DD  AA 
+02537  21DE  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02537  21DF  AA 
+02537  21E0  AA 
+02537  21E1  AA 
+02537  21E2  AA 
+02537  21E3  AA 
+02537  21E4  AA 
+02537  21E5  AA 
+02538  21E6  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02538  21E7  AA 
+02538  21E8  AA 
+02538  21E9  AA 
+02538  21EA  AA 
+02538  21EB  AA 
+02538  21EC  AA 
+02538  21ED  AA 
+02539  21EE  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02539  21EF  AA 
+02539  21F0  AA 
+02539  21F1  AA 
+02539  21F2  AA 
+02539  21F3  AA 
+02539  21F4  AA 
+02539  21F5  AA 
+02540  21F6  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02540  21F7  AA 
+02540  21F8  AA 
+02540  21F9  AA 
+02540  21FA  AA 
+02540  21FB  AA 
+02540  21FC  AA 
+02540  21FD  AA 
+02541  21FE  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02541  21FF  AA 
+02541  2200  AA 
+02541  2201  AA 
+02541  2202  AA 
+02541  2203  AA 
+02541  2204  AA 
+02541  2205  AA 
+
+
+
+
+
+
+MONITOR$080F......PAGE 0051
+
+LINE# LOC   CODE        LINE
+
+
+02542  2206  AA                 .BYTE $AA,$AA,$AA,$AA,$AA,$AA,$AA,$AA
+02542  2207  AA 
+02542  2208  AA 
+02542  2209  AA 
+02542  220A  AA 
+02542  220B  AA 
+02542  220C  AA 
+02542  220D  AA 
+02543  220E              ;********************************
+02544  220E              ;
+02545  220E              ;********************************
+02546  220E  AA          ZZCFFF .BYTE $AA
+02547  220F              ;********************************
+02548  220F              .END
+
+
+ERRORS = 00000
+
+
+SYMBOL TABLE
+
+SYMBOL VALUE
+ ADRAY1   0003    ADRAY2   0005    BASIC    120D    BLNON    00CF
+ BSTUB    0001    CAS1     00C0    CBINV    0316    CHANNL   0013
+ CHARAC   0007    CHRIN    FFCF    CHROUT   FFD2    CINV     0314
+ CLRCHN   FFCC    CMPO     00B0    D6510    0000    DIMFLG   000C
+ ENDCHR   0008    ENTRY    120F    FRETOP   0033    GARBFL   000F
+ GDBLN    00CE    GETIN    FFE4    INDEX    0022    INPFLG   0011
+ INTFLG   000E    KEYD     0277    LINNUM   0014    LOAD     FFD5
+ MCHRIN   1215    MCHROT   1218    MEMSIZ   0283    MEMUSS   00C3
+ NDX      00C6    NMINV    0318    PNT      00D1    PNTR     00D3
+ PRTXA    1A73    PXC00C   2107    RESHO    0026    ROBUF    00F9
+ SAL      00AC    SAVE     FFD8    SETMSG   FF90    SOUT     2109
+ STACK    0100    STAL     00C1    STREND   0031    SUBFLG   0010
+ SVEC18   1F38    TANSGN   0012    TBLX     00D6    TEMPST   0019
+ TXTTAB   002B    UNUSED   0002    VALTYP   000D    VARTAB   002D
+ VICSCN   0400    XOUT     2114    XTITLE   2117    XXC003   1212
+ XXC00C   121B    XXC03F   124E    XXC084   1293    XXC087   1296
+ XXC08A   1299    XXC08F   129E    XXC097   12A6    XXC09C   12AB
+ XXC0AC   12BB    XXC0B9   12C8    XXC0D0   12DF    XXC0D5   12E4
+ XXC0D9   12E8    XXC0DB   12EA    XXC0E5   12F4    XXC0E7   12F6
+ XXC0EA   12F9    XXC0F3   1302    XXC0FA   1309    XXC0FC   130B
+ XXC10A   1319    XXC111   1320    XXC115   1324    XXC127   1336
+ XXC137   1346    XXC13F   134E    XXC148   1357    XXC151   1360
+ XXC163   1372    XXC177   1386    XXC188   1397    XXC18C   139B
+ XXC197   13A6    XXC198   13A7    XXC1AB   13BA    XXC1BE   13CD
+ XXC1C1   13D0    XXC1D9   13E8    XXC1E9   13F8    XXC1F0   13FF
+ XXC203   1412    XXC208   1417    XXC212   1421    XXC22C   143B
+ XXC232   1441    XXC23E   144D    XXC244   1453    XXC256   1465
+ XXC25B   146A    XXC25E   146D    XXC273   1482    XXC27B   148A
+ XXC28A   1499    XXC29C   14AB    XXC2A0   14AF    XXC2A8   14B7
+ XXC2AD   14BC    XXC2B5   14C4    XXC2B7   14C6    XXC2BF   14CE
+ XXC2C0   14CF    XXC2C6   14D5    XXC2CB   14DA    XXC2CC   14DB
+ XXC2E2   14F1    XXC2EA   14F9    XXC2F5   1504    XXC304   1513
+
+
+
+
+
+
+
+
+SYMBOL TABLE
+
+SYMBOL VALUE
+ XXC30F   151E    XXC313   1522    XXC317   1526    XXC32C   153B
+ XXC330   153F    XXC337   1546    XXC33B   154A    XXC343   1552
+ XXC352   1561    XXC35D   156C    XXC361   1570    XXC374   1583
+ XXC385   1594    XXC388   1597    XXC391   15A0    XXC3A0   15AF
+ XXC3B3   15C2    XXC3B6   15C5    XXC3BB   15CA    XXC3BE   15CD
+ XXC3C1   15D0    XXC3D7   15E6    XXC3E2   15F1    XXC3F3   1602
+ XXC409   1618    XXC40E   161D    XXC411   1620    XXC438   1647
+ XXC449   1658    XXC453   1662    XXC457   1666    XXC465   1674
+ XXC46F   167E    XXC479   1688    XXC47B   168A    XXC49D   16AC
+ XXC4A2   16B1    XXC4A8   16B7    XXC4C4   16D3    XXC4CC   16DB
+ XXC4DA   16E9    XXC4EC   16FB    XXC4F1   1700    XXC4F7   1706
+ XXC500   170F    XXC51B   172A    XXC522   1731    XXC529   1738
+ XXC52C   173B    XXC532   1741    XXC547   1756    XXC56C   177B
+ XXC56F   177E    XXC579   1788    XXC580   178F    XXC583   1792
+ XXC589   1798    XXC590   179F    XXC592   17A1    XXC597   17A6
+ XXC599   17A8    XXC59C   17AB    XXC5AB   17BA    XXC5C8   17D7
+ XXC5D6   17E5    XXC607   1816    XXC632   1841    XXC634   1843
+ XXC650   185F    XXC659   1868    XXC667   1876    XXC67C   188B
+ XXC688   1897    XXC692   18A1    XXC694   18A3    XXC696   18A5
+ XXC6AC   18BB    XXC6C6   18D5    XXC6D6   18E5    XXC6D9   18E8
+ XXC702   1911    XXC714   1923    XXC718   1927    XXC72F   193E
+ XXC733   1942    XXC765   1974    XXC767   1976    XXC7B2   19C1
+ XXC7B5   19C4    XXC7D1   19E0    XXC7D4   19E3    XXC7DC   19EB
+ XXC7DE   19ED    XXC815   1A24    XXC81D   1A2C    XXC82E   1A3D
+ XXC831   1A40    XXC836   1A45    XXC83B   1A4A    XXC840   1A4F
+ XXC843   1A52    XXC84E   1A5D    XXC855   1A64    XXC86D   1A7C
+ XXC874   1A83    XXC877   1A86    XXC879   1A88    XXC887   1A96
+ XXC88B   1A9A    XXC897   1AA6    XXC89A   1AA9    XXC89F   1AAE
+ XXC8A6   1AB5    XXC8A9   1AB8    XXC8B0   1ABF    XXC8BD   1ACC
+ XXC8C9   1AD8    XXC8D0   1ADF    XXC8DA   1AE9    XXC8DB   1AEA
+ XXC8E5   1AF4    XXC8F2   1B01    XXC8F3   1B02    XXC8FC   1B0B
+ XXC90C   1B1B    XXC90D   1B1C    XXC925   1B34    XXC92A   1B39
+ XXC92E   1B3D    XXC93F   1B4E    XXC950   1B5F    XXC956   1B65
+ XXC963   1B72    XXC96D   1B7C    XXC96E   1B7D    XXC974   1B83
+ XXC979   1B88    XXC97C   1B8B    XXC9A8   1BB7    XXC9AA   1BB9
+ XXC9D1   1BE0    XXC9E2   1BF1    XXC9FB   1C0A    XXCA13   1C22
+ XXCA20   1C2F    XXCA22   1C31    XXCA34   1C43    XXCA38   1C47
+ XXCA3C   1C4B    XXCA4A   1C59    XXCA4F   1C5E    XXCA58   1C67
+ XXCA5F   1C6E    XXCA70   1C7F    XXCA7A   1C89    XXCA83   1C92
+ XXCA8C   1C9B    XXCAA7   1CB6    XXCAAF   1CBE    XXCAB5   1CC4
+ XXCABF   1CCE    XXCAD1   1CE0    XXCAF3   1D02    XXCB0F   1D1E
+ XXCB15   1D24    XXCB20   1D2F    XXCB35   1D44    XXCB44   1D53
+ XXCB55   1D64    XXCB5C   1D6B    XXCB63   1D72    XXCB6F   1D7E
+ XXCB91   1DA0    XXCB98   1DA7    XXCB9B   1DAA    XXCBB3   1DC2
+ XXCBB9   1DC8    XXCBC7   1DD6    XXCBCA   1DD9    XXCBD8   1DE7
+ XXCBE7   1DF6    XXCBF4   1E03    XXCC05   1E14    XXCC1B   1E2A
+ XXCC23   1E32    XXCC41   1E50    XXCC64   1E73    XXCC6A   1E79
+ XXCC6F   1E7E    XXCC75   1E84    XXCC9C   1EAB    XXCC9E   1EAD
+ XXCCB3   1EC2    XXCCBE   1ECD    XXCCD6   1EE5    XXCCE9   1EF8
+ XXCCF6   1F05    XXCCF9   1F08    XXCD04   1F13    XXCD13   1F22
+ XXCD19   1F28    XXCD39   1F48    XXCD3A   1F49    XXCD45   1F54
+ XXCD49   1F58    XXCD4B   1F5A    XXCD53   1F62    XXCD57   1F66
+ XXCD59   1F68    XXCD63   1F72    XXCD75   1F84    XXCD7C   1F8B
+ XXCDA3   1FB2    XXCDAB   1FBA    XXCDB9   1FC8    XXCDFD   200C
+ XXCE0A   2019    XXCE0B   201A    XXCE0C   201B    XXCE0D   201C
+
+
+
+
+
+
+
+
+SYMBOL TABLE
+
+SYMBOL VALUE
+ XXCE0E   201D    XXCE0F   201E    XXCE10   201F    XXCE17   2026
+ XXCE57   2066    XXCE97   20A6    XXCEAD   20BC    XXCEC2   20D1
+ XXCEC3   20D2    XXCEEE   20FD    XXCEEF   20FE    XXCEF0   20FF
+ XXCEF1   2100    XXCEF2   2101    XXCEF3   2102    XXCEF4   2103
+ XXCEF5   2104    XXCEF6   2105    XXCEF7   2106    ZZC121   1330
+ ZZC125   1334    ZZC19B   13AA    ZZC1C4   13D3    ZZC241   1450
+ ZZC396   15A5    ZZC399   15A8    ZZC420   162F    ZZC44C   165B
+ ZZC6A2   18B1    ZZC6A6   18B5    ZZC6AA   18B9    ZZC76A   1979
+ ZZC78D   199C    ZZC981   1B90    ZZC9D7   1BE6    ZZC9EE   1BFD
+ ZZC9FE   1C0D    ZZCCBF   1ECE    ZZCFFF   220E   
+
+END OF ASSEMBLY
+

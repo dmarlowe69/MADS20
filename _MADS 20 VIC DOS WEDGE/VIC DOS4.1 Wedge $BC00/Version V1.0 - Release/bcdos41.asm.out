@@ -1,0 +1,457 @@
+BCDOS41.ASM......PAGE 0001
+
+LINE# LOC   CODE        LINE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DOS 4.1 DISK WEDGE......PAGE 0002
+
+LINE# LOC   CODE        LINE
+
+
+00003  0000              ;*********************************
+00004  0000              ;* = $0401   ; 3K EXPANSION
+00005  0000              ;* = $1001   ; NO EXPANSION
+00006  0000              ;* = $1201    ; 32K EXPANSION
+00007  0000              *      = $BC00         ; SYS 48128
+00008  BC00              ;*********************************
+00009  BC00              ;
+00010  BC00              ;       DOS 4.1 DISK WEDGE
+00011  BC00              ;
+00012  BC00              ;      VERSION V4.1/071382
+00013  BC00              ;      BY BOB FAIRBAIRN
+00014  BC00              ;        COPYRIGHT 1982
+00015  BC00              ;  COMMODORE BUSINESS MACHINES
+00016  BC00              ;
+00017  BC00              ;  DOCUMENTED BY DENTON MARLOWE
+00018  BC00              ;
+00019  BC00              ;*********************************
+00020  BC00              ; INSTALL WEDGE INTO CHRGET LOOP
+00021  BC00              ;*********************************
+00022  BC00              .LIB   PATCH.ASM
+00023  BC00              ;*********************************
+00024  BC00              ;
+00025  BC00              ;*********************************
+00026  BC00              INDEX  = $0022
+00027  BC00              INDEX2 = $0024
+00028  BC00              VARTOP = $002B
+00029  BC00              FRETOP = $0033
+00030  BC00              MEMSIZ = $0037
+00031  BC00              ;********************************
+00032  BC00              ; CHARGET EQUATES
+00033  BC00              ;********************************
+00034  BC00              ZCHRGT = $0073
+00035  BC00              ;********************************
+00036  BC00              ; PATCH CHRGET WITH JMP TO WEDGE
+00037  BC00              ;********************************
+00038  BC00  A9 4C       XX0519 LDA #$4C        ;'L'
+00039  BC02  A0 0D              LDY #<WEDGE
+00040  BC04  A2 BC              LDX #>WEDGE
+00041  BC06              ;
+00042  BC06  85 73              STA ZCHRGT
+00043  BC08  84 74              STY ZCHRGT+1
+00044  BC0A  86 75              STX ZCHRGT+2
+00045  BC0C  60                 RTS 
+00046  BC0D              ;********************************
+00047  BC0D              ;
+00048  BC0D              ;********************************
+00049  BC0D              .END
+00050  BC0D              ;*********************************
+00051  BC0D              ; MAIN BODY OF CODE
+00052  BC0D              ;*********************************
+00053  BC0D              .FIL   DOS41.ASM
+00054  BC0D              ;*********************************
+00055  BC0D              ;
+00056  BC0D              ;       DOS 4.1E DISK WEDGE
+00057  BC0D              ;
+
+
+
+
+
+
+DOS 4.1 DISK WEDGE......PAGE 0003
+
+LINE# LOC   CODE        LINE
+
+
+00058  BC0D              ;      VERSION V4.1/071382
+00059  BC0D              ;      BY BOB FAIRBAIRN
+00060  BC0D              ;        COPYRIGHT 1982
+00061  BC0D              ;  COMMODORE BUSINESS MACHINES
+00062  BC0D              ;
+00063  BC0D              ;  DOCUMENTED BY DENTON MARLOWE
+00064  BC0D              ;
+00065  BC0D              ;********************************
+00066  BC0D              ; EXTERNAL ADDRESS EQUATES
+00067  BC0D              ;********************************
+00068  BC0D              PRTLIN=$DDCD
+00069  BC0D              CLOAD  =$E195
+00070  BC0D              WARMBS=$E467
+00071  BC0D              KCHROT=$E742
+00072  BC0D              ;********************************
+00073  BC0D              ; EXTERNAL ADDRESS EQUATES
+00074  BC0D              ;********************************
+00075  BC0D              SECOND = $FF93
+00076  BC0D              TKSA   = $FF96
+00077  BC0D              ACPTR  = $FFA5
+00078  BC0D              CIOUT  = $FFA8
+00079  BC0D              UNTLK  = $FFAB
+00080  BC0D              UNLSN  = $FFAE
+00081  BC0D              LISTEN = $FFB1
+00082  BC0D              TALK   = $FFB4
+00083  BC0D              SETLFS = $FFBA
+00084  BC0D              SETNAM = $FFBD
+00085  BC0D              OPEN   = $FFC0
+00086  BC0D              CLOSE  = $FFC3
+00087  BC0D              CLRCHN = $FFCC
+00088  BC0D              CHROUT = $FFD2
+00089  BC0D              LOAD   = $FFD5
+00090  BC0D              STOP   = $FFE1
+00091  BC0D              GETIN  = $FFE4
+00092  BC0D              ;********************************
+00093  BC0D              ; CHRGET EQUATES
+00094  BC0D              ;********************************
+00095  BC0D              RCHRGT = $79           ;JUMP BACK INTI CHRGET
+00096  BC0D              TXTPTR = $7A           ;CHRGET POINTER
+00097  BC0D              ;*********************************
+00098  BC0D              ; DISK I/O ADDRESS
+00099  BC0D              ;*********************************
+00100  BC0D              STATUS = $90           ;KERNAL I/O STATUS
+00101  BC0D              PRTY   = $9B           ;USED FOR TEMPORARY STORAG
+E
+00102  BC0D              ;*********************************
+00103  BC0D              ;
+00104  BC0D              ;*********************************
+00105  BC0D              STACK  = $0100         ;6502 PROCESSOR STACK
+00106  BC0D              ;*********************************
+00107  BC0D              ; BASIC ROM ADDRESSES
+00108  BC0D              ;*********************************
+00109  BC0D              CHRGEC = $C48D         ;CALL TO CHRGET FROM DIREC
+T MODE
+00110  BC0D              ;********************************
+00111  BC0D              ;
+00112  BC0D              ;********************************
+
+
+
+
+
+
+DOS 4.1 DISK WEDGE......PAGE 0004
+
+LINE# LOC   CODE        LINE
+
+
+00113  BC0D  E6 7A       WEDGE  INC TXTPTR
+00114  BC0F  D0 02              BNE XX0608
+00115  BC11  E6 7B              INC TXTPTR+1
+00116  BC13  86 9B       XX0608 STX PRTY
+00117  BC15  BA                 TSX 
+00118  BC16              ;********************************
+00119  BC16              ; CHECK WHERE WE WERE CALLED FROM
+00120  BC16              ; $C48D - 1 CALL TO CHRGET FROM
+00121  BC16              ; $C483 BASIC WARM START
+00122  BC16              ;********************************
+00123  BC16  BD 01 01           LDA STACK+1,X
+00124  BC19  C9 8C              CMP #<CHRGEC-1  ;#$8C $C48C
+00125  BC1B  D0 36              BNE XX0648
+00126  BC1D  BD 02 01           LDA STACK+2,X
+00127  BC20  C9 C4              CMP #>CHRGEC    ;#$C4
+00128  BC22  D0 2F              BNE XX0648
+00129  BC24              ;********************************
+00130  BC24              ; CHECK COMMAND
+00131  BC24              ;********************************
+00132  BC24  A5 7A              LDA TXTPTR
+00133  BC26  D0 28              BNE XX0645      ;IF HIBYTE POINTER NON ZER
+O EXIT
+00134  BC28              ;
+00135  BC28  A5 7B              LDA TXTPTR+1
+00136  BC2A  C9 02              CMP #$02        ;DIRECT MODE
+00137  BC2C  D0 22              BNE XX0645      ;NO EXIT
+00138  BC2E              ;
+00139  BC2E  A0 00              LDY #$00        ;SET INDEX=0
+00140  BC30  84 9B              STY PRTY        ;SAVE
+00141  BC32              ;********************************
+00142  BC32              ; CHECK COMMAND
+00143  BC32              ; @ OR > OR /
+00144  BC32              ;********************************
+00145  BC32  B1 7A              LDA (TXTPTR),Y
+00146  BC34  C9 3E              CMP #$3E        ;'>'
+00147  BC36  F0 0D              BEQ XX063A
+00148  BC38              ;
+00149  BC38  C9 40              CMP #$40        ;'@'
+00150  BC3A  F0 09              BEQ XX063A
+00151  BC3C              ;
+00152  BC3C  C8                 INY 
+00153  BC3D  85 9B              STA PRTY
+00154  BC3F              ;
+00155  BC3F  C9 2F              CMP #$2F        ;'/'
+00156  BC41  F0 55              BEQ XX068D
+00157  BC43              ;
+00158  BC43  D0 0B              BNE XX0645
+00159  BC45              ;********************************
+00160  BC45              ;
+00161  BC45              ;********************************
+00162  BC45  C8          XX063A INY 
+00163  BC46  B1 7A              LDA (TXTPTR),Y
+00164  BC48  F0 2C              BEQ XX066B
+00165  BC4A              ;********************************
+00166  BC4A              ; CHECK DIRECTORY COMMAND $
+00167  BC4A              ;********************************
+
+
+
+
+
+
+DOS 4.1 DISK WEDGE......PAGE 0005
+
+LINE# LOC   CODE        LINE
+
+
+00168  BC4A  C9 24              CMP #$24        ;'$'
+00169  BC4C  F0 4A              BEQ XX068D
+00170  BC4E              ;********************************
+00171  BC4E              ; CHECK STATUS COMMAND ONLY
+00172  BC4E              ;********************************
+00173  BC4E  D0 08              BNE XX064D
+00174  BC50              ;********************************
+00175  BC50              ; NO COMMAND - PASS BACK TO PROCESSING LOOP
+00176  BC50              ;********************************
+00177  BC50  4C 79 00    XX0645 JMP RCHRGT
+00178  BC53              ;********************************
+00179  BC53              ; NOT OUR COMMAND 
+00180  BC53              ; RETURN TO CHRGET TO PROCESS COMMAND
+00181  BC53              ;********************************
+00182  BC53  A6 9B       XX0648 LDX PRTY        ; RECOVERY X REG
+00183  BC55  4C 79 00           JMP RCHRGT
+00184  BC58              ;********************************
+00185  BC58              ; @ OR / READ DRIVE STATUS
+00186  BC58              ;********************************
+00187  BC58  A9 08       XX064D LDA #$08
+00188  BC5A  20 B1 FF           JSR LISTEN
+00189  BC5D  A9 6F              LDA #$6F
+00190  BC5F  20 93 FF           JSR SECOND
+00191  BC62              ;
+00192  BC62  E6 7A       XX0657 INC TXTPTR
+00193  BC64  A0 00              LDY #$00
+00194  BC66  B1 7A              LDA (TXTPTR),Y
+00195  BC68  F0 06              BEQ XX0665
+00196  BC6A  20 A8 FF           JSR CIOUT
+00197  BC6D  B8                 CLV 
+00198  BC6E  50 F2              BVC XX0657
+00199  BC70  20 AE FF    XX0665 JSR UNLSN
+00200  BC73  B8                 CLV 
+00201  BC74  50 1F              BVC XX068A
+00202  BC76              ;
+00203  BC76  84 7A       XX066B STY TXTPTR
+00204  BC78  A9 08              LDA #$08
+00205  BC7A  20 B4 FF           JSR TALK
+00206  BC7D  A9 6F              LDA #$6F
+00207  BC7F  20 96 FF           JSR TKSA
+00208  BC82              ;********************************
+00209  BC82              ; READ IN STATUS BYTES 00, OK,00,00
+00210  BC82              ;********************************
+00211  BC82  20 A5 FF    XX0677 JSR ACPTR
+00212  BC85  C9 0D              CMP #$0D
+00213  BC87  F0 06              BEQ XX0684
+00214  BC89  20 42 E7           JSR KCHROT
+00215  BC8C  B8                 CLV 
+00216  BC8D  50 F3              BVC XX0677
+00217  BC8F  20 42 E7    XX0684 JSR KCHROT
+00218  BC92  20 AB FF           JSR UNTLK
+00219  BC95  4C 79 00    XX068A JMP RCHRGT
+00220  BC98              ;********************************
+00221  BC98              ; @$ OR /$ LIST DIRECTORY
+00222  BC98              ;********************************
+
+
+
+
+
+
+DOS 4.1 DISK WEDGE......PAGE 0006
+
+LINE# LOC   CODE        LINE
+
+
+00223  BC98  C8          XX068D INY 
+00224  BC99  B1 7A              LDA (TXTPTR),Y
+00225  BC9B  D0 FB              BNE XX068D
+00226  BC9D  88                 DEY 
+00227  BC9E  98                 TYA 
+00228  BC9F  A2 01              LDX #$01
+00229  BCA1  A0 02              LDY #$02
+00230  BCA3  20 BD FF           JSR SETNAM
+00231  BCA6              ;********************************
+00232  BCA6  A2 08              LDX #$08
+00233  BCA8  A5 9B              LDA PRTY
+00234  BCAA  D0 3E              BNE XX06DF
+00235  BCAC              ;
+00236  BCAC  A9 0E              LDA #$0E
+00237  BCAE  A0 60              LDY #$60
+00238  BCB0  20 BA FF           JSR SETLFS
+00239  BCB3              ;********************************
+00240  BCB3  20 C0 FF           JSR OPEN
+00241  BCB6              ;********************************
+00242  BCB6  A9 08              LDA #$08
+00243  BCB8  20 B4 FF           JSR TALK
+00244  BCBB  A9 60              LDA #$60
+00245  BCBD  20 96 FF           JSR TKSA
+00246  BCC0  A9 00              LDA #$00
+00247  BCC2  85 90              STA STATUS
+00248  BCC4  A0 03              LDY #$03
+00249  BCC6              ;********************************
+00250  BCC6  84 B7       RFILNM STY $B7
+00251  BCC8  20 A5 FF           JSR ACPTR
+00252  BCCB  85 B0              STA $B0
+00253  BCCD  A4 90              LDY STATUS
+00254  BCCF  D0 1B              BNE XX06E1
+00255  BCD1              ;********************************
+00256  BCD1  20 A5 FF           JSR ACPTR
+00257  BCD4  85 B1              STA $B1
+00258  BCD6  A4 90              LDY STATUS
+00259  BCD8  D0 12              BNE XX06E1
+00260  BCDA              ;********************************
+00261  BCDA  A4 B7              LDY $B7
+00262  BCDC  88                 DEY 
+00263  BCDD  D0 E7              BNE RFILNM
+00264  BCDF              ;********************************
+00265  BCDF  A6 B0              LDX $B0
+00266  BCE1  A5 B1              LDA $B1
+00267  BCE3  20 CD DD           JSR PRTLIN
+00268  BCE6  A9 20              LDA #$20        ;' '
+00269  BCE8  D0 06              BNE XX06E5
+00270  BCEA              ;********************************
+00271  BCEA  D0 40       XX06DF BNE LOADIT
+00272  BCEC              ;********************************
+00273  BCEC              ; DONE.
+00274  BCEC              ;********************************
+00275  BCEC  D0 31       XX06E1 BNE ENDER
+00276  BCEE              ;********************************
+00277  BCEE              ; LOOP BACK TO READ MORE CHARACTERS
+
+
+
+
+
+
+DOS 4.1 DISK WEDGE......PAGE 0007
+
+LINE# LOC   CODE        LINE
+
+
+00278  BCEE              ;********************************
+00279  BCEE  D0 D6       XX06E3 BNE RFILNM
+00280  BCF0              ;********************************
+00281  BCF0              ;
+00282  BCF0              ;********************************
+00283  BCF0  20 D2 FF    XX06E5 JSR CHROUT
+00284  BCF3  20 A5 FF    XX06E8 JSR ACPTR
+00285  BCF6  A6 90              LDX STATUS
+00286  BCF8  D0 25              BNE ENDER
+00287  BCFA              ;********************************
+00288  BCFA  C9 00              CMP #$00
+00289  BCFC  F0 18              BEQ XX070B
+00290  BCFE  20 D2 FF           JSR CHROUT
+00291  BD01  20 E1 FF           JSR STOP
+00292  BD04  F0 19              BEQ ENDER
+00293  BD06              ;********************************
+00294  BD06  20 E4 FF           JSR GETIN
+00295  BD09  F0 E8              BEQ XX06E8
+00296  BD0B  C9 20              CMP #$20        ;' '
+00297  BD0D  D0 E4              BNE XX06E8
+00298  BD0F  20 E4 FF    XX0704 JSR GETIN
+00299  BD12  F0 FB              BEQ XX0704
+00300  BD14  D0 DD              BNE XX06E8
+00301  BD16  A9 0D       XX070B LDA #$0D
+00302  BD18  20 D2 FF           JSR CHROUT
+00303  BD1B  A0 02              LDY #$02
+00304  BD1D  D0 CF              BNE XX06E3
+00305  BD1F              ;********************************
+00306  BD1F              ; DONE CLOSE CLEAR AND CLOSE CHANNEL
+00307  BD1F              ;********************************
+00308  BD1F  20 CC FF    ENDER  JSR CLRCHN      ;CLEAR I/O CHANNELS
+00309  BD22  A9 0E              LDA #$0E        ;DRIVE CHANNEL
+00310  BD24  20 C3 FF           JSR CLOSE       ;CLOSE
+00311  BD27  68                 PLA             ;PULL RTS ADDRESS
+00312  BD28  68                 PLA
+00313  BD29  4C 67 E4           JMP WARMBS
+00314  BD2C              ;********************************
+00315  BD2C              ; /FILENAME - LOAD FILENAME
+00316  BD2C              ;********************************
+00317  BD2C  A9 0E       LOADIT LDA #$0E
+00318  BD2E  A0 00              LDY #$00
+00319  BD30  20 BA FF           JSR SETLFS
+00320  BD33  A9 00              LDA #$00
+00321  BD35  A6 2B              LDX VARTOP
+00322  BD37  A4 2C              LDY VARTOP+1
+00323  BD39  20 D5 FF           JSR LOAD
+00324  BD3C              ;********************************
+00325  BD3C              ; BASIC CLEANUP AFTER LOAD
+00326  BD3C              ;********************************
+00327  BD3C  4C 95 E1           JMP CLOAD
+00328  BD3F              ;********************************
+00329  BD3F              ;.END 
+
